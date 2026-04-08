@@ -1,0 +1,308 @@
+<section class="module" id="module-3">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">How The Deep Agent Uses Climate Context</h1>
+      <p class="module-subtitle">The agent path is where the demo gets interesting. It can notice a place name, fetch climate history for that location, and then still require document evidence before making product claims.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The agent has two tools and one traffic law</h2>
+      <p class="animate-in">The traffic law is simple: climate is advisory, documents are authoritative. That keeps weather context useful without letting it replace grounded product evidence.</p>
+
+      <div class="arch-diagram animate-in">
+        <div class="arch-zone">
+          <h4 class="arch-zone-label">User Input</h4>
+          <div class="arch-component" data-desc="A free-form HVAC question enters the system. The agent inspects it for product needs and for an explicit location.">
+            <div class="arch-icon">❓</div>
+            <span>User Query</span>
+          </div>
+        </div>
+        <div class="arch-zone">
+          <h4 class="arch-zone-label">Agent Brain</h4>
+          <div class="arch-component" data-desc="The system prompt tells the agent when to call climate lookup, when to search docs, and how to combine those outputs without inventing unsupported product claims.">
+            <div class="arch-icon">🧠</div>
+            <span>AGENT_SYSTEM_PROMPT</span>
+          </div>
+          <div class="arch-component" data-desc="This is the hosted model running inside create_deep_agent. It decides whether the query needs tools.">
+            <div class="arch-icon">🤖</div>
+            <span>create_deep_agent</span>
+          </div>
+        </div>
+        <div class="arch-zone">
+          <h4 class="arch-zone-label">Tools</h4>
+          <div class="arch-component" data-desc="Geocodes a place, fetches ten years of weather history from Open-Meteo, then turns that into HVAC-relevant notes.">
+            <div class="arch-icon">🌤️</div>
+            <span>get_climate_profile</span>
+          </div>
+          <div class="arch-component" data-desc="Searches the HVAC vector store and returns normalized evidence the agent can cite from.">
+            <div class="arch-icon">📚</div>
+            <span>search_hvac_docs_tool</span>
+          </div>
+        </div>
+        <div class="arch-zone">
+          <h4 class="arch-zone-label">Output</h4>
+          <div class="arch-component" data-desc="The notebook renders the final answer, trace, climate profile, and evidence as separate views so you can inspect the path.">
+            <div class="arch-icon">🪟</div>
+            <span>Rendered Result</span>
+          </div>
+        </div>
+        <div class="arch-description">Click any component to learn what it does.</div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Climate context is derived from history, not guessed</h2>
+      <p class="animate-in">This function does more than geocode a city. It pulls ten years of archive weather, groups by month, converts units, and then turns those aggregates into maintenance notes a human can actually use.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">climate_df = pd.DataFrame({</span>
+<span class="code-line">    <span class="code-string">"date"</span>: pd.to_datetime(daily[<span class="code-string">"time"</span>]),</span>
+<span class="code-line">    <span class="code-string">"tmax_c"</span>: daily[<span class="code-string">"temperature_2m_max"</span>],</span>
+<span class="code-line">    <span class="code-string">"tmin_c"</span>: daily[<span class="code-string">"temperature_2m_min"</span>],</span>
+<span class="code-line">    <span class="code-string">"precip_mm"</span>: daily.get(<span class="code-string">"precipitation_sum"</span>, [<span class="code-keyword">None</span>] * <span class="code-function">len</span>(daily[<span class="code-string">"time"</span>])),</span>
+<span class="code-line">})</span>
+<span class="code-line">climate_df[<span class="code-string">"month"</span>] = climate_df[<span class="code-string">"date"</span>].dt.month</span>
+<span class="code-line"></span>
+<span class="code-line">monthly = climate_df.groupby(<span class="code-string">"month"</span>, as_index=<span class="code-keyword">False</span>).agg(</span>
+<span class="code-line">    avg_high_c=(<span class="code-string">"tmax_c"</span>, <span class="code-string">"mean"</span>),</span>
+<span class="code-line">    avg_low_c=(<span class="code-string">"tmin_c"</span>, <span class="code-string">"mean"</span>),</span>
+<span class="code-line">)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Take the raw weather arrays and build a tidy <span class="term" data-definition="A DataFrame is a table-like data structure in pandas. It is useful when you need to group, filter, and summarize many rows of measurements.">DataFrame</span>.</p>
+            <p class="tl">Convert the date strings into real dates so month-based math becomes easy.</p>
+            <p class="tl">Store daily high temperature, low temperature, and rainfall in named columns.</p>
+            <p class="tl">If rainfall is missing, pad the column with empty values so the table shape still works.</p>
+            <p class="tl">Add a month column so each day now knows which monthly bucket it belongs to.</p>
+            <p class="tl">Group all rows by month and compute average highs and lows for each month.</p>
+            <p class="tl">Those monthly summaries later become human-facing climate and maintenance notes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warning animate-in">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-content">
+          <strong class="callout-title">Important boundary</strong>
+          <p>The agent prompt explicitly says climate is advisory only. A hot city can influence the recommendation story, but it cannot prove which product supports BACnet or monitoring features.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Tool choice depends on the query shape</h2>
+      <p class="animate-in">Use the matcher below like a simplified version of the agent’s routing logic. Drag each query type onto the system behavior that fits it best.</p>
+
+      <div class="dnd-container animate-in" id="dnd-module3">
+        <div class="dnd-chips">
+          <div class="dnd-chip" draggable="true" data-answer="climate-first">Question names Phoenix Arizona</div>
+          <div class="dnd-chip" draggable="true" data-answer="docs-only">Question asks for BACnet support with no location</div>
+          <div class="dnd-chip" draggable="true" data-answer="warning-path">Geocoder cannot resolve the location</div>
+        </div>
+        <div class="dnd-zones">
+          <div class="dnd-zone" data-correct="docs-only">
+            <div class="dnd-zone-label">Skip weather lookup and search product docs directly</div>
+            <div class="dnd-zone-target">Drop here</div>
+          </div>
+          <div class="dnd-zone" data-correct="climate-first">
+            <div class="dnd-zone-label">Call climate lookup before retrieval</div>
+            <div class="dnd-zone-target">Drop here</div>
+          </div>
+          <div class="dnd-zone" data-correct="warning-path">
+            <div class="dnd-zone-label">Continue with retrieval-backed reasoning and mention missing climate context</div>
+            <div class="dnd-zone-target">Drop here</div>
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <button class="btn btn-primary" onclick="checkDnD('dnd-module3')">Check Match</button>
+          <button class="btn" onclick="resetDnD('dnd-module3')">Reset</button>
+        </div>
+      </div>
+
+      <div class="flow-steps animate-in">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <p>Inspect query for explicit location</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <p>Optionally call climate tool</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <p>Search HVAC docs</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <p>Return grounded answer with climate-fit notes when relevant</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module3">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The agent has a climate tool and a document search tool." data-explanation-wrong="The prompt mentions exactly two tools, one for climate and one for docs.">
+            <h3 class="quiz-question">How many tools does the agent receive?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Two</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Four</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. An explicit location is the signal to use climate lookup first." data-explanation-wrong="The climate tool is triggered by meaningful place information, not by every query.">
+            <h3 class="quiz-question">What most strongly triggers the climate tool?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A high Top K value</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook title</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An explicit location in the user query</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Climate notes help with fit and maintenance context, but docs still own product claims." data-explanation-wrong="The agent prompt is careful: climate can guide, but documentation must support product facts.">
+            <h3 class="quiz-question">What is climate data allowed to do?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Provide advisory context without replacing document evidence</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Override missing product evidence</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Disable retrieval entirely</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The profile includes maintenance guidance derived from climate conditions." data-explanation-wrong="The function outputs more than temperatures; it also turns them into upkeep implications.">
+            <h3 class="quiz-question">What extra human-facing output comes from the climate profile?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>New embeddings</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Climate notes and maintenance notes</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A new widget toolbar</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. If climate lookup fails, the agent is supposed to continue with retrieval-backed reasoning and mention the gap." data-explanation-wrong="Failure of climate lookup does not end the whole answer path.">
+            <h3 class="quiz-question">What should happen if climate lookup fails?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook should close</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model should invent weather assumptions</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system should continue with retrieval-backed reasoning and mention that climate context was unavailable</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The right workflow is climate first, then retrieval-backed product grounding." data-explanation-wrong="The query includes location and product selection, so the full agent path matters.">
+            <h3 class="quiz-question">A user asks, “Which chiller model fits Phoenix best?” What should the agent do first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Resolve Phoenix for climate context, then search docs</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Skip both tools and answer from memory</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only display the trace log</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. Historical weather becomes HVAC-relevant because the code turns it into implications like freeze protection or coil maintenance." data-explanation-wrong="The climate data matters only after the notebook translates it into operating implications.">
+            <h3 class="quiz-question">Why does the notebook group weather history by month instead of only showing raw daily values?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because pandas cannot display days</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because monthly aggregates make seasonal HVAC implications easier to infer and explain</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the vector store requires months</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The system prompt is the contract that tells the agent when a tool should and should not be used." data-explanation-wrong="The behavior boundary lives in the agent instructions more than in the widget layer.">
+            <h3 class="quiz-question">If the agent starts calling climate lookup for every query, what should you inspect first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The sample queries list</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The DataFrame grouping code</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>AGENT_SYSTEM_PROMPT</code> and its decision rules</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The code geocodes first so it can fetch climate history for resolved coordinates." data-explanation-wrong="The weather archive request needs latitude and longitude, so location resolution happens first.">
+            <h3 class="quiz-question">Why does <code>get_climate_profile()</code> call geocoding before the weather archive?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because archive weather lookup needs coordinates</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because widgets only accept decimal numbers</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because retrieval must be disabled first</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The agent collects climate context, but retrieved documentation still owns the factual recommendation." data-explanation-wrong="The final answer should combine both, with climate as context and docs as support.">
+            <h3 class="quiz-question">In the final answer, how should climate context and retrieved docs relate?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Climate should replace missing product evidence</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Climate should add fit rationale while documents support the product claims</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Docs should only be used when climate lookup fails</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The design keeps environmental context informative without letting the agent smuggle unsupported product choices into the answer." data-explanation-wrong="The most important tradeoff is maintaining evidentiary discipline while still using climate as useful context.">
+            <h3 class="quiz-question">Why is the rule “climate is advisory only” so architecturally important?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because weather APIs cannot return JSON fast enough</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the notebook wants fewer charts</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it prevents a plausible but unsupported environmental story from replacing product evidence</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The climate tool is an interpretation layer built on top of historical measurements and HVAC heuristics." data-explanation-wrong="This function is not just reporting data. It is translating weather summaries into domain recommendations.">
+            <h3 class="quiz-question">What makes <code>get_climate_profile()</code> more than a raw weather API wrapper?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It derives HVAC-oriented notes and maintenance implications from archived weather data</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It stores embeddings for climate zones</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It trains the agent model on meteorology</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The nested geocoder attempts are a resilience pattern that keeps location resolution from being all-or-nothing." data-explanation-wrong="The retry logic is about graceful degradation across providers, not about widget convenience.">
+            <h3 class="quiz-question">What architecture lesson is hidden inside the dual geocoding strategy?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Always prefer one API and never fall back</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>External tool dependencies should degrade gracefully when one provider fails or misses a query shape</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Weather data should be cached in the UI</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Tracking tool evidence separately lets the notebook deduplicate and inspect what the agent actually used." data-explanation-wrong="The extra evidence list exists for traceability and review, not for prompt formatting alone.">
+            <h3 class="quiz-question">Why does <code>run_deep_agent()</code> keep a separate <code>tool_evidence</code> list?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To store widget colors</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To replace the final answer text</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To collect and later deduplicate the evidence surfaced through tool calls</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. This is a subtle but strong design move: the notebook preserves partial utility even when one tool path fails." data-explanation-wrong="The ideal behavior keeps the answer grounded where possible instead of collapsing the whole run.">
+            <h3 class="quiz-question">If climate lookup fails but retrieval succeeds, what outcome best matches the design philosophy of this demo?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Return a grounded answer plus a note that climate context was unavailable</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Hide the failure and pretend climate was never relevant</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Abort the run even though evidence exists</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('quiz-module3')">Check Answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module3')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>

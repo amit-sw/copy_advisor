@@ -1,0 +1,288 @@
+<section class="module" id="module-4" style="background: var(--color-bg-warm);">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">04</span>
+      <h1 class="module-title">Notebook UX And Debugging</h1>
+      <p class="module-subtitle">The last layer turns all of the backend behavior into something a presenter can operate live: widgets for input, structured renderers for outputs, and a trace log that exposes what the system just did.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">One click fans out into three possible runs</h2>
+      <p class="animate-in">The notebook UI is built with <span class="term" data-definition="ipywidgets is a Python library for interactive notebook controls such as dropdowns, sliders, buttons, and text boxes.">ipywidgets</span>. The user picks a mode, types a question, clicks Run Demo, and the handler decides which runner functions to execute.</p>
+
+      <div class="step-cards animate-in">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Read the current controls</strong>
+            <p>Mode dropdown, query text area, and Top K slider define the run configuration.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Reset trace state</strong>
+            <p>The notebook clears old trace events so each run tells one clean story.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Execute selected modes</strong>
+            <p>All modes can run, or the presenter can isolate baseline, RAG, or the agent.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>Render answer plus diagnostics</strong>
+            <p>Warnings, evidence, climate profile, trace, and final answer are displayed in a consistent order.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The click handler is the notebook conductor</h2>
+      <p class="animate-in">The handler is small, but it coordinates nearly everything. It validates the query, chooses the active mode, resets traces between sections, and delegates rendering to the specialized helpers.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line"><span class="code-keyword">def</span> <span class="code-function">on_run_clicked</span>(_):</span>
+<span class="code-line">    <span class="code-keyword">with</span> output:</span>
+<span class="code-line">        clear_output(wait=<span class="code-keyword">True</span>)</span>
+<span class="code-line">        TRACE_LOG.clear()</span>
+<span class="code-line">        <span class="code-keyword">try</span>:</span>
+<span class="code-line">            query = query_widget.value.strip()</span>
+<span class="code-line">            <span class="code-keyword">if</span> <span class="code-keyword">not</span> query:</span>
+<span class="code-line">                <span class="code-keyword">raise</span> ValueError(<span class="code-string">"Enter a query before running the demo."</span>)</span>
+<span class="code-line">            top_k = <span class="code-function">int</span>(top_k_widget.value)</span>
+<span class="code-line">            display(Markdown(<span class="code-string">"# HVAC Demo Output"</span>))</span>
+<span class="code-line">            display(Markdown(<span class="code-string">f"**Selected Mode**: `{mode_widget.value}`"</span>))</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Define the callback that runs when the user presses the notebook button.</p>
+            <p class="tl">Render everything into the shared output panel.</p>
+            <p class="tl">Clear the old UI first so the new run does not stack on top of stale results.</p>
+            <p class="tl">Reset the trace so this run has its own timeline.</p>
+            <p class="tl">Try the full run inside error handling so mistakes become readable notebook output.</p>
+            <p class="tl">Pull the current query text from the text area and trim whitespace.</p>
+            <p class="tl">If the query is empty, stop immediately with a human-readable error.</p>
+            <p class="tl">Read the current Top K slider and show a heading that explains what mode is being demonstrated.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent animate-in">
+        <div class="callout-icon">🔍</div>
+        <div class="callout-content">
+          <strong class="callout-title">Trace log is not chain of thought</strong>
+          <p>The trace records observable system events like “retrieval invoked” or “climate profile received.” It is operational telemetry, not hidden reasoning text.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">What to inspect when the demo behaves strangely</h2>
+      <p class="animate-in">Good demos are debuggable demos. This notebook already gives you strong inspection surfaces if you know the order to use them.</p>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">⚠️</div>
+          <h3 class="pattern-title">Warnings first</h3>
+          <p class="pattern-desc">Look for placeholder vector store messages, retrieval failures, or climate lookup warnings before blaming the model.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">🧾</div>
+          <h3 class="pattern-title">Evidence second</h3>
+          <p class="pattern-desc">If the retrieved snippets are weak, the final answer will also be weak even if the model is behaving correctly.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-3);">
+          <div class="pattern-icon" style="background: var(--color-actor-3); color: white;">🪵</div>
+          <h3 class="pattern-title">Trace third</h3>
+          <p class="pattern-desc">The ordered trace tells you which path ran and which tool calls actually fired.</p>
+        </div>
+      </div>
+
+      <div class="badge-list animate-in">
+        <div class="badge-item">
+          <code class="badge-code">render_evidence()</code>
+          <span class="badge-desc">Check whether the retrieval layer actually found useful snippets.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">render_climate_profile()</code>
+          <span class="badge-desc">Inspect resolved location, temperature ranges, and maintenance notes when location matters.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">render_trace()</code>
+          <span class="badge-desc">Verify the execution path without exposing hidden model reasoning.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">SAMPLE_QUERIES</code>
+          <span class="badge-desc">Use known prompts to reproduce the intended behavior during a live demo.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module4">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The notebook UI is built with ipywidgets controls." data-explanation-wrong="The controls come from the widget library, not from pandas or LangChain.">
+            <h3 class="quiz-question">What library provides the interactive notebook controls?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>ipywidgets</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>pandas</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>urllib</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The query text is required before the run starts." data-explanation-wrong="The handler checks for one missing input explicitly before proceeding.">
+            <h3 class="quiz-question">What input causes an immediate error if it is missing?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The sample queries list</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The climate notes</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The user query text</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The output area is cleared at the start of each run." data-explanation-wrong="The handler first wipes the old run before rendering the new one.">
+            <h3 class="quiz-question">Why does the handler call <code>clear_output(wait=True)</code>?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To reset the vector store</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To replace stale output with a fresh run view</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To recalculate the climate archive</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. TRACE_LOG is cleared so the next run has a clean event history." data-explanation-wrong="The trace is reset intentionally between runs.">
+            <h3 class="quiz-question">What is the purpose of calling <code>TRACE_LOG.clear()</code>?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To keep each run’s trace separate</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To reduce widget width</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To retrain the agent</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The sample queries are starter prompts for exercising the demo path." data-explanation-wrong="Those strings are example prompts for the presenter, not configuration or logs.">
+            <h3 class="quiz-question">What are <code>SAMPLE_QUERIES</code> for?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They define the weather archive schema</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They give presenters ready-made questions to try</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They store the vector store ID</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The warning is the fastest signal that the grounding layer is misconfigured." data-explanation-wrong="Start with the obvious operational clue before digging into prompt behavior.">
+            <h3 class="quiz-question">A demo run returns plausible text but no retrieved evidence. What should you inspect first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The CSS styling</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The order of sample queries</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The warnings and evidence-rendering sections</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Running “all” is useful when you want to compare the three strategies on the same prompt." data-explanation-wrong="Think about which mode is designed for side-by-side comparison rather than isolation.">
+            <h3 class="quiz-question">When is the “All modes” setting most useful?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>When you want to compare baseline, RAG, and agent behavior on one query</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>When you want to disable evidence rendering</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>When you want to skip widgets entirely</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The trace is best used as operational telemetry showing which path and tools fired." data-explanation-wrong="The trace is there to explain execution events, not to expose private reasoning.">
+            <h3 class="quiz-question">How should a presenter interpret the trace log?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a hidden transcript of the model’s thoughts</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a timestamped record of observable system steps</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a replacement for evidence inspection</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Specialized renderers make each output easier to inspect and debug." data-explanation-wrong="The render helpers split the output by concern on purpose.">
+            <h3 class="quiz-question">Why does the notebook use separate render functions for evidence, climate, trace, and final answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To keep each diagnostic surface distinct and readable</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Markdown cannot show two sections at once</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To remove the need for try/except</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. A known-good sample query is a fast way to separate random prompt choice from genuine system breakage." data-explanation-wrong="Use the controlled prompts first before assuming a deeper architecture failure.">
+            <h3 class="quiz-question">Why are the bundled sample queries valuable during debugging?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They permanently improve model weights</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They reduce API cost to zero</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They give you reproducible prompts that should exercise known branches of the demo</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The handler is not just a button callback. It is the orchestration point where execution policy meets presentation policy." data-explanation-wrong="The deeper value of the handler is coordination across state, execution branches, and rendering.">
+            <h3 class="quiz-question">Why is <code>on_run_clicked()</code> an architectural choke point in this notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it owns the vector store ranking algorithm</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it coordinates state reset, mode branching, and the rendering order that makes the demo intelligible</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it performs all climate calculations</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The render order is a debugging philosophy: show the operational context before the polished answer." data-explanation-wrong="The strongest explanation is about inspection ergonomics, not notebook syntax.">
+            <h3 class="quiz-question">What principle is reinforced by rendering warnings, evidence, and traces before the final answer body?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Styling should come before logic</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Users should never see diagnostics</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Operational evidence should frame interpretation of the answer</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Clearing trace state between branches keeps each mode legible when the notebook runs them back-to-back." data-explanation-wrong="The point is not memory savings. It is preserving attribution of events to the right run.">
+            <h3 class="quiz-question">Why does the code clear <code>TRACE_LOG</code> before each mode inside “All modes” execution?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>So each rendered section shows only the events for its own mode</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>So widgets can be recreated</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>So pandas can free DataFrame memory</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The separation between event trace and model reasoning is a safety and product clarity decision." data-explanation-wrong="The strongest distinction is about what kinds of transparency are helpful and appropriate.">
+            <h3 class="quiz-question">Why is an event trace safer and more useful here than exposing the agent’s hidden reasoning text?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because event traces are always shorter</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it gives operational visibility without pretending private chain-of-thought is a stable interface</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because reasoning text cannot contain timestamps</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Strong demo design makes failure diagnosis part of the experience, not an afterthought." data-explanation-wrong="The best answer is about making architecture behavior visible under failure, not about avoiding all failure.">
+            <h3 class="quiz-question">What makes this notebook a better teaching artifact than a minimal one-box demo?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It hides all intermediate steps so the UI looks cleaner</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It avoids any user controls</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes execution paths, evidence quality, warnings, and outputs inspectable in a repeatable way</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('quiz-module4')">Check Answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module4')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>

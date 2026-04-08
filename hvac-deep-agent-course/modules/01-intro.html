@@ -1,0 +1,314 @@
+<section class="module" id="module-1">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">01</span>
+      <h1 class="module-title">What This Demo Is Proving</h1>
+      <p class="module-subtitle">This notebook is a side-by-side lab for three answer styles: plain model output, retrieval-grounded output, and a tool-using agent that adds climate context when a location appears in the query.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Three characters answer the same HVAC question</h2>
+      <p class="animate-in">Think of this file as a live bake-off. One model answers from general knowledge, one must quote retrieved evidence, and one can first ask for climate context before it searches documentation.</p>
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">B</div>
+          <h3 class="pattern-title">Baseline LLM</h3>
+          <p class="pattern-desc">Fastest path. It answers directly, but it has no built-in evidence loop.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">R</div>
+          <h3 class="pattern-title">RAG</h3>
+          <p class="pattern-desc">Answers only from retrieved HVAC snippets, then cites filenames.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-3);">
+          <div class="pattern-icon" style="background: var(--color-actor-3); color: white;">A</div>
+          <h3 class="pattern-title">Deep Agent + RAG</h3>
+          <p class="pattern-desc">Decides whether to call a climate tool, then retrieves docs before it recommends anything.</p>
+        </div>
+      </div>
+
+      <div class="chat-window animate-in" id="chat-module1">
+        <div class="chat-messages">
+          <div class="chat-message" data-msg="0" data-sender="user" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-4);">U</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-4);">User Query</span>
+              <p>Which rooftop unit supports BACnet or remote monitoring in Phoenix Arizona?</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="1" data-sender="baseline" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-1);">B</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-1);">Baseline</span>
+              <p>I can answer quickly, but I may be leaning on model memory instead of the actual HVAC corpus.</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="2" data-sender="rag" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-2);">R</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-2);">RAG</span>
+              <p>I will search the vector store first and only answer from the retrieved snippets.</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="3" data-sender="agent" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-3);">A</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-3);">Deep Agent</span>
+              <p>Phoenix changes the story, so I will check climate context first and then ground product claims in documents.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-typing" style="display:none">
+          <div class="chat-avatar" id="chat-module1-typing-avatar">?</div>
+          <div class="chat-typing-dots">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+
+        <div class="chat-controls">
+          <button class="btn chat-next-btn">Next Message</button>
+          <button class="btn chat-all-btn">Play All</button>
+          <button class="btn chat-reset-btn">Replay</button>
+          <span class="chat-progress"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The whole product fits in one Python file</h2>
+      <p class="animate-in">That makes this a good teaching repo. You can trace configuration, tools, prompting, and the widget UI without jumping across folders.</p>
+      <div class="file-tree animate-in">
+        <div class="ft-folder open">
+          <span class="ft-name">copy_advisor/</span>
+          <span class="ft-desc">Tiny repo that holds the demo export</span>
+          <div class="ft-children">
+            <div class="ft-file">
+              <span class="ft-name">hvac_langchain_deep_agent_colab_demo.py</span>
+              <span class="ft-desc">Setup, retrieval helpers, climate tool, agent wiring, and notebook UI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="badge-list animate-in">
+        <div class="badge-item">
+          <code class="badge-code">OPENAI_API_KEY</code>
+          <span class="badge-desc">Credential for OpenAI APIs. The notebook refuses to run without it.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">OPENAI_VECTOR_STORE_ID</code>
+          <span class="badge-desc">Pointer to the hosted HVAC corpus used by RAG and the agent.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">TOP_K</code>
+          <span class="badge-desc">How many document chunks retrieval should ask for.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">CHAT_MODEL / AGENT_MODEL</code>
+          <span class="badge-desc">Separate model choices for the plain chat steps and the tool-using agent.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Bootstrapping is defensive, not fancy</h2>
+      <p class="animate-in">The notebook first checks normal environment variables, then falls back to Colab secrets. That keeps the demo portable between notebook sessions and regular Python execution.</p>
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line"><span class="code-keyword">def</span> <span class="code-function">get_secret</span>(name: str, default: str = <span class="code-string">""</span>) -&gt; str:</span>
+<span class="code-line">    <span class="code-keyword">if</span> os.getenv(name):</span>
+<span class="code-line">        <span class="code-keyword">return</span> os.getenv(name)</span>
+<span class="code-line">    <span class="code-keyword">if</span> userdata <span class="code-keyword">is not</span> <span class="code-keyword">None</span>:</span>
+<span class="code-line">        <span class="code-keyword">try</span>:</span>
+<span class="code-line">            value = userdata.get(name)</span>
+<span class="code-line">            <span class="code-keyword">if</span> value:</span>
+<span class="code-line">                <span class="code-keyword">return</span> value</span>
+<span class="code-line">        <span class="code-keyword">except</span> Exception:</span>
+<span class="code-line">            <span class="code-keyword">pass</span></span>
+<span class="code-line">    <span class="code-keyword">return</span> default</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Create one helper whose whole job is to fetch a named secret.</p>
+            <p class="tl">If the value already exists in the normal process environment, trust that first.</p>
+            <p class="tl">If we are inside <span class="term" data-definition="Google Colab is a cloud notebook environment. It lets a notebook pull stored secrets without hardcoding them in the file.">Colab</span>, try its secret store next.</p>
+            <p class="tl">If the secret exists there, return it and keep moving.</p>
+            <p class="tl">If Colab secret access fails, do not crash on that step alone.</p>
+            <p class="tl">Fall back to a default value so the rest of setup can decide whether that is acceptable.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-accent animate-in">
+        <div class="callout-icon">💡</div>
+        <div class="callout-content">
+          <strong class="callout-title">Key idea</strong>
+          <p>This file is not trying to be a production system. It is trying to make architectural differences visible, so every feature is bent toward explainability.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module1">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The notebook exists to compare answer strategies side by side." data-explanation-wrong="Not quite. The main product idea here is comparative behavior across modes, not data collection or training.">
+            <h3 class="quiz-question">What is the main purpose of this notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Train a new HVAC model from scratch</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Store climate records in a new database</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Compare baseline, RAG, and tool-using agent answers</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The baseline path does not retrieve evidence before it answers." data-explanation-wrong="Look for the mode with the fewest moving pieces. That is the direct-answer path.">
+            <h3 class="quiz-question">Which mode has the fewest steps between query and answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Deep Agent + RAG</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Baseline LLM</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>RAG with retrieval</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The vector store ID is the handle for the retrieved document corpus." data-explanation-wrong="The answer is the variable that points at the hosted document collection, not the one that picks a model name.">
+            <h3 class="quiz-question">Which setting tells the notebook where the HVAC documents live?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>OPENAI_VECTOR_STORE_ID</code></span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>CHAT_MODEL</code></span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>TRACE_LOG</code></span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The helper first checks normal environment variables, then Colab userdata." data-explanation-wrong="This notebook prefers the simplest source first: the existing process environment.">
+            <h3 class="quiz-question">Where does <code>get_secret()</code> look first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Inside the vector store</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The current environment variables</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The widget text box</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The notebook is deliberately presenter-friendly and keeps the whole story close together." data-explanation-wrong="The file layout is intentionally tiny so the full flow stays legible in one place.">
+            <h3 class="quiz-question">Why is a one-file demo useful for teaching?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes API calls free</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for prompts</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>You can trace setup, tools, and UI without hunting through a large repo</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. RAG is the grounded middle path between pure memory and a full agent tool loop." data-explanation-wrong="Think about which mode adds retrieval without adding climate-tool decision making.">
+            <h3 class="quiz-question">You want an answer grounded in docs, but you do not need climate reasoning. Which mode should you inspect first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Baseline LLM</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>RAG</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Deep Agent + RAG</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Missing API credentials should stop the notebook immediately." data-explanation-wrong="Look for the secret that is truly mandatory for any OpenAI call at all.">
+            <h3 class="quiz-question">If the notebook should fail fast before any mode runs, which missing value is the most important to check?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>OPENAI_API_KEY</code></span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>TOP_K</code></span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>SAMPLE_QUERIES</code></span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Separate model variables let the demo compare a lighter chat model against a stronger agent model." data-explanation-wrong="The separation is about role fit, not about notebook widgets or pandas.">
+            <h3 class="quiz-question">Why keep <code>CHAT_MODEL</code> and <code>AGENT_MODEL</code> separate?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the vector store requires two model names</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because widgets cannot share one string</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because direct answering and tool orchestration can have different model needs</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The file is optimized for presentation and tracing, so cross-cutting logic sits close together." data-explanation-wrong="The author did not minimize features. They minimized codebase distance between related ideas.">
+            <h3 class="quiz-question">What design tradeoff does the one-file approach make?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prioritizes production modularity over teachability</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prioritizes traceability and demo clarity over deep module separation</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It avoids using third-party libraries</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. If the vector store ID stays as the placeholder, retrieval-backed modes become visibly limited." data-explanation-wrong="Think about which configuration value would quietly disconnect the grounding layer from the rest of the demo.">
+            <h3 class="quiz-question">A presenter forgets to replace the placeholder vector store ID. Which part of the demo is most affected?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>RAG and Deep Agent evidence gathering</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The widget layout only</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The Colab secret loader only</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The whole course rests on visible contrast between answer strategies, so preserving that boundary is worth the duplication." data-explanation-wrong="The strongest reason is about experimental clarity, not code golf.">
+            <h3 class="quiz-question">Why is it architecturally valuable that the notebook keeps separate runners for baseline, RAG, and the agent instead of one generic function with flags?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Python cannot pass flags into functions</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because widgets require one function per button</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because each path exposes different evidence, warnings, and reasoning boundaries that are easier to compare when they stay explicit</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The setup code trades a little duplication for a much smoother presenter experience across environments." data-explanation-wrong="The secret helper is about portability and graceful setup, not about cryptography or performance.">
+            <h3 class="quiz-question">What is the subtle win of checking both environment variables and Colab userdata for secrets?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees secrets are encrypted twice</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It lets the same demo survive both notebook and script-style execution with almost no setup branching</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes vector search faster</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. A lightweight baseline is useful only if it stays meaningfully distinct from the tool-rich paths." data-explanation-wrong="The point is not to maximize baseline quality at all costs. It is to preserve a clean comparison point.">
+            <h3 class="quiz-question">If you upgraded the baseline to silently call retrieval behind the scenes, what would you lose first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A clean experimental control for comparing grounded and ungrounded behavior</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The ability to use widgets</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The climate tool function</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The placeholder warning is a teaching affordance because it turns a silent misconfiguration into an explainable state." data-explanation-wrong="Think about what helps a presenter and learner diagnose the missing retrieval layer fastest.">
+            <h3 class="quiz-question">Why is the placeholder vector store ID check a good demo design choice?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prevents users from typing long queries</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes the baseline model more accurate</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It surfaces a broken grounding configuration explicitly instead of failing in a confusing way later</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. In a teaching artifact, cognitive path length matters as much as implementation elegance." data-explanation-wrong="The strongest justification is about learner tracing speed, not package purity.">
+            <h3 class="quiz-question">For this repo, which tradeoff is most justified?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Splitting every helper into a different file even if the explanation becomes fragmented</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Keeping closely related demo logic together so a learner can follow one narrative in one file</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Inlining every secret into the notebook to avoid helper functions</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('quiz-module1')">Check Answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module1')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>

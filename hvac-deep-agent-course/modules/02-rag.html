@@ -1,0 +1,304 @@
+<section class="module" id="module-2" style="background: var(--color-bg-warm);">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">How RAG Grounds the Answer</h1>
+      <p class="module-subtitle">Retrieval-augmented generation is the notebook’s evidence lane. It turns a free-form HVAC question into a search against the vector store, then feeds the resulting snippets into a stricter prompt.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">RAG is a courier route, not magic</h2>
+      <p class="animate-in">Picture a messenger carrying the user question to a document index, then carrying the best snippets back to the model. The answer becomes more trustworthy because the path is explicit.</p>
+
+      <div class="flow-animation animate-in" data-steps='[
+        {"highlight":"flow-rag-query","label":"The user enters an HVAC question in the notebook."},
+        {"highlight":"flow-rag-search","label":"search_hvac_docs prepares a vector store search request.","packet":true,"from":"rag-query","to":"rag-search"},
+        {"highlight":"flow-rag-store","label":"OpenAI vector search returns the best matching chunks.","packet":true,"from":"rag-search","to":"rag-store"},
+        {"highlight":"flow-rag-prompt","label":"The RAG prompt injects the retrieved evidence into the model call.","packet":true,"from":"rag-store","to":"rag-prompt"},
+        {"highlight":"flow-rag-answer","label":"The answer comes back with citations and an evidence sufficiency note.","packet":true,"from":"rag-prompt","to":"rag-answer"}
+      ]'>
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-rag-query">
+            <div class="flow-actor-icon">Q</div>
+            <span>User Query</span>
+          </div>
+          <div class="flow-actor" id="flow-rag-search">
+            <div class="flow-actor-icon">S</div>
+            <span>search_hvac_docs</span>
+          </div>
+          <div class="flow-actor" id="flow-rag-store">
+            <div class="flow-actor-icon">V</div>
+            <span>Vector Store</span>
+          </div>
+          <div class="flow-actor" id="flow-rag-prompt">
+            <div class="flow-actor-icon">P</div>
+            <span>RAG Prompt</span>
+          </div>
+          <div class="flow-actor" id="flow-rag-answer">
+            <div class="flow-actor-icon">A</div>
+            <span>Grounded Answer</span>
+          </div>
+        </div>
+
+        <div class="flow-packet"></div>
+
+        <div class="flow-step-label">Click "Next Step" to begin</div>
+
+        <div class="flow-controls">
+          <button class="btn flow-next-btn">Next Step</button>
+          <button class="btn flow-reset-btn">Restart</button>
+          <span class="flow-progress"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The retrieval helper is intentionally literal</h2>
+      <p class="animate-in">Notice what the code does not do. It does not blend hidden heuristics into the answer. It builds search arguments, calls vector search, normalizes the response, and records warnings when evidence is missing.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">kwargs = {</span>
+<span class="code-line">    <span class="code-string">"vector_store_id"</span>: OPENAI_VECTOR_STORE_ID,</span>
+<span class="code-line">    <span class="code-string">"query"</span>: query,</span>
+<span class="code-line">    <span class="code-string">"max_num_results"</span>: <span class="code-function">int</span>(top_k),</span>
+<span class="code-line">    <span class="code-string">"rewrite_query"</span>: <span class="code-keyword">True</span>,</span>
+<span class="code-line">}</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">try</span>:</span>
+<span class="code-line">    response = openai_client.vector_stores.search(**kwargs)</span>
+<span class="code-line">    results = normalize_search_results(response)</span>
+<span class="code-line">    add_trace(<span class="code-string">f"Documents found: {len(results)} chunk(s) from vector store {OPENAI_VECTOR_STORE_ID}"</span>)</span>
+<span class="code-line"><span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> exc:</span>
+<span class="code-line">    warning = <span class="code-string">f"Retrieval failed: {exc}"</span></span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Build one clean request object for the <span class="term" data-definition="A vector store is a searchable collection of document embeddings. Instead of exact keyword matching, it finds chunks that are semantically close to the question.">vector store</span>.</p>
+            <p class="tl">Aim the search at the configured HVAC corpus, not some hardcoded local file.</p>
+            <p class="tl">Pass the user question through directly.</p>
+            <p class="tl">Respect the chosen <span class="term" data-definition="Top K means how many best matches you ask retrieval to return. Bigger values show more evidence, but can add noise.">Top K</span> so the presenter can control result breadth.</p>
+            <p class="tl">Allow query rewriting so search can better match the phrasing stored in the corpus.</p>
+            <p class="tl">Run the search, convert the response into plain Python structures, and log how many chunks came back.</p>
+            <p class="tl">If the retrieval call fails, convert that failure into a visible warning instead of a silent mystery.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">🧭</div>
+        <div class="callout-content">
+          <strong class="callout-title">Grounded does not mean perfect</strong>
+          <p>RAG can still retrieve weak evidence. The important improvement is that the weakness becomes inspectable instead of hidden inside pure model confidence.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The RAG prompt narrows the contract</h2>
+      <p class="animate-in">Prompting does not just style the answer. Here it changes the rules: answer only from retrieved evidence, admit incompleteness, and cite filenames in square brackets.</p>
+
+      <div class="step-cards animate-in">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>Retrieve snippets</strong>
+            <p>The helper returns scored chunks plus a text bundle that can be dropped into the prompt.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>Constrain the model</strong>
+            <p>The system message says the answer must stay inside the retrieved evidence boundary.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>Render evidence separately</strong>
+            <p>The notebook shows the retrieved rows and the final answer in different sections, which makes debugging much easier.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">📄</div>
+          <h3 class="pattern-title">normalize_search_results</h3>
+          <p class="pattern-desc">Turns SDK-shaped data into a predictable list of filenames, scores, attributes, and snippets.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">⚠️</div>
+          <h3 class="pattern-title">warning channel</h3>
+          <p class="pattern-desc">Makes empty retrieval or exceptions visible to the presenter before the answer is interpreted.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-5);">
+          <div class="pattern-icon" style="background: var(--color-actor-5); color: white;">🧾</div>
+          <h3 class="pattern-title">evidence_text</h3>
+          <p class="pattern-desc">Serializes the retrieved snippets into a prompt-friendly string the model can cite from.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module2">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. RAG starts by retrieving supporting document chunks." data-explanation-wrong="The key difference from baseline is the evidence retrieval step before answering.">
+            <h3 class="quiz-question">What happens before the RAG model writes its answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook retrieves relevant HVAC snippets</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The widget asks for a climate profile</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model fine-tunes itself</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. Top K controls how many search results are requested." data-explanation-wrong="Think about the parameter that changes result count, not model identity or UI mode.">
+            <h3 class="quiz-question">What does <code>top_k</code> control?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How many widgets appear</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How many retrieved chunks are requested</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How many models are compared</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The prompt tells the model to cite filenames in square brackets." data-explanation-wrong="The answer format is explicitly constrained by the RAG prompt.">
+            <h3 class="quiz-question">How should grounded answers reference evidence?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>With hidden internal IDs only</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They should avoid citations to stay concise</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>With filenames in square brackets</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The warning exists so evidence problems are inspectable." data-explanation-wrong="RAG does not silently assume success when retrieval fails.">
+            <h3 class="quiz-question">If retrieval throws an exception, what does the helper do?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Returns a warning and empty evidence</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Deletes the trace log</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Switches to baseline mode automatically</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. normalize_search_results makes the SDK payload easier to render and reason about." data-explanation-wrong="The function is about reshaping returned search data into a simple list.">
+            <h3 class="quiz-question">Why normalize search results?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To train embeddings again</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To convert the response into consistent fields like filename, score, and snippet</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To hide scores from the presenter</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Start with the retrieval helper, because that owns the search request and warnings." data-explanation-wrong="The first thing to inspect is the code that actually talks to the vector store.">
+            <h3 class="quiz-question">A presenter says the grounded answer always claims there was no evidence. Where should you inspect first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The pandas climate DataFrame</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The widget layout</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>search_hvac_docs()</code> and its warnings</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The prompt explicitly tells the model to answer only from retrieved evidence and admit gaps." data-explanation-wrong="The grounding rule lives in the prompt contract more than in the widget layer.">
+            <h3 class="quiz-question">Which design choice most directly makes the RAG answer cautious instead of overconfident?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system prompt says to answer only from retrieved evidence and say when it is incomplete</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The text box is 120 pixels tall</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The climate tool rounds temperatures</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Increasing Top K gives the prompt more evidence candidates, which can help or add noise." data-explanation-wrong="Think about which knob changes retrieval breadth rather than model behavior.">
+            <h3 class="quiz-question">If a query needs broader document coverage, what is the most direct experiment?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Hide the trace output</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Raise <code>top_k</code> and compare the evidence quality</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Delete filename citations</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The UI already separates these panes so you can tell whether retrieval or generation caused the issue." data-explanation-wrong="The notebook is meant to expose evidence and answer separately, not blur them together.">
+            <h3 class="quiz-question">Why does the notebook render retrieved evidence in its own section before the final answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because pandas cannot display after Markdown</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because vector stores require two tabs</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes debugging grounding failures much clearer</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Query rewriting is the mechanism meant to help mismatch between user phrasing and corpus phrasing." data-explanation-wrong="Look at the retrieval arguments. One flag explicitly helps search rephrase the question.">
+            <h3 class="quiz-question">A user asks in slang while the manuals use formal terminology. Which existing retrieval setting is most likely to help first?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span><code>rewrite_query=True</code></span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Lower the notebook window height</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remove citations from the answer</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The strongest win is inspectability: you can debate the evidence itself, not just the model output." data-explanation-wrong="RAG is not valuable because it guarantees truth. It is valuable because it exposes the support under the answer.">
+            <h3 class="quiz-question">What is the most defensible reason this notebook separates retrieval output from generated output?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It reduces Python import time</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes evidence quality review independent from model phrasing quality</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It lets widgets avoid callbacks</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. A cautious fallback preserves the architecture lesson: retrieval quality is part of the answer, not a hidden implementation detail." data-explanation-wrong="The best fallback keeps the grounding contract visible rather than pretending the model still has evidence.">
+            <h3 class="quiz-question">If retrieval returns zero results, what behavior best preserves the design intent of this notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Silently answer from model memory</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Invent a likely citation</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>State that grounding was insufficient and surface the retrieval warning</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The helper acts like an adapter between a rich SDK payload and a renderer-friendly structure." data-explanation-wrong="The key architectural role is translation between system boundaries, not ranking or caching.">
+            <h3 class="quiz-question">What architectural pattern does <code>normalize_search_results()</code> most resemble here?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An adapter that reshapes external data into an internal contract</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A scheduler for async tasks</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An authentication gateway</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. That flag is a reminder that retrieval itself is an opinionated system with its own tradeoffs, not a neutral pipe." data-explanation-wrong="The interesting tradeoff here is between preserving user wording and improving search recall.">
+            <h3 class="quiz-question">Why is <code>rewrite_query=True</code> a meaningful design decision rather than a trivial toggle?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it changes widget rendering speed</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it trades literal phrasing fidelity for potentially better semantic recall</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it disables filename citations</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. RAG improves trust by making support inspectable, not by removing judgment from the system." data-explanation-wrong="The strongest trust gain comes from visible evidence, not from claiming the system can no longer be wrong.">
+            <h3 class="quiz-question">Why does this notebook make RAG a stronger teaching tool than a polished single answer box?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it hides the retrieval machinery from the learner</span></button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it removes the need for prompts entirely</span></button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it lets learners inspect the evidence path and reason about why an answer should or should not be trusted</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" onclick="checkQuiz('quiz-module2')">Check Answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module2')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>

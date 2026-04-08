@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC Deep Agent Demo Course</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root {
+      --color-accent:       #5C7598;
+      --color-accent-hover: #4A5F7B;
+      --color-accent-light: #EAF0F6;
+      --color-accent-muted: #9BAEC7;
+    }
+  </style>
+
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="nav-inner">
+      <span class="nav-title">HVAC Deep Agent Demo Course</span>
+      <div class="nav-meta">
+        <div class="quiz-level-control" role="group" aria-label="Quiz difficulty">
+          <span class="quiz-level-caption">Quiz level</span>
+          <div class="quiz-level-switch" data-quiz-level-switch>
+            <button class="quiz-level-btn" data-quiz-level-btn="low" type="button" aria-pressed="false">Low</button>
+            <button class="quiz-level-btn is-active" data-quiz-level-btn="medium" type="button" aria-pressed="true">Medium</button>
+            <button class="quiz-level-btn" data-quiz-level-btn="deep" type="button" aria-pressed="false">Deep</button>
+          </div>
+        </div>
+        <div class="nav-dots" id="nav-dots" role="tablist">
+          <button class="nav-dot" data-target="module-1" data-tooltip="What The Demo Is Proving" role="tab" aria-label="Module 1: What The Demo Is Proving"></button>
+          <button class="nav-dot" data-target="module-2" data-tooltip="How RAG Grounds Answers" role="tab" aria-label="Module 2: How RAG Grounds Answers"></button>
+          <button class="nav-dot" data-target="module-3" data-tooltip="How The Deep Agent Thinks About Climate" role="tab" aria-label="Module 3: How The Deep Agent Thinks About Climate"></button>
+          <button class="nav-dot" data-target="module-4" data-tooltip="Notebook UX And Debugging" role="tab" aria-label="Module 4: Notebook UX And Debugging"></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
