@@ -1,0 +1,348 @@
+<section class="quiz-section" id="section-3">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">03</span>
+      <h1 class="section-title">Normalization, Shared Context, and Deeper Agents</h1>
+      <p class="section-subtitle">This section follows the next refinement steps: extracting tool inputs, improving payloads, and preparing for deeper autonomy.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">The workflow became easier for users and more structured for developers</h2>
+      <p>
+        Once real tools required a ticker symbol, the session moved to request normalization. The idea was to preserve a natural user experience while still
+        giving tools the structured inputs they need. Then the discussion shifted toward more durable shared context and toward the later notebooks where the
+        workflow edges closer to a deep-agent pattern.
+      </p>
+      <ul class="study-points">
+        <li>Notebook 8 added a preprocessing step that tries to resolve the stock ticker or company name from a free-form request before specialists run.</li>
+        <li>This richer request context is a kind of prompt engineering: instead of dumping the raw question into the model, the system prepares a better input.</li>
+        <li>The orchestration was wrapped into one higher-level function so the user makes one call while the system handles normalization, tool calls, and synthesis.</li>
+        <li>Notebook 9 tightened shared memory by moving from a loose Python dictionary to a structured Pydantic class, which better supports multi-agent coordination.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section3">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The session explicitly named notebook 8 as the request-normalization step." data-explanation-wrong="Request normalization came after adding real tools, not before the tool examples.">
+          <h3 class="quiz-question">1. What was the main new concept introduced in notebook 8?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Image segmentation for drone footage.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Request normalization for extracting needed information from a free-form user query.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Replacing every prompt with a handwritten decision tree.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The normalizer tries to recover a ticker or company name from the user's natural-language request." data-explanation-wrong="The step was not about translating languages or changing the final answer format.">
+          <h3 class="quiz-question">2. What specific kind of information was the normalizer trying to pull from the query?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A ticker symbol or company reference needed for tool calls.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A user's preferred font size for the notebook.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The price history itself, without using any tools.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The instructor said you have to think about what to do when the query has no valid stock target at all." data-explanation-wrong="The session did not assume every user request would be valid just because normalization exists.">
+          <h3 class="quiz-question">3. Why did the instructor mention a query like "how do I bake an ice cream" during the normalization discussion?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To show that stock agents should always answer cooking questions, too.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To prove that Yahoo Finance supports recipe data.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To remind learners that preprocessing needs fallback behavior when the request does not match the intended domain.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. Building a better request context before the call was described as prompt engineering or prompt improvement." data-explanation-wrong="The improvement was not only about changing the model itself. It was about shaping the input more intelligently.">
+          <h3 class="quiz-question">4. How did the instructor frame the act of enriching the request before calling the agent?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As removing context so the model can improvise more freely.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a form of prompt engineering that gives the model a better, more structured input.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a replacement for all tool usage.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The user-facing improvement was that one function would now handle the full workflow behind the scenes." data-explanation-wrong="The session explicitly said the system was moving back toward a single user call, not exposing more internal steps.">
+          <h3 class="quiz-question">5. What user-experience improvement came with the newer wrapper function around the workflow?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The user could make one high-level call while normalization, tool calls, and synthesis happened internally.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The user had to call each specialist manually to increase transparency.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The user no longer needed any query at all.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Notebook 9 changed the shared request context from a dictionary into a structured class." data-explanation-wrong="The main change was about state structure and shared memory, not adding another finance API.">
+          <h3 class="quiz-question">6. What was the notable data-structure change introduced in notebook 9?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The request context became a spreadsheet.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The request context became an image classifier.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The request context moved from a Python dictionary to a structured class.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The benefit was that the context becomes more constrained and predictable for multiple agents sharing it." data-explanation-wrong="The class-based context was about structure and safety, not about making the workflow more random.">
+          <h3 class="quiz-question">7. Why is a structured class better than a loose dictionary for shared multi-agent context?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It forces fields and makes shared memory more disciplined.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prevents the system from using prompts.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees that every prediction is correct.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The later notebooks were introduced as steps toward deeper agents, including a hybrid stage and then fuller orchestration autonomy." data-explanation-wrong="The session did not say deeper-agent ideas ended at notebook 9. They were coming next.">
+          <h3 class="quiz-question">8. How did the instructor describe the later notebooks that followed this normalization and context cleanup work?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a return to basic image classification only.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As steps that move from a hybrid pattern toward fuller deep-agent orchestration.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As notebooks that remove all tool calls and go back to raw prompts.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. One suggested exercise was to compare answer quality under more control versus more autonomy." data-explanation-wrong="The exercise was not about notebook color themes or runtime speed. It was about response quality under different control strategies.">
+          <h3 class="quiz-question">9. What comparison exercise did the instructor suggest for the deeper-agent notebooks?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Compare which notebook has the shortest code cells.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Compare public versus private datasets for every model.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Compare output quality when you keep high-level control versus when you give the agent fuller autonomy.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The session explicitly encouraged testing failure cases and improving preprocessing when the normalizer gets them wrong." data-explanation-wrong="The instructor did not claim the first version was perfect. Testing and iteration were part of the lesson.">
+          <h3 class="quiz-question">10. How was the normalization helper supposed to be improved over time?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By testing different query cases, finding failures, and refining the preprocessing logic.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By deleting all fallback logic and forcing users to type symbols manually again.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By switching from text to image prompts for stock questions.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track active" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Normalization was the usability bridge between free-form user language and the structured arguments required by tools." data-explanation-wrong="The point was not just code cleanliness. It was to make the tool-using system easier for people to interact with.">
+          <h3 class="quiz-question">1. Why did request normalization materially improve the user experience of the stock workflow?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It eliminated the need for any stock-related tools.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It let users ask natural questions while the system resolved the structured tool inputs behind the scenes.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It forced every query into a fixed menu of three company names.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. As more agents and tool calls share state, a typed or structured context becomes more reliable than a loose dictionary." data-explanation-wrong="The benefit was not cosmetic. It was about safer coordination among components.">
+          <h3 class="quiz-question">2. Why did notebook 9's move from a dictionary to a Pydantic-style model matter?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because dictionaries cannot hold text values in Python.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because classes always run faster than dictionaries on every task.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because structured fields make shared context more predictable and robust when multiple agents depend on it.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. 'Build the payload' was basically shorthand for constructing the best context package before invoking the specialist." data-explanation-wrong="The payload builder was not a synonym for synthesis. It happened before the specialists were called.">
+          <h3 class="quiz-question">3. In this part of the session, what did "building the payload" most nearly mean?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Collecting and structuring relevant context so the agent receives a stronger, more informative input.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Compressing the final answer into fewer characters.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Choosing the page layout for the notebook UI.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The instructor presented this as better prompt design: use tools, resolution logic, or other preprocessing to improve the model's context before asking it to answer." data-explanation-wrong="The session did not reduce prompt engineering to writing longer natural-language instructions only.">
+          <h3 class="quiz-question">4. How did the instructor broaden the idea of prompt engineering in this workflow?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt engineering only means changing adjectives inside the system prompt.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt engineering can include tool-driven context building and preprocessing that improve what the agent sees before it answers.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt engineering is unnecessary once schemas exist.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The user-facing wrapper function internalized the full chain: resolve ticker, run tools, run specialists, then synthesize." data-explanation-wrong="The wrapper function made the flow simpler for the user, not more fragmented.">
+          <h3 class="quiz-question">5. What work did the single high-level workflow function absorb on behalf of the user?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only the final formatting of the answer.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only the Yahoo Finance authentication step.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Normalization, tool invocation, specialist execution, and synthesis into one internal pipeline.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Testing varied phrasings was a way to find where the resolution logic failed and where it needed refinement." data-explanation-wrong="The examples were there to validate and stress-test the normalization step, not to generate training labels for a different model.">
+          <h3 class="quiz-question">6. Why did the instructor show several possible stock questions and ask whether the normalizer resolved them correctly?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To test whether the preprocessing works across realistic phrasings and edge cases.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To prove that every finance query should resolve to Apple.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To demonstrate that tools are less important than color themes.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The broader pattern is that preprocessing serves as a translator between natural-language requests and structured tool signatures." data-explanation-wrong="The preprocessing step did not replace the tool. It prepared the right arguments for the tool.">
+          <h3 class="quiz-question">7. If a downstream tool expects JSON-like fields instead of conversational text, what role does preprocessing play?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for tool calls by guessing the answer directly.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It translates a human request into the structured parameters the tool needs.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It converts the tool into a classifier.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The transition to deeper agents changes who decides the sequence: the developer less, the agent more." data-explanation-wrong="The session treated deepening autonomy as an orchestration shift, not as simply adding more specialists.">
+          <h3 class="quiz-question">8. What changes conceptually when the workflow moves from the current stage toward a deeper-agent design?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model stops using tools entirely.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The request context becomes less important because deep agents ignore memory.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system gives the agent more responsibility for planning call order and workflow decisions.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The hybrid approach keeps some orchestration at a higher level while granting more decision-making freedom inside sub-agents." data-explanation-wrong="The hybrid idea is neither full manual control nor unrestricted autonomy. It sits in between.">
+          <h3 class="quiz-question">9. What best describes the hybrid deep-agent pattern mentioned in the session?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The outer workflow still imposes some structure, but individual agents gain more internal autonomy.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system removes all specialists and only keeps a classifier.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The workflow becomes identical to the earliest no-tool notebook.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. Notebook 8 improved the request and usability; notebook 9 improved the structure and discipline of shared context." data-explanation-wrong="Both notebooks refined the workflow, but in different layers.">
+          <h3 class="quiz-question">10. How do notebook 8 and notebook 9 differ in the kind of problem they each address?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Notebook 8 handles UI colors, while notebook 9 handles finance APIs.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Notebook 8 improves input normalization and user-facing flow; notebook 9 improves the internal structure of shared multi-agent state.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Notebook 8 adds object detection, while notebook 9 adds image classification.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The normalizer had to do more than extract a symbol; it also needed a strategy for bad or irrelevant inputs so the workflow would fail gracefully." data-explanation-wrong="The session explicitly used off-domain questions to show that extraction alone is not enough.">
+          <h3 class="quiz-question">1. What deeper engineering issue was the instructor exposing by discussing non-stock queries during normalization?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Preprocessing needs both extraction logic and failure-handling logic, because not every user request belongs to the workflow's intended domain.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>All off-domain questions should still be force-mapped to a stock ticker.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The best fix is to remove natural-language input entirely.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The session framed prompt quality as a systems problem: better upstream context can improve outputs even before changing the model itself." data-explanation-wrong="The instructor did not equate prompt engineering with cosmetic wording only.">
+          <h3 class="quiz-question">2. Why does the session's view of prompt engineering matter architecturally, not just rhetorically?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because prompt engineering means adding more adjectives to make outputs sound confident.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because prompts matter only in workflows without tools.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because upstream retrieval, resolution, and context-building change what the model is actually reasoning over, which can improve results without changing model weights.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. Once multiple agents contribute partial outputs, shared memory becomes the thread that keeps the workflow coherent." data-explanation-wrong="The need for shared memory grows with coordination, not with the number of fonts in the notebook.">
+          <h3 class="quiz-question">3. Why did shared memory become such an important concept once the workflow involved multiple specialists and synthesis?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because each agent needed a different browser extension.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the system needs a reliable place to carry context and partial results across multiple coordinated steps.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because synthesis agents cannot read strings unless they are stored in tables.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. As the workflow grows more complex, accidental field changes or missing values in a loose dictionary become a bigger operational risk." data-explanation-wrong="The move to a structured model was not mainly about speed or syntax preference.">
+          <h3 class="quiz-question">4. Why does a structured context model become more valuable as a workflow gains more tool calls and sub-agents?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because stricter shared state reduces ambiguity and makes coordination failures easier to prevent and debug.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because only structured classes can hold prompts longer than one sentence.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because structured models force the agent to become fully autonomous.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The suggested experiment was a quality comparison: do better answers come from keeping high-level orchestration or from giving complete workflow autonomy?" data-explanation-wrong="The proposed comparison was not mainly about runtime or library complexity.">
+          <h3 class="quiz-question">5. What was the educational purpose of comparing the later hybrid notebook with the fuller-autonomy notebook?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To see which notebook has fewer imports.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To measure whether Pydantic classes load faster than dictionaries.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To test whether retained control or fuller autonomy produces better response quality for the same overall task.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The hybrid pattern is a deliberate compromise: keep some trustworthy scaffold while allowing more local autonomy inside it." data-explanation-wrong="Hybrid was not presented as identical to full manual orchestration or full agent freedom.">
+          <h3 class="quiz-question">6. Why might a hybrid deep-agent design be attractive according to the logic of this session?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it removes the need for any evaluation or testing.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it preserves a high-level scaffold where needed while still allowing sub-agents to make more nuanced decisions.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it guarantees fewer tool calls than any workflow.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. A default-to-Apple fallback can keep the code running, but it also risks silently producing nonsense for the wrong company." data-explanation-wrong="The problem is not that defaults are always forbidden. The problem is hidden semantic failure.">
+          <h3 class="quiz-question">7. Why is a blind default such as "just use Apple if resolution fails" dangerous in a normalization pipeline?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it can hide failure by producing a polished answer about the wrong target instead of surfacing that resolution failed.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Apple data cannot be queried through finance tools.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because defaults are only dangerous in image models, not agent workflows.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Collapsing the sequence behind one function is not just cosmetic; it turns a teaching graph into something closer to a usable interface." data-explanation-wrong="The change mattered because it simplified how a real user would interact with the workflow, not because it removed internal complexity.">
+          <h3 class="quiz-question">8. Why does wrapping the workflow into one user-facing function matter from a product-design perspective?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because users prefer reading more internal helper names before asking questions.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it converts the workflow into a vision model.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it hides orchestration details behind a simple interface while preserving the internal pipeline that makes the answer work.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The instructor's suggested process was empirical: run varied tests, see where resolution fails, and then tighten the logic." data-explanation-wrong="The session did not recommend assuming the first version was reliable enough without testing.">
+          <h3 class="quiz-question">9. What evaluation habit was being modeled when the instructor talked about queries that the normalizer fails to resolve correctly?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Always trust the first implementation if it works on one demo query.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Probe realistic edge cases, identify failure modes, and iterate on the preprocessing design.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Replace all preprocessing with manual user input after the first bug.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Across these notebooks, the course is gradually shifting responsibility from the programmer's explicit graph toward agent-managed decisions, but in stages." data-explanation-wrong="The progression was not a sudden jump from simple prompting to unconstrained autonomy. It was incremental.">
+          <h3 class="quiz-question">10. Looking across notebooks 7 through the later deep-agent previews, what overall transition is the session designing for?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A staged move from manually orchestrated workflows toward agent systems that can handle more of the planning themselves.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A move away from tools back to purely memorized model knowledge.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A move from text interfaces to image-only interfaces.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn" type="button" onclick="resetQuiz('quiz-section3')">Reset Section</button>
+      </div>
+    </div>
+  </div>
+</section>

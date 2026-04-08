@@ -1,0 +1,348 @@
+<section class="quiz-section" id="section-1">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">01</span>
+      <h1 class="section-title">Autonomy, Guardrails, and Project Fit</h1>
+      <p class="section-subtitle">This section focuses on when to let agents act on their own, and how that choice shapes project design.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">The session's first new idea was not "more autonomy at all costs"</h2>
+      <p>
+        After a brief recap, the instructor shifted into a fresh discussion about what changes when you move from a workflow agent to a deep agent.
+        In a workflow, the developer decides the graph and the sequence of steps. In a deep agent, the developer still chooses the tools and sets the high-level goal,
+        but the agent gets more freedom to plan the sequence and decide which tools to call.
+      </p>
+      <ul class="study-points">
+        <li>Autonomy can be useful, but learners repeatedly emphasized the need for guardrails, especially for higher-impact tasks.</li>
+        <li>Different components may deserve different autonomy levels; the right design depends on domain, risk, and expected outcomes.</li>
+        <li>Project ideas were judged partly by feasibility: API access, safe use of internal data, and whether public or synthetic data could stand in for classroom discussion.</li>
+        <li>The session encouraged practical project scoping: start with a workable pattern, avoid sharing Trane IP, and use one-on-one sessions to refine implementation details.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section1">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. A workflow is developer-orchestrated, while a deep agent gets more freedom to plan its own steps." data-explanation-wrong="Not quite. The key distinction was who decides the sequence and tool usage plan.">
+          <h3 class="quiz-question">1. What was the simplest contrast the instructor drew between a workflow agent and a deep agent?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A workflow has tools, but a deep agent has none.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A workflow follows a developer-set sequence, while a deep agent gets more planning autonomy.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A workflow can only answer text questions, while a deep agent can only answer image questions.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Learners said autonomy seems useful until it goes wrong, which is why guardrails matter." data-explanation-wrong="The discussion was not anti-autonomy. It was about using autonomy carefully and safely.">
+          <h3 class="quiz-question">2. Why did the class describe agent autonomy as "good until it's bad"?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because autonomous agents always refuse to use tools.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because autonomy only works in computer vision.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because freedom can help, but without constraints it can produce bad outcomes.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Even deep agents only have access to the tools the developer exposes." data-explanation-wrong="The session stressed that autonomy is partial, not unlimited. Tool access is still controlled.">
+          <h3 class="quiz-question">3. Even in deep agents, what major control does the developer still keep?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The developer chooses which tools the agent can access.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The developer manually writes every final answer for the agent.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The developer removes all prompts once the agent starts.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The instructor agreed that autonomy should vary by application, impact, and component." data-explanation-wrong="The session rejected a one-size-fits-all rule for autonomy.">
+          <h3 class="quiz-question">4. How did the class think about deciding autonomy levels?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every system should either be fully autonomous or fully manual.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Different tasks and components may deserve different levels of autonomy.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Autonomy only depends on how large the model is.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. API access was the first feasibility check for the release-readiness idea." data-explanation-wrong="The instructor did not start by asking about model size or labels. The first question was whether the agent could fetch the needed data.">
+          <h3 class="quiz-question">5. For the release-readiness idea, what was the first follow-up question from the instructor?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How many GPUs will the team need?</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Can the agent classify images of the release dashboard?</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Is there API access to Jira, release notes, and related systems?</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The class could help with setup, but Trane IP itself should not be shared." data-explanation-wrong="The restriction was about confidentiality, not banning internal tools entirely.">
+          <h3 class="quiz-question">6. What rule applied to projects using internal company data or tools?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use internal systems if needed, but do not share Trane IP in class discussions.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only public websites were allowed for every project.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every project had to be completed with no real data at all.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The weather-and-shades idea became more interesting because it depends on location, sun angle, weather, and house orientation." data-explanation-wrong="The instructor highlighted a mix of environmental and house-specific factors, not just a thermostat setpoint.">
+          <h3 class="quiz-question">7. What made the weather-and-shades comfort idea more than a generic automation problem?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It required blockchain data to work correctly.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It depends on weather, sun position, location, and how the house is oriented.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It only works if the house has no windows.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The thermostat scheduling idea was framed as a per-user pattern-learning problem." data-explanation-wrong="The idea was not to train one universal schedule for everybody.">
+          <h3 class="quiz-question">8. How was the thermostat scheduling model expected to be trained?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One model for all users, ignoring personal habits.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only on weather data, without thermostat behavior.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Per user, based on that person's historical setpoint changes.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The main caution was that on-device models small enough to fit might not be very capable." data-explanation-wrong="The issue was not that APIs were impossible. The concern was local resource limits.">
+          <h3 class="quiz-question">9. What was the main concern about running an LLM directly on the embedded device?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Models that fit the memory budget may not perform very well.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Embedded devices cannot make any HTTP requests.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Large models always run faster on smaller hardware.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Failure examples are rare, so skew and preprocessing were highlighted as the main modeling challenge." data-explanation-wrong="The session did not say the data was unusable. It said imbalance was the issue to handle.">
+          <h3 class="quiz-question">10. What key modeling challenge came up in the failure-prediction project idea?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>There would be too many failure examples and not enough healthy examples.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Failure cases are rare, so the data is skewed toward healthy equipment.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Sensor data cannot be used with machine learning models.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track active" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The meaningful shift was from a developer-authored graph to an agent that can plan more of the graph itself." data-explanation-wrong="The session did not define deep agents by model size or output type. It defined them by orchestration freedom.">
+          <h3 class="quiz-question">1. Which statement best captures the session's working definition of a deep agent?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A deep agent is any model with more parameters than a workflow agent.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A deep agent is given tools and a high-level goal, then gets more freedom to plan the sequence of work.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A deep agent is just a workflow that has more output fields.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The class leaned toward hybrid control because different components have different risk and impact." data-explanation-wrong="The discussion did not argue for removing all autonomy. It argued for calibrated autonomy.">
+          <h3 class="quiz-question">2. Why did the class lean toward a hybrid autonomy model rather than "let it run wild"?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because some parts of a system can tolerate more autonomy than others, so control should match risk.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because hybrid systems never use prompts or tools.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because full autonomy is impossible whenever APIs are available.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The release-readiness proposal was feasible because there was API access to the systems the agent needed to inspect." data-explanation-wrong="The session focused on data access and interoperability, not on training a new model from scratch.">
+          <h3 class="quiz-question">3. What made the release-readiness idea immediately plausible as an agent project?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It avoided all external systems and only required handwritten rules.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It already had a labeled image dataset.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It could pull from Jira, release notes, and related systems through available APIs.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The advice was: use internal tools if useful, but keep confidential company IP out of classroom sharing." data-explanation-wrong="The instructors did not ban internal stacks. They set a confidentiality boundary around them.">
+          <h3 class="quiz-question">4. If a learner wanted to build with AWS Bedrock and internal data, what was the instructor's position?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It was not allowed because the class only supports notebook projects.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It was allowed, but internal Trane IP should not be shared during class support.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It was required for all production-oriented projects.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The idea combines outdoor context with house-specific geometry and timing, which makes it a richer decision problem." data-explanation-wrong="The project was not framed as a generic thermostat schedule or a pure weather forecast.">
+          <h3 class="quiz-question">5. Why did the instructor find the shades-and-comfort idea compelling?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it combines location, sun path, weather, and house orientation into a practical control decision.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it avoids needing any APIs or environmental information.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it guarantees perfect comfort without deployment or testing.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The suggestion was to think per user and start with simpler models such as a random forest once data is available." data-explanation-wrong="The session did not recommend a global model trained on everybody's behavior as the first step.">
+          <h3 class="quiz-question">6. What modeling direction was suggested for personalized thermostat scheduling?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use one fixed schedule for all users and skip modeling.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Train a deep agent to browse the web instead of using thermostat data.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Train per user on historical setpoint changes, starting with lightweight models if possible.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. A remote LLM call through a REST interface looked realistic, while fitting a useful local model on-device looked harder." data-explanation-wrong="The class did not reject the project. It separated the internet-connected version from the local-on-device version.">
+          <h3 class="quiz-question">7. How did the class distinguish the embedded-device chatbot idea's easy path from its hard path?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The hard part was making any HTTP call at all, while local inference was trivial.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Calling an existing model over the network seemed feasible; fitting a capable local model on-device seemed challenging.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Both paths were ruled out because embedded devices cannot host UIs.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The instructor suggested starting with image classification and only later moving to detection if needed." data-explanation-wrong="YOLO and object detection were presented as possible later steps, not the mandatory first move.">
+          <h3 class="quiz-question">8. For the bullseye-from-a-drone project, what first simplification did the instructor suggest?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Treat it first as image classification: "is the target present, yes or no?"</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Skip classification and start with full 3D scene reconstruction.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use only language prompts, not computer vision models.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The warning was about imbalance: if failure is rare, naive training can miss the minority class." data-explanation-wrong="The concern was not lack of any data. It was class imbalance inside the data.">
+          <h3 class="quiz-question">9. Why would the failure-prediction idea likely need preprocessing before modeling?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because sensor data always has to be converted into images first.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because random forests only work on balanced image classes.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the rare-failure class can be overwhelmed by the many healthy examples.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The class emphasized that building workflows is only part of the job; evaluating them is also essential." data-explanation-wrong="The session explicitly said evaluation would be discussed later and matters for these projects.">
+          <h3 class="quiz-question">10. What project skill did the instructor say would still need explicit attention later in the course?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Memorizing stock tickers from Yahoo Finance.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Evaluating how good an agentic workflow actually is.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Choosing one universal autonomy rule for every domain.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The analogy was that people once hand-coded many rules, then deep learning succeeded by letting the model discover features from data." data-explanation-wrong="The point of the analogy was not that deep agents already have infinite freedom. It was about the shift from manual structure to learned or chosen structure.">
+          <h3 class="quiz-question">1. What did the instructor's cat-detection analogy imply about agent autonomy?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As systems mature, hand-crafted rules may give way to giving the model more responsibility for finding the right internal strategy.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Deep agents should only be used for image tasks, not language tasks.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Autonomy is safe only when the model has no tools.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The class framed current deep agents as a controlled middle ground: freedom inside a bounded tool set." data-explanation-wrong="The session explicitly rejected the idea that deep agents already have access to everything.">
+          <h3 class="quiz-question">2. Which description best matches the session's practical stance on today's deep agents?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are already fully autonomous systems with no developer-imposed limits.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are currently closer to hybrids: more autonomous than workflows, but still bounded by prompts and tool access.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are just workflows that can never spawn sub-agents.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The guidance was to separate classroom-safe examples from confidential internal use, not to avoid internal deployment entirely." data-explanation-wrong="The instructors did not require public-only deployment, and they did not say all internal code was off-limits.">
+          <h3 class="quiz-question">3. What principle best generalizes the class's advice about internal projects?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Never use internal tools when learning agent patterns.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only discuss production systems if the full private dataset is shared with the class.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use synthetic or public stand-ins for discussion, then apply the same code internally through normal company processes.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The class argued that autonomy should vary by component because the risks and outcomes differ across a system." data-explanation-wrong="The reasoning was not that users dislike autonomy in general. It was about matching autonomy to impact.">
+          <h3 class="quiz-question">4. If one subsystem can cause costly mistakes while another is low risk, what design judgment from the session follows?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use different autonomy levels for different components instead of forcing one policy everywhere.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Always remove tool access from both components.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only use classical ML because agents cannot be bounded.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The instructor explicitly said the release-readiness concept could likely be implemented as either a deep agent or a workflow agent." data-explanation-wrong="The session did not force that idea into exactly one architecture category.">
+          <h3 class="quiz-question">5. How did the instructor classify the release-readiness proposal architecturally?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It had to be a fully autonomous deep agent and could not be a workflow.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It could plausibly be built either as a workflow agent or a deep agent.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It was purely a supervised learning project with no agentic component.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The deeper point was that house management decisions depend on contextual factors that unfold over time, not just instantaneous temperature." data-explanation-wrong="The project was not framed as a simple weather alert or a fixed thermostat schedule.">
+          <h3 class="quiz-question">6. Why did the instructor say living in a house for a full year helps you understand the shades-and-sun problem?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because yearly occupancy is required before any weather API works.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the thermostat hardware calibrates itself over twelve months.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because sun angle, seasonal shifts, and house geometry create patterns you only understand across time.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The tradeoff was between practical network-based inference and the difficulty of fitting a good local model on constrained hardware." data-explanation-wrong="The session did not argue that local inference is always pointless. It argued that capability under resource limits is the issue.">
+          <h3 class="quiz-question">7. What is the clearest tradeoff in the embedded-device idea as discussed in class?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote inference is easier to make useful, while local inference is more self-contained but harder to make capable on the given hardware.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote inference is impossible, while local inference is guaranteed to be high quality.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The only real decision is whether to add a UI theme.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Classification answers presence/absence, while object detection localizes with boxes, possibly multiple." data-explanation-wrong="The two tasks differ by output structure, not by whether the input comes from a drone.">
+          <h3 class="quiz-question">8. What distinction did the instructor draw between image classification and object detection for the drone target idea?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Classification requires a Raspberry Pi, while detection requires a Jetson Nano.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Classification gives a yes/no judgment, while detection also localizes the object with bounding boxes.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Classification uses public data, while detection cannot use transfer learning.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. If the model sees overwhelmingly healthy examples, it may minimize loss by under-detecting the rare but important failures." data-explanation-wrong="The issue is not just slower training. It is distorted learning priorities from the imbalance.">
+          <h3 class="quiz-question">9. In the 99%-healthy / 1%-failure scenario, what is the main risk the instructor was warning about?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model can appear accurate overall while still performing poorly on the rare failure cases that matter most.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model will automatically become a deep agent instead of a classifier.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model cannot use random forests under any class imbalance.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The one-on-one sessions were framed as a bridge from interesting idea to workable starting implementation." data-explanation-wrong="They were not described as grading meetings or requirements changes.">
+          <h3 class="quiz-question">10. What role were the planned one-on-one sessions supposed to play in the project process?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They were meant to replace all later course sessions.</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They were only for reviewing personal resumes and interview prep.</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They were meant to help learners answer project-specific questions and get started with concrete implementation details.</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn" type="button" onclick="resetQuiz('quiz-section1')">Reset Section</button>
+      </div>
+    </div>
+  </div>
+</section>
