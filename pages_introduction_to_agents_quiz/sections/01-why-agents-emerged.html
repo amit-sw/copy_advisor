@@ -1,0 +1,347 @@
+<section class="quiz-section" id="section-1">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">01</span>
+      <h1 class="section-title">Why Agents Emerged</h1>
+      <p class="section-subtitle">The deck starts with the market moment, then shows why a single giant prompt was an intuitive but limited first move.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">The opening argument is about structure, not hype</h2>
+      <p>
+        The presentation frames agentic AI as mainstream, then narrows to one concrete use case: customer support in 2024, when ChatGPT was popular and APIs were mature enough to build with.
+        The first instinct was a big monolith: one "grand prompt" expected to cover status requests, complaints, happy-customer moments, polite small talk, and even handoff to human agents.
+      </p>
+      <ul class="study-points">
+        <li>The speaker distinguishes two broad styles early: workflow agents and autonomous agents.</li>
+        <li>This deck intentionally focuses on workflow agents and defers autonomous agents to later.</li>
+        <li>The monolith slide is visual but important: it shows one prompt being stretched across multiple support intents.</li>
+        <li>The motivating problem is not abstract research; it is a practical support system that must handle different user needs.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section1">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The deck says the two dominant styles are workflow and autonomous agents." data-explanation-wrong="The opening overview names workflow and autonomous as the two dominant styles.">
+          <h3 class="quiz-question">1. Which two agent styles does the overview call dominant?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Reactive and predictive</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Workflow and autonomous</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Centralized and distributed</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The speaker says the focus today is on workflow agents." data-explanation-wrong="The deck explicitly postpones autonomous agents and focuses on workflow agents.">
+          <h3 class="quiz-question">2. Which agent style is the main focus of this deck?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Autonomous agents</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Robotic agents</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Workflow agents</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The 2024 setup is about using AI for customer support." data-explanation-wrong="The motivating scenario is customer support, not coding assistants or gaming.">
+          <h3 class="quiz-question">3. What practical problem is used to motivate the architecture discussion?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Building AI for customer support</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Training a model for autonomous driving</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Generating marketing images</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The monolith slide says to create a single grand prompt to cover all use cases." data-explanation-wrong="The first attempt was not a team of specialists. It was one large prompt covering everything.">
+          <h3 class="quiz-question">4. What was the first architectural attempt shown in the deck?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A graph of five specialist agents</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A single grand prompt covering all support cases</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A database-first rule engine with no model</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. One example use case on the monolith slide is status requests like 'Where is my product?'" data-explanation-wrong="The slide explicitly includes status requests as one of the support intents.">
+          <h3 class="quiz-question">5. Which request appears on the monolith slide as an example support intent?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>'Can you refactor my Python package?'</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>'Can you summarize this research paper?'</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>'Where is my product?'</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The visual slide includes complaints as one of the cases the grand prompt should handle." data-explanation-wrong="Complaints are one of the listed support categories on the monolith slide.">
+          <h3 class="quiz-question">6. Besides status requests, which other customer-support case is explicitly listed on the monolith slide?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Complaints about a product not working</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Hardware device provisioning</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Long-form legal contract review</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The slide also expects polite chatter and referral to human agents when needed." data-explanation-wrong="The grand-prompt idea includes conversational politeness and possible human handoff.">
+          <h3 class="quiz-question">7. What conversational behavior did the monolith prompt also need to cover?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only terse one-word replies</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Polite chatter and referral to human agents if needed</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Strict refusal to answer any off-script question</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The deck positions agentic AI as already widespread, including products from Google, OpenAI, and Anthropic." data-explanation-wrong="The opening says agentic AI is already everywhere, not a distant future concept.">
+          <h3 class="quiz-question">8. How does the deck frame agentic AI at the start?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a niche topic used only in academia</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As mostly irrelevant to mainstream tools</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As already widespread across major AI products</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The 2024 framing mentions that APIs are well established." data-explanation-wrong="The 2024 slide explicitly says APIs are now well established.">
+          <h3 class="quiz-question">9. What technical condition on the 2024 slide helps make building support agents feel realistic?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>APIs are well established</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Context windows are infinite</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Customers no longer need human support</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The happy-customer example is framed as a chance to gather testimonials." data-explanation-wrong="The slide mentions happy customers specifically in connection with possible testimonials.">
+          <h3 class="quiz-question">10. Why does the monolith slide mention a happy customer as a separate support case?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because happy customers should always be ignored</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the system might use the moment to ask for testimonials</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because sentiment analysis replaces all routing logic</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The deck narrows from the broad AI landscape to one concrete support scenario so the later architecture discussion has a real use case." data-explanation-wrong="The opening is not just scene-setting. It creates a practical reason to discuss architecture.">
+          <h3 class="quiz-question">1. Why does the deck move from 'agentic AI is everywhere' to a 2024 customer-support example so quickly?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To anchor the architecture discussion in a concrete business problem instead of leaving it abstract</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To prove that customer support is the only valid AI application</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To avoid discussing different agent styles altogether</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The first architecture assumes one prompt can unify multiple behaviors and use cases in one place." data-explanation-wrong="The grand-prompt design is about centralizing many behaviors, not specializing them.">
+          <h3 class="quiz-question">2. What assumption sits underneath the 'big monolith' idea?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every support case should have a separate model provider</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Support systems work best with no prompts at all</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One prompt can absorb many distinct support intents and behaviors</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The visual slide matters because it shows the breadth of responsibilities being loaded into the same prompt." data-explanation-wrong="The monolith image is not decorative. It conveys how many responsibilities are being fused together.">
+          <h3 class="quiz-question">3. What does the image-heavy monolith slide add beyond the short title text?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves the system already has specialist routing</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows the range of intents the one prompt is supposed to absorb</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows that tools are unnecessary in support systems</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Workflow versus autonomous is introduced so the audience knows which style the rest of the deck is about." data-explanation-wrong="The distinction is used to scope the talk, not to say both styles are equivalent here.">
+          <h3 class="quiz-question">4. Why is the workflow-versus-autonomous distinction introduced before any implementation detail?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To define the design space and narrow the discussion to workflow agents</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To argue that autonomous agents are impossible to build</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To show that model providers only support one style</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The listed use cases mix informational, emotional, and escalation behavior, which makes the monolith broad in scope." data-explanation-wrong="The slide's examples are not all of the same type; that diversity is part of the point.">
+          <h3 class="quiz-question">5. Why is it significant that the monolith slide combines status checks, complaints, testimonials, and polite chatter?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It means every support interaction is fundamentally identical</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows the prompt is being asked to span very different intents and response styles</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves the model already has perfect routing built in</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The 2024 setup makes building feel feasible because popular chat products exist and API access is mature." data-explanation-wrong="The deck is not claiming the problem is solved. It is saying the conditions make experimentation realistic.">
+          <h3 class="quiz-question">6. What message does the 2024 slide send about the timing of building an AI support system?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The market is too early because APIs are still immature</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The problem should wait until autonomous agents are standardized</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The ecosystem is mature enough that trying to build is reasonable now</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Human handoff appearing on the first architecture slide implies the system already has to manage not just answers, but escalation decisions too." data-explanation-wrong="The presence of human handoff broadens the responsibility of the monolith rather than narrowing it.">
+          <h3 class="quiz-question">7. What does the mention of human escalation imply about the first monolithic design?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It must handle decision logic about when not to answer directly</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for tone and politeness</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows the system is already modular</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The deck's opening is basically a narrowing funnel: broad ecosystem, concrete use case, then first architecture attempt." data-explanation-wrong="The early slides are sequenced to progressively narrow the problem, not to jump randomly between ideas.">
+          <h3 class="quiz-question">8. Which description best matches the logic of the first four slides?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Definition, implementation, benchmarking, deployment</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Landscape, concrete business scenario, then initial architectural response</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Dataset review, fine-tuning plan, then UI polish</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. A single support chatbot often sounds simple until you enumerate the very different tasks it must perform." data-explanation-wrong="The section is not arguing that support is trivial. It is surfacing hidden complexity.">
+          <h3 class="quiz-question">9. What broader lesson is the speaker setting up by showing many support intents on one slide?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That customer support should never use AI</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That every task deserves its own model provider contract</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That apparently simple systems can hide multiple distinct reasoning and response modes</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The deck uses popular products to establish relevance, not to say their internal designs are identical to the example system." data-explanation-wrong="The examples support the claim that agentic AI matters now; they are not claiming identical architectures.">
+          <h3 class="quiz-question">10. Why mention products like Gemini, NotebookLM, Codex, and Claude Code in the overview?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To establish that agentic behavior is already part of mainstream AI products</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To show that all of them use the exact same prompt template</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To argue that vendor choice matters more than architecture</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The opening slides frame architecture as a response to expanding behavioral scope, not just a matter of model quality." data-explanation-wrong="The deck is moving toward an architectural argument about organizing behavior, not just tuning a model.">
+          <h3 class="quiz-question">1. What deeper design pressure is already visible before the deck ever names modular engineering?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The need to switch cloud vendors every quarter</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The need to organize many different support behaviors without collapsing them into one indistinct blob</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The need to eliminate prompts entirely from the system</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The monolith is compelling because centralization feels simpler at first, especially when one wants quick coverage across many intents." data-explanation-wrong="The initial attraction of a monolith is simplicity and speed of setup, not fine-grained control.">
+          <h3 class="quiz-question">2. Why is the 'single grand prompt' idea so plausible as a first attempt?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because centralizing instructions promises fast initial setup and broad coverage before complexity becomes obvious</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it guarantees perfect separation of responsibilities</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because support systems never need escalation logic or tone control</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Mixing complaint handling, logistics, sentiment, and escalation means the architecture question is really about behavior composition." data-explanation-wrong="The breadth of intents points to composition and coordination problems, not just token cost.">
+          <h3 class="quiz-question">3. Why does the visual monolith slide matter architecturally rather than just rhetorically?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because icons on slides are better than bullet points</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it proves the team already built graph routing</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it reveals the system is trying to compose multiple kinds of work inside one undifferentiated prompt</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The workflow-versus-autonomous distinction acts as a scoping boundary, so later design choices are interpreted in the intended regime." data-explanation-wrong="The deck is not treating the distinction as trivia. It sets the interpretation of every later example.">
+          <h3 class="quiz-question">4. In design terms, what role does the workflow-versus-autonomous distinction play in the opening?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It serves mainly as vendor marketing language</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It defines the operating assumptions for the rest of the architecture discussion</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It eliminates the need to talk about routing later</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Mentioning happy customers and testimonials shows the system is not only reactive problem-solving; it also handles opportunity capture and tone." data-explanation-wrong="The happy-customer example broadens the system's role rather than narrowing it to issue resolution.">
+          <h3 class="quiz-question">5. What is the significance of including 'happy customer' and testimonials among the early use cases?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows the system spans service recovery, logistics, relationship management, and business opportunity capture</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows the model should avoid all negative interactions</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves feedback should bypass the main support system entirely</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The early 2024 slide establishes feasibility and urgency, which makes the later architectural tradeoffs feel like implementation choices rather than science fiction." data-explanation-wrong="The slide is not just nostalgia. It supplies the practical context that makes architecture worth discussing now.">
+          <h3 class="quiz-question">6. Why is the 2024 framing important to the argument's pacing?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it proves autonomous agents were already solved in 2024</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it eliminates the need to compare architectures</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes the problem feel timely and buildable, so structure becomes the real challenge</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Human escalation means the system needs judgment about capability boundaries and business process, not just answer generation." data-explanation-wrong="Escalation introduces decision-making about when the AI should stop or transfer, which is more than language generation.">
+          <h3 class="quiz-question">7. What hidden complexity does 'refer user to human agents if needed' add to the supposed one-prompt system?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It eliminates the need for any internal state</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It requires the system to reason about boundaries, confidence, and handoff conditions</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees users will never ask complaints or status questions</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The opening sequence primes the audience to see the later modular proposal as an answer to coordination complexity, not mere stylistic preference." data-explanation-wrong="The deck is setting up a concrete problem that later sections solve with structure.">
+          <h3 class="quiz-question">8. How does the deck make the later move to workflow agents feel justified rather than arbitrary?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By first showing a real scenario whose breadth makes a one-prompt design feel strained</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By proving that no prompt can ever answer customer questions</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By banning all use of APIs in support systems</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The speaker is not only explaining technology; they are showing how a business problem naturally creates architectural responsibilities." data-explanation-wrong="The core lesson is about mapping business needs to system structure, not memorizing vendor names.">
+          <h3 class="quiz-question">9. What is the best architectural reading of the opening section?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Choose whichever provider has the most product announcements</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prefer visual slides over all text slides</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Translate business intent diversity into a system-design problem about organization and control</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. 'Workflow today, autonomous later' implies a staged curriculum where controlled orchestration is learned before looser autonomy." data-explanation-wrong="The sequencing matters: workflow concepts are being positioned as foundational.">
+          <h3 class="quiz-question">10. What teaching choice is embedded in the line 'we will cover Autonomous Agents later'?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That autonomous agents are unrelated to workflow ideas</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That understanding orchestrated workflow systems is the foundation for later discussions of autonomy</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That workflow agents never use models or prompts</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn" type="button" onclick="resetQuiz('quiz-section1')">Reset Section</button>
+      </div>
+    </div>
+  </div>
+</section>
