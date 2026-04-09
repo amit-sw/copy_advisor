@@ -1,0 +1,347 @@
+<section class="quiz-section" id="section-5">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">05</span>
+      <h1 class="section-title">Shared State, Routing, and Tools</h1>
+      <p class="section-subtitle">The workflow only works because the agents are coordinated through shared state, conditional routing, and explicit control-flow rules.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">These agents do not chat freely with each other; they coordinate through orchestration state</h2>
+      <p>
+        The communication slides emphasize that this design is indirect. A classifier writes fields like category into shared state, a router reads that state, and the chosen downstream agent reads the same messages before writing a response back.
+        The control-flow code shows the same idea in graph form: start goes to classifier, the classifier uses conditional edges, downstream specialists end the workflow, and LangGraph provides the graph machinery. Tool usage fits into this same structure, even though the example status agent used a more brute-force version.
+      </p>
+      <ul class="study-points">
+        <li>The deck says this is specific to LangGraph choices, but also a good design pattern.</li>
+        <li>One shared state object solves the parameter-passing problem across functions.</li>
+        <li>The example AgentState includes messages, response, and category.</li>
+        <li>The tool-usage slide distinguishes a brute-force approach from the more typical conditional tool-calling pattern supported by LLM APIs.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section5">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The deck says the communication design shown is specific to choices made in LangGraph." data-explanation-wrong="The communication slide explicitly mentions that the design is specific to LangGraph choices.">
+          <h3 class="quiz-question">1. Which framework does the deck name when discussing its communication design choices?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>React</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>LangGraph</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>TensorFlow</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The deck says you could do things differently, even though it presents this as a good design." data-explanation-wrong="The slide notes that other communication designs are possible.">
+          <h3 class="quiz-question">2. How does the deck qualify the communication design it is presenting?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is one good design, but not the only possible one</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is the only way any agents can communicate</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It only works for autonomous agents</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The communication-layer slide says each agent is a Python function." data-explanation-wrong="The deck explicitly describes each agent as a Python function in this example.">
+          <h3 class="quiz-question">3. In the communication-layer slide, what is each agent modeled as?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A separate database cluster</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A browser tab</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A Python function</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The slide says the functions can accept arbitrary parameters, which creates the coordination problem." data-explanation-wrong="The parameter-passing question starts from the fact that functions could accept arbitrary parameters.">
+          <h3 class="quiz-question">4. What challenge does the communication-layer slide raise about agent functions?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They cannot produce text outputs</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They can accept arbitrary parameters, so the infrastructure needs a consistent way to pass information</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They cannot share any data with each other</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The stated solution is one single shared state object." data-explanation-wrong="The slide explicitly proposes one shared state object as the solution.">
+          <h3 class="quiz-question">5. What solution does the deck give for passing information across agents consistently?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use one shared state object</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Make each agent invent its own argument list</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Store everything only in browser cookies</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. Every function has the same signature in the proposed design." data-explanation-wrong="The slide says every function has the same signature because they share the state object pattern.">
+          <h3 class="quiz-question">6. What does the shared-state design let the functions share structurally?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The same hard-coded response</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The same cloud account</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The same function signature</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The AgentState slide lists messages, response, and category." data-explanation-wrong="Those three fields are explicitly shown in the AgentState example.">
+          <h3 class="quiz-question">7. Which field appears in the example AgentState class?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>category</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>embedding_model</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>temperature</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The diagram shows the classifier writing category into shared state." data-explanation-wrong="The classifier writes category into shared state in the visual communication diagram.">
+          <h3 class="quiz-question">8. According to the shared-state routing diagram, what does the classifier write into state?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The final user response</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The category</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The entire workflow graph definition</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The main router reads the category from state and routes to a downstream agent." data-explanation-wrong="The main router's job is to read the category and decide the downstream branch.">
+          <h3 class="quiz-question">9. What does the main router do in the communication diagram?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It changes the user message text directly</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It trains a new model</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It reads the category and routes to the appropriate downstream agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The tool-use slide says the example brute-forced tool usage in the status agent, though usually tool calls are conditional." data-explanation-wrong="The deck says the example status agent brute-forced tools, but that conditional tool use is more typical.">
+          <h3 class="quiz-question">10. How does the deck describe the example's current tool usage?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It was brute-forced in the status agent, even though conditional tool calls are more typical</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It avoided tools entirely</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It used a separate tool router agent not shown elsewhere</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The deck explicitly says this is not agent-to-agent chat; it is state-based coordination inside an orchestration graph." data-explanation-wrong="The communication slide's core point is that coordination is indirect through shared state and routing.">
+          <h3 class="quiz-question">1. What is the most important communication principle taught by the shared-state diagram?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Agents should send direct peer-to-peer messages to each other whenever possible</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Agents coordinate indirectly through shared state and routing rather than free-form mutual chat</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only the main router should ever read user messages</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The shared state solves the interface problem by giving every function a common parameter structure." data-explanation-wrong="The main benefit is interface simplification and consistency across agents.">
+          <h3 class="quiz-question">2. Why does a single shared state object solve the parameter-passing problem elegantly?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because each agent can accept the same shape of input while reading only the fields it needs</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it removes the need for routing decisions</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it forces every agent to use the same prompt text</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The state object is updated as the workflow progresses, making it the medium for information transfer between stages." data-explanation-wrong="The state is not static metadata; it is the evolving context of the workflow.">
+          <h3 class="quiz-question">3. Why does the deck emphasize that the state object is updated by each function as the workflow progresses?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because updates are only needed to satisfy Python syntax</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it avoids the need for any output fields</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the evolving state is how one stage's output becomes the next stage's usable context</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The control-flow code shows a conditional edge from classifier to the router logic, which is how branching becomes explicit in the graph." data-explanation-wrong="The graph uses conditional edges to represent routing decisions after classification.">
+          <h3 class="quiz-question">4. What is the significance of the control-flow code using a conditional edge from the classifier?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It means the classifier writes no state at all</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It encodes that the next step depends on classification results rather than a fixed path</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It means all downstream agents execute in parallel by default</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The AgentState fields shown are minimal but purposeful: messages carry context, category supports routing, and response captures output." data-explanation-wrong="Each listed field has a clear role in the workflow.">
+          <h3 class="quiz-question">5. How do the example AgentState fields map onto workflow needs?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>messages preserve context, category supports routing, and response stores the produced answer</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>messages store cloud credentials, category stores model weights, and response stores source code</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are placeholders with no real function in the workflow</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Saying the downstream agent reads the same state.messages reinforces that communication happens through shared context, not direct hand-crafted message passing between agents." data-explanation-wrong="The slide is emphasizing shared context access rather than agent-to-agent direct messaging.">
+          <h3 class="quiz-question">6. Why does the diagram call out that the chosen downstream agent reads the same state.messages?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because downstream agents are not allowed to see user messages</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the main router always rewrites the user message first</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the workflow uses shared context as the communication medium across stages</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The final line on the communication diagram says the design is state-based coordination inside an orchestration graph." data-explanation-wrong="That concluding sentence is the diagram's main lesson.">
+          <h3 class="quiz-question">7. What does the diagram mean by saying the system is 'state-based coordination inside an orchestration graph'?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Agents continuously chat with each other using natural language</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The graph controls execution while a shared state object carries the information between stages</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The whole workflow is really just one static prompt with no branching</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The status-agent example is intentionally imperfect; the deck uses it to introduce the more general pattern of conditional tool use." data-explanation-wrong="The point is not that brute-force tools are ideal. It is that there is a better common pattern.">
+          <h3 class="quiz-question">8. Why does the deck mention that the status agent 'brute-forced' tool usage?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To contrast the current implementation with the more typical design where tools are called conditionally</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To argue that brute-force tool use is always best practice</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To show that tool use and workflows are unrelated topics</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Saying tool support is built into LLM APIs means tool use can be integrated into the same orchestration story rather than bolted on externally." data-explanation-wrong="The slide is pointing out that modern LLM APIs can participate directly in conditional tool invocation.">
+          <h3 class="quiz-question">9. What does the 'built-in support in the LLM APIs' line imply about tool usage?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That tools should only be handled outside the model layer</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That only autonomous agents can call tools</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That conditional tool calling can be supported directly by the model interface the workflow uses</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. This section is where the workflow becomes operationally real: interfaces, state, routing, and execution logic all appear together." data-explanation-wrong="The section turns the architecture from a picture into an execution model.">
+          <h3 class="quiz-question">10. What is this section's main role in the overall deck?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To replace the workflow graph with one long prompt</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To explain the concrete coordination mechanics that make the workflow architecture executable</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To prove that shared state is only useful in customer support</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The key architectural claim is that coordination should be mediated and observable through state and routing rather than hidden inside free-form inter-agent exchanges." data-explanation-wrong="The section argues for explicit orchestration-mediated coordination, not unconstrained peer chat.">
+          <h3 class="quiz-question">1. What deeper design principle is embedded in the phrase 'not agent-to-agent chat'?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Coordination should be explicit, mediated, and inspectable through orchestration state rather than opaque peer exchanges</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Agents should never access the same user messages</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Routing is unnecessary once agents have prompts</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. A shared state object acts like a common interface contract across heterogeneous agent functions, reducing bespoke parameter wiring." data-explanation-wrong="The benefit is not just convenience; it is a stable contract across components.">
+          <h3 class="quiz-question">2. Architecturally, what does the shared state object function as?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A replacement for the workflow graph</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A database that permanently stores every user conversation</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A stable interface contract that lets many functions cooperate without bespoke argument plumbing</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The classifier writes category, the router reads it, and the downstream agent writes a response back, so state serves as the handoff medium across phases." data-explanation-wrong="The diagram shows state as the medium that carries outputs from one stage into decisions and outputs at later stages.">
+          <h3 class="quiz-question">3. Why is the category field especially important in the shared-state pattern shown here?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it replaces the need to keep messages</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it is the routing signal that turns classification output into graph control flow</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it stores tool call results permanently</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Conditional edges are the graph-level expression of decision logic, making branching explicit in orchestration rather than hidden in prose." data-explanation-wrong="The control-flow code is teaching that branching should be represented explicitly in the orchestration graph.">
+          <h3 class="quiz-question">4. What is the key architectural value of using conditional edges in the control-flow code?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They make decision-driven branching explicit in the graph instead of burying it inside one giant prompt</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They guarantee that downstream agents never need state</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They force every agent to run asynchronously</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Messages, category, and response together form a minimal working schema for context, routing, and output, which are the core workflow needs." data-explanation-wrong="Those fields are deliberately small but sufficient to demonstrate the workflow pattern.">
+          <h3 class="quiz-question">5. Why is the example AgentState schema so small?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because LangGraph does not allow additional fields</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the deck is trying to hide implementation details</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it is illustrating the minimum shared schema needed to carry context, route work, and emit results</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. Saying 'you could do things differently' matters because it separates the underlying design principle from any one framework-specific API surface." data-explanation-wrong="The deck is teaching a pattern, not insisting that only one implementation library can embody it.">
+          <h3 class="quiz-question">6. Why does the deck bother to say that the communication design is specific to LangGraph and could be done differently?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the presenter thinks the design is weak and temporary</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the underlying architecture pattern should be distinguished from any one framework's exact implementation details</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because frameworks make routing impossible to express clearly</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The tool-use slide expands the architecture from pure routing toward action-taking: some branches may need to invoke external capabilities conditionally." data-explanation-wrong="Tool use is part of the orchestration story because it changes what an agent may do, not just what it says.">
+          <h3 class="quiz-question">7. How does the tool-use slide deepen the architecture rather than merely add an implementation footnote?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows that workflow nodes may conditionally take external actions, so orchestration governs capabilities as well as responses</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves only the status agent matters in the graph</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It argues that routing and tools should be kept unrelated</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The contrast between brute-force and conditional tools implies a maturity path: move from ad hoc integration toward policy-driven invocation." data-explanation-wrong="The slide is contrasting a quick implementation with a more principled tool-calling strategy.">
+          <h3 class="quiz-question">8. What improvement path is implied by the contrast between brute-force and conditional tool use?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remove tool usage from the workflow entirely</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Shift from hard-coded or always-on tool behavior toward decision-aware tool invocation inside the workflow</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Move all routing logic into the tool layer</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. This section makes the workflow legible: what data moves, who decides next steps, and where outputs land." data-explanation-wrong="The core contribution is operational legibility, not just more syntax examples.">
+          <h3 class="quiz-question">9. What problem would remain unsolved if the deck stopped after the earlier topology section and skipped this coordination section?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>We would not know the names of the specialist agents</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>We would not know the color of the workflow nodes</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>We would know the roles, but not the concrete mechanism by which data and decisions move through the system</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The broad lesson is that good workflow-agent systems depend on explicit contracts for state, control flow, and optional action-taking, not on implicit coordination." data-explanation-wrong="The section's biggest lesson is explicit orchestration discipline.">
+          <h3 class="quiz-question">10. What is the most general engineering takeaway from this final section?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Agent workflows become robust when state shape, routing rules, and capability invocation are expressed explicitly as part of the system contract</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Agent coordination works best when each node invents its own interface independently</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Shared state is mainly a presentation detail for slides rather than a design tool</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn" type="button" onclick="resetQuiz('quiz-section5')">Reset Section</button>
+      </div>
+    </div>
+  </div>
+</section>
