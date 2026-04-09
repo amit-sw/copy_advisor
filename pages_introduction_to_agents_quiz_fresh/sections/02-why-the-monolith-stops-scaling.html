@@ -1,0 +1,344 @@
+<section class="quiz-section" id="section-2">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">02</span>
+      <h1 class="section-title">Why the Monolith Stops Scaling</h1>
+      <p class="section-subtitle">The deck shows why one giant prompt feels attractive at first, then details the practical limits that make it fragile.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">The monolith is appealing because it is simple, but simplicity collapses as requirements spread</h2>
+      <p>
+        The first attempt is a single support prompt that contains brand tone, multiple policy sections, and access to tools.
+        That design is easy to start with and can work for straightforward requests, but the deck argues that its weaknesses emerge as the system grows.
+        Limited context windows, instruction overload, maintenance strain, and multi-step tasks all push against the one-big-prompt strategy.
+      </p>
+      <ul class="study-points">
+        <li>The monolith bundles header guidance, policies, and tooling in one place.</li>
+        <li>Its strengths are speed, simplicity, and decent performance on easy tasks.</li>
+        <li>Its limitations show up under scale, complexity, and ongoing maintenance.</li>
+        <li>The problem is not just prompt length; it is operational manageability.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section2">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The monolith structure includes a header with instructions like 'be polite' and stay on-brand." data-explanation-wrong="The monolith slide explicitly includes a header for general behavioral guidance such as politeness and brand tone.">
+          <h3 class="quiz-question">1. What kind of guidance appears in the monolith's header?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>General behavior rules such as being polite and on-brand</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only GPU allocation rules</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only customer shipping addresses</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The structure slide mentions multiple policy sections, one for each use case." data-explanation-wrong="The monolith organizes guidance into multiple policy sections for different cases.">
+          <h3 class="quiz-question">2. How are use-case rules organized inside the monolith?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are removed to keep the prompt short</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They appear as multiple policy sections</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are stored only in browser cookies</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The monolith also includes tooling so it can check systems such as shipping status." data-explanation-wrong="Tooling is part of the monolith because the agent may need to inspect external systems.">
+          <h3 class="quiz-question">3. Why does the monolith include tooling?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To render CSS themes</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To avoid any external data access</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To query systems such as shipping when needed</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The good side of the monolith is that it is simple to set up." data-explanation-wrong="One benefit named explicitly is setup simplicity.">
+          <h3 class="quiz-question">4. Which benefit of the monolith is named directly in the deck?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is simple to set up</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees perfect routing</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes all maintenance work</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The deck also says monoliths are generally fast." data-explanation-wrong="Speed is listed as one of the monolith's advantages.">
+          <h3 class="quiz-question">5. Besides simplicity, what operational strength does the monolith have?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It automatically adds specialists</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is generally fast</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It eliminates the need for any instructions</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The deck says monoliths work well for simple requests." data-explanation-wrong="The monolith is described as effective for simpler requests, not for every kind of workload.">
+          <h3 class="quiz-question">6. For what kind of work does the monolith perform reasonably well?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only tasks requiring parallel graphs</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only tasks with many internal handoffs</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Simple requests</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The deck mentions typical context windows around 8,000 tokens, including both input and output." data-explanation-wrong="The slide cites a typical 8,000-token context window, counting input and output together.">
+          <h3 class="quiz-question">7. What context-window size is mentioned as a practical limitation?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>About 8,000 tokens</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>About 80,000 tokens</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>About 800,000 tokens</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The deck says LLMs tended to make more mistakes when given lots of directions." data-explanation-wrong="Instruction overload is named as a reason the monolith becomes error-prone.">
+          <h3 class="quiz-question">8. What happens when the model is given too many directions in one place?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It always becomes more precise</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It tends to make more mistakes</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It stops needing tools</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The deck says monoliths are hard to maintain and reason through as more use cases are added." data-explanation-wrong="Maintenance difficulty grows as the number of cases rises.">
+          <h3 class="quiz-question">9. Why does adding a fifth or tenth use case become a problem for the monolith?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the support team disappears</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools can no longer be called</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the prompt gets harder to maintain and reason about</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The deck also questions whether a monolith can handle requests that require several actions." data-explanation-wrong="Multi-step work is called out as another stress case for the monolith.">
+          <h3 class="quiz-question">10. What kind of user request further exposes the monolith's weakness?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A request that requires several actions to complete</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A greeting with no business meaning</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A request with no customer message</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The monolith feels attractive because it centralizes everything in one place, which lowers initial setup friction." data-explanation-wrong="Its appeal comes from apparent simplicity and speed, not from superior long-term structure.">
+          <h3 class="quiz-question">1. Why is a monolithic prompt such a tempting first design move?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it automatically solves growth and maintenance problems</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it keeps behavior, policy, and tool instructions in one easy starting point</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it guarantees each request uses a different specialist</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The problem with the 8,000-token limit is not just the number; it means one packed prompt competes with the live conversation and response for space." data-explanation-wrong="The context-window limit matters because everything must fit inside it together.">
+          <h3 class="quiz-question">2. Why does the context-window limitation hit monoliths especially hard?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because all instructions, user input, and generated output have to share the same limited budget</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because monoliths never use prompts at all</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools permanently expand the model window</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. More directions means the model has to reconcile more constraints at once, increasing the chance of conflict or missed instructions." data-explanation-wrong="The deck is pointing to overload: too many directions make correct behavior harder to sustain.">
+          <h3 class="quiz-question">3. Why do more directions often produce more mistakes in a monolith?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because longer prompts stop the model from producing any output</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because policies become legally invalid</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model must juggle too many constraints and can miss or blur them</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The maintenance problem is architectural: each new case makes the central prompt denser and harder to reason about safely." data-explanation-wrong="The deck is stressing long-term manageability, not just prompt-writing inconvenience.">
+          <h3 class="quiz-question">4. What kind of problem appears when the company adds many more use cases to a monolithic system?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only the response speed changes</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The central prompt becomes increasingly difficult to update, inspect, and trust</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The user stops needing human escalation</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Multi-step tasks stress the monolith because success depends on organizing several actions coherently, not just producing one well-worded reply." data-explanation-wrong="The problem is sequencing and coordination, not merely phrasing.">
+          <h3 class="quiz-question">5. Why do multi-action customer requests create extra pressure on a monolith?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They require sequencing and coordination that one giant instruction bundle handles awkwardly</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They eliminate the need for any brand guidance</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They make context windows larger automatically</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The deck is not saying the monolith is useless; it is saying the design breaks down as scope and complexity grow." data-explanation-wrong="The critique is conditional: monoliths can work at first, but they do not scale cleanly.">
+          <h3 class="quiz-question">6. What is the most accurate reading of the deck's stance on monoliths?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They never work under any conditions</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are fine for simpler situations, but their weaknesses surface as scope expands</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They are best for every large support system</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The header, policy sections, and tools together show how many responsibilities the monolith is asked to absorb at once." data-explanation-wrong="The structure slide is evidence that the monolith is overburdened with mixed concerns.">
+          <h3 class="quiz-question">7. What does the monolith structure slide reveal about the design burden placed on one prompt?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That it only needs a short greeting and no policy content</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That the model does not need access to any systems</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That one prompt is expected to carry tone, rules, and operational behavior simultaneously</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Tooling inside the monolith is useful, but it also increases the number of behaviors that the same prompt must govern." data-explanation-wrong="Tool access adds capability, but it also adds coordination complexity.">
+          <h3 class="quiz-question">8. How does tooling contribute to the monolith's later fragility?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It expands the range of actions the same prompt has to manage coherently</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for any policy instructions</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees each tool call will be correct</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The growth from the fifth to the tenth use case is a stand-in for combinatorial maintenance complexity, not just prompt length." data-explanation-wrong="The deck is warning about design complexity as the system evolves.">
+          <h3 class="quiz-question">9. Why does the speaker ask what happens when the company adds the fifth or tenth use case?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To show that the company should stop serving customers</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To expose how brittle a single prompt becomes as responsibilities accumulate</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To argue that more use cases make the system easier to reason through</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The section's overall point is that initial convenience does not guarantee durable structure." data-explanation-wrong="The monolith's convenience is front-loaded, while its costs emerge later.">
+          <h3 class="quiz-question">10. What is the central lesson of this section?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Speed always matters more than maintainability</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tool calls are the only reason systems fail</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A design that is easy to start can still be a poor shape for growth and complexity</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The monolith collapses many concerns into one control surface, which is precisely why it feels efficient at first and opaque later." data-explanation-wrong="Its deeper problem is not just token budget; it is the overloading of one interface with too many responsibilities.">
+          <h3 class="quiz-question">1. What deeper architectural problem does the monolith embody?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It separates concerns too aggressively across many components</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It overloads one control surface with tone, policy, action, and exception handling all at once</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes any need for system-level reasoning</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The 8,000-token figure matters because it turns architectural overloading into a hard resource constraint, not just a style problem." data-explanation-wrong="The context limit is one concrete reason why over-concentration of instructions becomes unsustainable.">
+          <h3 class="quiz-question">2. Why is the context-window limit more than a minor implementation detail in this argument?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It converts the monolith's design sprawl into an explicit resource bottleneck</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves small models are always better than large ones</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows tools should never be included in support systems</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The claim about more directions producing more mistakes implies that instruction quality is not independent of instruction density." data-explanation-wrong="The section is arguing that prompt performance degrades when too many constraints compete for attention.">
+          <h3 class="quiz-question">3. What principle about prompting is implied by the deck's warning about 'lots of directions'?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every additional instruction improves reliability linearly</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt length matters only when tools are unavailable</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Instruction density can reduce reliability because constraints start to compete and blur</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The fifth-or-tenth-use-case example is really about change management: every new case makes the shared prompt harder to update without regressions." data-explanation-wrong="The warning is about safe evolution of the system over time.">
+          <h3 class="quiz-question">4. What long-term engineering concern is hidden inside the 'fifth use case' example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How to minimize HTML payload size</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How to evolve a central prompt without losing confidence in what changed</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>How to choose a font family for technical dashboards</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Multi-step tasks reveal that the monolith is being asked not just to answer, but to coordinate, remember, and sequence actions." data-explanation-wrong="That example exposes the missing workflow structure inside the monolith.">
+          <h3 class="quiz-question">5. Why are multi-action requests especially revealing in the critique of the monolith?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They show that the system needs orchestration capabilities, not merely one well-worded response prompt</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They prove that customer support never needs specialist behavior</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They eliminate the need for state management entirely</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The deck treats monolith speed as a local advantage that may be outweighed by global system brittleness." data-explanation-wrong="Speed is acknowledged, but the argument is about whether the structure remains dependable as requirements expand.">
+          <h3 class="quiz-question">6. How should the 'generally fast' benefit be interpreted in context?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As proof that structural simplicity is always the best long-term choice</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As evidence that maintainability does not matter</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a short-term operational win that does not erase longer-term coordination and maintenance costs</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The monolith's failure mode is not simply size but mixed responsibility: brand voice, policy, and tool behavior are all tangled in one artifact." data-explanation-wrong="The core critique is concern entanglement, which grows harder to reason about over time.">
+          <h3 class="quiz-question">7. Which phrase best captures why the monolith becomes hard to reason through?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Too many distinct responsibilities are entangled inside one artifact</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It has too many independent agents to inspect</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prevents any response from being generated</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Even the 'good' parts of the monolith imply a tradeoff: local simplicity in exchange for weak modularity and poor inspectability." data-explanation-wrong="The deck is inviting the audience to see simplicity as a tradeoff, not an unconditional virtue.">
+          <h3 class="quiz-question">8. What tradeoff is the section really asking the audience to notice?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Low hardware cost versus premium branding</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Initial convenience versus long-term clarity, flexibility, and control</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Faster fonts versus slower fonts</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The presence of tools in the monolith shows that the design is being stretched beyond language generation into operational execution without a matching coordination layer." data-explanation-wrong="Tooling raises the stakes because the prompt is now expected to guide actions, not just words.">
+          <h3 class="quiz-question">9. Why does tool access make the monolith critique even stronger?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools eliminate every need for architecture</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools reduce the number of possible behaviors</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the same prompt is now expected to govern both language behavior and operational action-taking</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The section prepares the audience to accept modular engineering not because monoliths are foolish, but because growth exposes their structural mismatch." data-explanation-wrong="The monolith is presented as a reasonable starting point whose limits justify a new architecture.">
+          <h3 class="quiz-question">10. How does this section set up the move to workflow agents?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By showing that a sensible initial design becomes structurally mismatched as complexity and responsibility increase</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By proving that prompts should never be used in any system</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By demonstrating that support systems only need faster models</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

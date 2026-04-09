@@ -1,0 +1,344 @@
+<section class="quiz-section" id="section-4">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">04</span>
+      <h1 class="section-title">Roles, Routing, and Graph Shape</h1>
+      <p class="section-subtitle">The middle of the deck makes the workflow concrete by naming the roles and showing how the classifier sits at the center of the routing logic.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">The architecture becomes visible when the deck names the agents and shows the graph</h2>
+      <p>
+        The example workflow contains five agents: classifier, smalltalk, complaint, status, and feedback.
+        That role list turns the abstract idea of specialization into a concrete topology.
+        The classifier stands at the front of the graph, and the routing logic determines which specialist gets the request before the path ends.
+      </p>
+      <ul class="study-points">
+        <li>The agent names reflect task categories rather than generic assistant personas.</li>
+        <li>The classifier is the entry point that decides the branch.</li>
+        <li>Each specialist path ends after its task is complete in the example graph.</li>
+        <li>The graph is showing workflow structure, not just implementation syntax.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section4">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The example names five agents in total." data-explanation-wrong="The slide says the example contains five agents.">
+          <h3 class="quiz-question">1. How many agents are in the example workflow?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Three</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Five</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Seven</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. One of the named agents is the classifier agent." data-explanation-wrong="The classifier is one of the five roles named on the slide.">
+          <h3 class="quiz-question">2. Which of these is one of the named agents?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Classifier agent</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Billing warehouse agent</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>GPU diagnostics agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Smalltalk agent is one of the listed roles." data-explanation-wrong="The deck explicitly includes a smalltalk agent.">
+          <h3 class="quiz-question">3. Which specialist handles casual conversational requests in the example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Router agent</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Memory agent</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Smalltalk agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Complaint agent is another of the listed specialists." data-explanation-wrong="The complaint agent is one of the five named roles.">
+          <h3 class="quiz-question">4. Which agent is responsible for complaint-type requests?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Feedback agent</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Complaint agent</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>State agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The status agent is one of the five specialists in the example." data-explanation-wrong="Status agent is the role used for status-related requests.">
+          <h3 class="quiz-question">5. Which agent would handle a status-oriented customer request in the example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Status agent</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Feedback agent</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Header agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The feedback agent is explicitly listed in the deck." data-explanation-wrong="Feedback agent is one of the named roles.">
+          <h3 class="quiz-question">6. Which listed role is designed for feedback-type interactions?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Review agent</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Follow-up agent</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Feedback agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. In the control-flow example, the graph starts at the classifier." data-explanation-wrong="The start edge goes to the classifier node.">
+          <h3 class="quiz-question">7. Which node receives control immediately after START in the graph example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Complaint agent</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Classifier</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Status agent</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The classifier uses conditional routing to pick the next branch." data-explanation-wrong="The control-flow code shows conditional edges leaving the classifier.">
+          <h3 class="quiz-question">8. How does the graph decide which specialist to run after classification?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>With conditional edges from the classifier</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By always calling every specialist</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By removing the graph entirely</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. In the example, each specialist connects to END after completing its work." data-explanation-wrong="The graph sends each specialist branch to END.">
+          <h3 class="quiz-question">9. Where do the specialist branches go in the example after they run?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Back into the classifier loop</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To a hidden database node</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To END</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The deck says the control-flow capability is provided by the LangGraph library." data-explanation-wrong="The code example is described as a service provided by LangGraph.">
+          <h3 class="quiz-question">10. Which library is named as providing the graph-control machinery?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Pandas</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>LangGraph</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>NumPy</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Naming the five roles makes the abstract idea of specialization concrete by tying each branch to a recognizable task category." data-explanation-wrong="The role list is doing conceptual work by translating 'specialists' into an actual support workflow.">
+          <h3 class="quiz-question">1. Why is the slide listing the five agent names important to the overall argument?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It turns the abstract idea of specialization into a concrete workflow with recognizable branches</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows the system will never need routing logic</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves the deck is mostly about naming conventions</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The classifier's structural role is to sit at the junction where one shared entry can branch into specialized handling." data-explanation-wrong="Its job is routing and dispatch, not specialist completion.">
+          <h3 class="quiz-question">2. What is the classifier's real architectural role in the graph?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Produce the final customer response for every case</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Act as the branching point that converts one incoming request into the correct specialist path</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Store permanent customer history outside the workflow</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Specialists ending at END suggests the example is modeling a clean one-branch execution path rather than a complicated multi-hop loop." data-explanation-wrong="The graph's shape is intentionally simple: classify, route, finish.">
+          <h3 class="quiz-question">3. What does it imply that each specialist edge goes directly to END?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The classifier is no longer necessary once the graph compiles</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every request must visit multiple specialists in sequence</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The example is modeling a straightforward dispatch-and-complete workflow</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Complaint, status, feedback, and smalltalk are not random; they mirror recognizable support intents that motivate routing." data-explanation-wrong="The role names are chosen to align with request categories in the business problem.">
+          <h3 class="quiz-question">4. Why are the specialist names themselves informative?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They reveal that the workflow is organized around support intent categories rather than generic agent personas</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They prove every branch shares the same prompt text</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They show routing is mainly based on model temperature</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Conditional edges matter because branching becomes visible and inspectable in the graph instead of being buried in prompt behavior." data-explanation-wrong="The graph is making routing explicit.">
+          <h3 class="quiz-question">5. What is the value of expressing routing with conditional edges instead of burying it inside one prompt?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees the classifier never makes mistakes</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes branch logic explicit and easier to inspect or modify</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for specialist prompts</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The graph code is not only syntax; it is a formal description of workflow shape and order." data-explanation-wrong="The code matters because it defines control flow, not because it is just an implementation detail.">
+          <h3 class="quiz-question">6. How should the audience interpret the control-flow code snippet?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As a decorative example with no design meaning</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As proof that customer support cannot be modularized</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As an executable expression of the workflow's topology and routing behavior</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Starting with the classifier preserves a single intake point while still allowing specialized downstream behavior." data-explanation-wrong="The classifier is there so incoming requests can be normalized into branch choices.">
+          <h3 class="quiz-question">7. Why is it useful that every request enters through the classifier first?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because specialists should never see the original message</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because one intake point creates a consistent place to interpret the request before dispatch</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it forces every request to take all branches</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The five-role list is evidence that modularity is being designed around real support functions rather than abstract AI capabilities." data-explanation-wrong="The workflow maps directly onto the business domain.">
+          <h3 class="quiz-question">8. What does the choice of classifier, complaint, status, feedback, and smalltalk suggest about the design philosophy?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system is partitioned around business-relevant intents and outcomes</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system is partitioned around vendor-specific APIs</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system is partitioned around file formats</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. A graph with named nodes and edges makes the architecture inspectable in a way a monolith is not." data-explanation-wrong="The visual and code forms of the graph improve visibility into system behavior.">
+          <h3 class="quiz-question">9. Why does showing the workflow as a graph help the broader argument against the monolith?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because graphs remove the need for prompts entirely</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because graphs are shorter than prompts</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the structure of decision-making becomes visible, named, and reviewable</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. This section turns the earlier architectural claim into something concrete enough to implement and inspect." data-explanation-wrong="The graph and role list make the workflow proposal concrete and testable.">
+          <h3 class="quiz-question">10. What is the main achievement of this section in the overall deck?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It replaces specialization with a single stronger prompt</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It translates modularity from an idea into a concrete role map and routing structure</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves the system no longer needs any shared data</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The named-role graph is important because it exposes workflow design as a set of explicit decisions about task boundaries and branch points." data-explanation-wrong="The section is demonstrating designed topology, not just naming functions.">
+          <h3 class="quiz-question">1. What deeper design idea is expressed by the combination of named roles and a graph?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That workflow architecture consists of explicit choices about boundaries, branch points, and termination paths</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That specialization is mainly a naming exercise with little structural impact</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That every request should traverse all available specialists</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Putting the classifier at the front means interpretation becomes a controlled gateway between incoming language and downstream action." data-explanation-wrong="The classifier is architecturally important because it mediates between request input and system branch selection.">
+          <h3 class="quiz-question">2. Why is the classifier best understood as a gateway rather than just another agent?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it stores every final answer permanently</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it converts open-ended user input into a controlled branching decision for the workflow</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it always resolves the whole request without delegation</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Specialist nodes leading straight to END reveal that the example is showing a dispatch architecture with shallow, single-purpose branches." data-explanation-wrong="The graph shape communicates simplicity of branch execution.">
+          <h3 class="quiz-question">3. What does the graph shape imply about the example's workflow depth?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is a recursive loop with unbounded depth</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is a parallel fan-out that requires every specialist to run</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is a shallow classify-then-handle pattern designed for clear dispatch</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The role names mirror support intents, which means the architecture is aligned with operational categories rather than arbitrary technical partitions." data-explanation-wrong="The business-domain alignment is one reason the structure is understandable and maintainable.">
+          <h3 class="quiz-question">4. Why does it matter that the specialist names map cleanly onto support intents?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It aligns architecture with business-relevant categories, making the system easier to reason about operationally</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves customer support no longer needs policy rules</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It ensures every branch can be removed without effect</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Conditional edges are a statement that routing criteria should be inspectable system logic, not hidden prompt behavior." data-explanation-wrong="The deeper value is explicit control over branching.">
+          <h3 class="quiz-question">5. What principle about system control is embodied by the conditional edges leaving the classifier?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Routing should be buried inside prompt phrasing to stay flexible</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Routing criteria should be explicit, inspectable, and separate from specialist execution</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every specialist should decide on its own whether it belongs in the workflow</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The graph example is effectively an argument for inspectable orchestration as a first-class part of the architecture." data-explanation-wrong="The code snippet is showing how control flow itself becomes a designed artifact.">
+          <h3 class="quiz-question">6. Why is the graph code more important than a mere implementation example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the syntax alone guarantees business success</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it eliminates the need for shared state</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes orchestration explicit enough to review, debug, and evolve</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. A single intake node with named downstream roles suggests an architecture that values normalization before specialization." data-explanation-wrong="The classifier normalizes incoming work before dispatch.">
+          <h3 class="quiz-question">7. What architectural pattern is implied by the graph's START-to-classifier-to-specialist sequence?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Normalize the incoming request first, then dispatch to narrow handlers</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Run every handler immediately, then sort out relevance later</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Skip intake and let each specialist parse the raw request independently</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The named paths ending at END show that the example is privileging clarity and inspectability over maximum dynamism." data-explanation-wrong="The graph is intentionally simple to make workflow structure legible.">
+          <h3 class="quiz-question">8. Why might the deck choose such a clean graph shape for the example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because real workflows should never branch</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because a simple topology makes the design principles of routing and specialization easier to understand</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because LangGraph cannot represent more complex workflows</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The role list plus graph shows that modularity must be expressed as both semantic boundaries and control boundaries." data-explanation-wrong="The section is connecting business meaning with execution structure.">
+          <h3 class="quiz-question">9. What two kinds of structure are being combined when the deck names roles and draws a graph?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Semantic task boundaries and control-flow boundaries</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Visual styling boundaries and pricing boundaries</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Hardware boundaries and database boundaries only</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The section's deeper job is to make the modular vision concrete enough that shared state and tooling can be explained as implementation mechanics next." data-explanation-wrong="This section is the bridge from high-level modularity to low-level execution mechanics.">
+          <h3 class="quiz-question">10. How does this section prepare the audience for the next implementation-focused material?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By proving the classifier can replace shared state</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By showing that graph syntax is the most important part of the system</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>By turning modularity into a specific topology that later state and routing mechanics can support</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
