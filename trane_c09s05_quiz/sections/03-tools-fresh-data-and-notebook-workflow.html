@@ -1,0 +1,319 @@
+<section class="quiz-section" id="section-3">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">03</span>
+      <h1 class="section-title">Tools, Fresh Data, and Notebook Workflow</h1>
+      <p class="section-subtitle">This section covers what tools actually add to an LLM system, why freshness matters, and how the live Colab exercise turned abstract ideas into a usable workflow.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">Tools are outside the model, but they change what the model can do</h2>
+      <p>
+        The weather example made the limit of base-model knowledge visible: without fresh external information, the model cannot answer
+        current questions reliably. The instructor explained tools as a way to fetch relevant context before the final prompt reaches the model.
+        The notebook walkthrough then showed the non-glamorous side of real usage: secrets, setup order, permissions, and debugging.
+      </p>
+      <ul class="study-points">
+        <li>Freshness problems often come from model cutoff dates, not from bad wording.</li>
+        <li>Tools such as web search, external APIs, and databases add context that gets folded into the final prompt.</li>
+        <li>Reasoning level is another control surface; in the example, low reasoning meant a faster, less loopy path.</li>
+        <li>Many live failures were ordinary workflow problems: wrong tab, missing notebook copy, secrets not toggled, or setup cells not rerun.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section3">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The model did not know today's weather because it lacked live current data." data-explanation-wrong="The failure was about freshness, not politeness or browser choice.">
+          <h3 class="quiz-question">1. Why could the model not answer today's weather question on its own?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because weather questions are blocked by default</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model did not have live up-to-date knowledge</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the output schema was missing</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Web search, weather APIs, and databases were all presented as examples of tools." data-explanation-wrong="The term tools was broad, not limited to a single feature.">
+          <h3 class="quiz-question">2. Which option best matches the class's definition of a tool?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only a browser search bar</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only a spreadsheet export</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Web search, an external API, or a database connection</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Low reasoning was described as a way to keep the answer from going into a long loop." data-explanation-wrong="The setting was about how much thinking effort the model should spend.">
+          <h3 class="quiz-question">3. What did reasoning set to low mean in the example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model should answer more directly instead of overthinking</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The API key becomes optional</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook runs offline</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Once the secret is stored, future notebooks can often reuse it." data-explanation-wrong="The transcript specifically highlighted this as a convenience.">
+          <h3 class="quiz-question">4. What was one benefit of saving the API secret in Colab?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It permanently retrains the model</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It can carry over into future notebooks</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need to grant access</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Learners had to toggle notebook access so the runtime could read the secret." data-explanation-wrong="The toggle was about permission, not about aesthetics.">
+          <h3 class="quiz-question">5. Why did learners need to toggle notebook access after creating the secret?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To increase the context window</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To activate image generation</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To let the notebook runtime read the secret</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The live troubleshooting showed that many errors came from skipped setup blocks." data-explanation-wrong="The class failures were often workflow problems, not deep model failures.">
+          <h3 class="quiz-question">6. If a learner sees a missing-name error, what is a likely cause from the session?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They did not run the setup or import cells correctly</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The weather API refused all requests</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model forgot what a token is</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The instructor's 'add-on brain' phrase meant temporary extra context, not permanent retraining." data-explanation-wrong="The wording was metaphorical, not about changing the weights of the model.">
+          <h3 class="quiz-question">7. What did the phrase 'add-on brain' really mean?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model gets permanently smarter after one tool call</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system temporarily gives the model more relevant context for a task</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The assistant prompt disappears</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The final image-generation note showed that similar setup ideas keep mattering beyond text." data-explanation-wrong="The closing demo extended the same workflow mindset rather than abandoning it.">
+          <h3 class="quiz-question">8. Why did the session briefly mention image generation at the end?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To prove prompts are unnecessary</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To replace the API lesson with a design lesson</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To show that the same API-and-workflow mindset can extend beyond text tasks</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The instructor framed cutoff dates as the reason the base model lacked current information." data-explanation-wrong="The issue was not that weather is impossible, only that it is current.">
+          <h3 class="quiz-question">9. What concept explained why the base model lacked current weather information?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model's cutoff date</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The assistant prompt</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The response schema</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Ordinary environment and workflow issues caused several of the live problems." data-explanation-wrong="The class troubleshooting segment showed plenty of non-AI failure modes.">
+          <h3 class="quiz-question">10. What larger lesson did the live debugging examples teach?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That only the model matters</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That reliable AI workflows also depend on setup order, permissions, and environment details</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That APIs eliminate operational work</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track active" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The weather example made freshness limits visible by contrasting the plain model with the tool-enabled version." data-explanation-wrong="It was more than a demo of a single question; it showed what tools solve.">
+          <h3 class="quiz-question">1. What was the most important lesson of the weather example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tools can compensate for freshness limits by bringing in current context</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Weather questions are always easier than sentiment questions</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only larger models can answer current events</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The instructor's key point was that the model ultimately receives one composed prompt that includes the fetched context." data-explanation-wrong="The orchestration layer matters before the model call.">
+          <h3 class="quiz-question">2. After a tool runs, what does the model itself finally receive?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A direct mirror of the search engine's private interface</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A combined prompt containing instructions, the user's request, and fetched context</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only the original question, unchanged</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The correct sequence was copy, secret, permission, then execute setup." data-explanation-wrong="The order matters because each step depends on the previous one.">
+          <h3 class="quiz-question">3. Which setup order best matches the live walkthrough?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt, then secret, then copy</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Image block, then output refresh, then copy</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Make a copy, add the secret, grant access, then run the setup cells</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Hidden search rewriting matters because enterprise teams care about exactly what information leaves the system and how." data-explanation-wrong="The concern was observability and security, not just curiosity.">
+          <h3 class="quiz-question">4. Why did the learner's question about hidden query rewriting matter?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because organizations care about what external search tools are actually sending and summarizing</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because rewriting makes API keys cheaper</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it eliminates the need for prompts</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Prompt engineering was described here as smart packaging of the user's request plus extra context before the model sees it." data-explanation-wrong="The definition was broader than rewriting one sentence.">
+          <h3 class="quiz-question">5. How did the instructor describe prompt engineering in the tools discussion?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As choosing a browser that supports sign-in</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As building a strong combined prompt from instructions, user input, and tool results</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>As deleting the system prompt before each call</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The instructor said tools make the model more powerful because they bring in relevant outside information." data-explanation-wrong="The added power came from context access, not from magically larger weights.">
+          <h3 class="quiz-question">6. Why do tools make an LLM system more powerful?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because they permanently enlarge the model</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because they remove the cutoff date from the base model</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because they let the system fetch context the base model does not already have</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The troubleshooting examples showed that these systems depend on ordinary software hygiene, not just good prompts." data-explanation-wrong="The lesson did not reduce everything to the prompt itself.">
+          <h3 class="quiz-question">7. What is the best interpretation of the notebook errors shown during class?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Many failures in AI workflows are ordinary operational mistakes rather than deep model problems</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every notebook error means the model is hallucinating</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Secrets make debugging impossible</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The same API mindset extends to multimodal cases: credentials, setup, outputs, and debugging still matter." data-explanation-wrong="The closing image note did not reject the rest of the lesson; it extended it.">
+          <h3 class="quiz-question">8. Why did the image-generation preview still fit the rest of the session?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because image models do not require setup</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the same API workflow ideas generalize beyond text calls</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it turned the weather tool into a schema</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The question was current by definition, so a cutoff-date-limited model needed an external information source." data-explanation-wrong="The issue was not wording alone. It was the time-sensitive nature of the answer.">
+          <h3 class="quiz-question">9. Why was asking for today's weather a particularly good teaching example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the answer is always the same</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because weather never requires tools</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it clearly exposes the difference between stale model knowledge and current external information</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Low reasoning was chosen to avoid needless loops on a task where the main missing ingredient was data access, not deep analysis." data-explanation-wrong="The reasoning setting was chosen with task fit in mind.">
+          <h3 class="quiz-question">10. Why was low reasoning a sensible setting for the weather-tool example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the main need was fresh information, not a long reasoning chain</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because low reasoning forces JSON output</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because reasoning only works for image prompts</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The architectural point is that tool use enriches the request context outside the base model rather than retroactively updating the model's weights." data-explanation-wrong="The important distinction is between orchestration and permanent retraining.">
+          <h3 class="quiz-question">1. What is the deepest architectural point behind the weather example?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Reasoning settings permanently move the model's cutoff date forward</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tools solve freshness by enriching the prompt context rather than by retraining the model on the spot</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>All current-information problems are really prompt-order problems</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Saying the model does not itself 'know web search' clarifies where orchestration logic lives." data-explanation-wrong="This distinction matters because it separates system design from model internals.">
+          <h3 class="quiz-question">2. Why is it important to say the model does not itself 'know web search'?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the search and context-building logic lives in the orchestration layer before the final prompt reaches the model</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because only browsers can use search tools</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because search results bypass the prompt entirely</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The prompt-engineering explanation here is really about context assembly before the model is invoked." data-explanation-wrong="The definition in this section was broader than phrasing alone.">
+          <h3 class="quiz-question">3. In the tools discussion, what is prompt engineering fundamentally doing?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Eliminating the need for system prompts</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Teaching the base model new weights permanently</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Assembling the best possible final context package before it reaches the model</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The session explicitly admitted that hard constraints remain difficult in generative systems, especially when signals conflict." data-explanation-wrong="The main difficulty is model behavior under layered and uncertain instructions.">
+          <h3 class="quiz-question">4. Why does the tools discussion connect naturally to the earlier conversation about imperfect guardrails?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools automatically eliminate policy conflicts</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because adding tools adds more context and decisions, which makes reliable control even more of a system-design challenge</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools only work when prompts are empty</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The operational takeaway is that many 'AI failures' are really ordinary workflow and environment failures." data-explanation-wrong="The class debugging segment was valuable exactly because it made those hidden dependencies visible.">
+          <h3 class="quiz-question">5. What broader engineering lesson comes from the setup-order mistakes shown live in class?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Reliable AI systems still depend on mundane operational details such as permissions, state, and execution order</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Model quality makes execution order irrelevant</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only network speed matters once a tool is added</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The enterprise concern is not only capability but also visibility into what the tool is doing with the user's request." data-explanation-wrong="This is about observability and policy, not about weather specifically.">
+          <h3 class="quiz-question">6. Why was the unanswered question about how web search rewrites queries still important even though the model dump did not reveal the full process?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because search rewriting determines token IDs only</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it proves schemas are unnecessary</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it highlights a real enterprise question about observability and what external tools are actually doing behind the scenes</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The image preview reinforces that the session is really about working with model APIs operationally, not just about one text use case." data-explanation-wrong="The common thread is the workflow mindset, not the output modality.">
+          <h3 class="quiz-question">7. What makes the image-generation preview conceptually consistent with the rest of the session?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It shows that prompt hierarchy is irrelevant for images</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It extends the same operational logic of keys, API calls, outputs, and debugging to another modality</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves that tools are unnecessary for multimodal tasks</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Choosing low reasoning for the weather demo matches the idea that the hard part was getting the data, not constructing a complex chain of thought." data-explanation-wrong="The setting choice was part of task design, not a random default.">
+          <h3 class="quiz-question">8. What design principle does the choice of low reasoning illustrate?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Match the amount of reasoning to the task, especially when the main missing ingredient is external data rather than deep inference</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Always use the lowest reasoning setting regardless of task</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Reasoning settings matter only in the UI</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The class framed tool use as a temporary expansion of available context, not as a new permanent memory inside the model." data-explanation-wrong="The distinction between temporary context and permanent memory was central.">
+          <h3 class="quiz-question">9. What is the best interpretation of tools as a 'temporary add-on brain'?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tools permanently rewrite the model's weights</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tools act like hidden system prompts only</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tools temporarily expand the context available for a given task without changing the underlying model permanently</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. This section ties the model back to real work by showing how current data, tools, and ordinary execution discipline all interact." data-explanation-wrong="Its importance is not just that the weather answer appears. It is that the system story becomes realistic.">
+          <h3 class="quiz-question">10. Why is this section essential to the course's practical framing of LLMs?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it shows that prompt layers are no longer useful once tools appear</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it connects abstract model behavior to real-world system design: freshness, orchestration, permissions, and debugging</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it proves that current models never need retrieval</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <button class="btn reset-section-btn" type="button" onclick="resetQuiz('quiz-section3')">Reset Section</button>
+    </div>
+  </div>
+</section>

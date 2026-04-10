@@ -1,0 +1,244 @@
+<section class="module" id="module-2">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">Prompt Layers and Structured Output</h1>
+      <p class="module-subtitle">The class moves past a simple API call and introduces two ideas that make LLMs operationally useful: prompt hierarchy and predictable response structure.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The model is not seeing "just your question"</h2>
+      <p class="animate-in">The instructor broke prompting into layers so learners could see why behavior changes even when the user message stays the same.</p>
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">1</div>
+          <h3 class="pattern-title">System Prompt</h3>
+          <p class="pattern-desc">Highest-priority instructions. This is where tone, role, and guardrails live.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">2</div>
+          <h3 class="pattern-title">User Prompt</h3>
+          <p class="pattern-desc">The visible request content. It asks for a task but does not outrank the system prompt.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-3);">
+          <div class="pattern-icon" style="background: var(--color-actor-3); color: white;">3</div>
+          <h3 class="pattern-title">Assistant Context</h3>
+          <p class="pattern-desc">Helpful context can be inserted here, but it carries less authority than the first two layers.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Structured output is what makes downstream software possible</h2>
+      <p class="animate-in">The session's strongest practical point is simple: free-flowing paragraphs are hard to pipe into other systems, but machine-readable fields are easy.</p>
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code Shape</span>
+          <pre><code><span class="code-line"><span class="code-keyword">class</span> <span class="code-function">NewsExtraction</span>(BaseModel):</span>
+<span class="code-line">    lottery: str</span>
+<span class="code-line">    jackpot: int</span>
+<span class="code-line">    organizer: str</span>
+<span class="code-line"></span>
+<span class="code-line">response = client.chat.completions.parse(</span>
+<span class="code-line">    response_format=NewsExtraction,</span>
+<span class="code-line">    ...</span>
+<span class="code-line">)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Define the shape of the answer before the model writes it.</p>
+            <p class="tl">Tell the model that the response must contain named fields with specific data types.</p>
+            <p class="tl">Give the model content to analyze, such as a news article.</p>
+            <p class="tl">Receive something your code can reliably inspect without regex guesswork.</p>
+            <p class="tl">Turn the model from a text generator into a software component that feeds later steps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Hierarchy is both power and risk</h2>
+      <p class="animate-in">The same layering that makes LLMs controllable also creates failure modes. Conflicting instructions, prompt injection, and imperfect guardrails all live here.</p>
+      <div class="callout callout-accent animate-in">
+        <div class="callout-icon">i</div>
+        <div class="callout-content">
+          <strong class="callout-title">Key takeaway</strong>
+          <p>If the system prompt says "only output positive or negative," the model should classify sentiment even when the user asks a different question. That is hierarchy in action.</p>
+        </div>
+      </div>
+      <div class="badge-list animate-in">
+        <div class="badge-item">
+          <code class="badge-code">System &gt; User &gt; Assistant</code>
+          <span class="badge-desc">That was the practical priority order the instructor emphasized.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">Default behavior exists</code>
+          <span class="badge-desc">Even if you omit instructions, the API still has some unseen defaults.</span>
+        </div>
+        <div class="badge-item">
+          <code class="badge-code">Guardrails are hard</code>
+          <span class="badge-desc">Generative systems can receive mixed signals, and hard constraints are still an active design problem.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module2">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The system prompt or instructions were described as the highest-priority layer." data-explanation-wrong="The transcript was explicit about prompt priority.">
+            <h3 class="quiz-question">Which prompt layer has the highest priority?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system prompt</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The assistant prompt</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The browser URL</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. Response format was the added feature that forced structure." data-explanation-wrong="The point was not just a different method name. It was enforcing a typed shape.">
+            <h3 class="quiz-question">What made the second API example more powerful than a plain free-text call?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A larger browser window</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A response format that required structured fields</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A second copy of the notebook</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The whole point of structure was that software pipelines need predictable fields, not just prose." data-explanation-wrong="The lesson did not say structure was only for readability. It is for reliable downstream use.">
+            <h3 class="quiz-question">Why is a structured response valuable?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It always makes the answer shorter</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for prompts</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives later code predictable fields to work with</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The assistant layer was described as the least authoritative of the three prompt layers." data-explanation-wrong="The system prompt outranks the others; the assistant prompt does not.">
+            <h3 class="quiz-question">Which layer has the lowest authority in the prompt stack described in class?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The assistant prompt</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The system prompt</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model name</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. If the system prompt says to classify, the model should classify rather than freely answer the user's question." data-explanation-wrong="The example showed hierarchy overpowering free-form user intent.">
+            <h3 class="quiz-question">If the system prompt says "respond only with positive or negative," what should the model do?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Ignore the instruction and answer however it wants</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Follow the classification rule even if the user asks something else</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Return the system prompt to the user</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The cleanest fit is structured extraction into named typed fields." data-explanation-wrong="Think about what would make the output usable by later code without guesswork.">
+            <h3 class="quiz-question">You want the model to pull a lottery name, jackpot amount, and organizer from an article. What design choice best fits that goal?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Ask for a poetic summary</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Hide the output and only print debug text</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Define a response schema and parse into that structure</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The transcript said user instructions like 'ignore the system prompt' normally lose because the system prompt has higher priority." data-explanation-wrong="This is a prompt hierarchy question, not a model size question.">
+            <h3 class="quiz-question">Why would a user request like "ignore the system prompt" usually fail?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because user prompts are automatically deleted</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the system prompt outranks the user prompt</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because assistant prompts always replace the user prompt</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The assistant prompt can carry extra context, but it is less authoritative than the other two layers." data-explanation-wrong="The transcript did not frame the assistant prompt as a security layer.">
+            <h3 class="quiz-question">What was the main role of the assistant prompt in the explanation?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To provide extra context, while remaining lower priority than system and user prompts</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To authenticate the API key</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To remove all model randomness</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The instructor said calls can still work without your own instructions because some default behavior exists behind the scenes." data-explanation-wrong="The answer is about hidden defaults, not about a browser dependency.">
+            <h3 class="quiz-question">If you omit custom instructions and send only a user question, why can the API still work?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because all user questions are converted into SQL automatically</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the assistant prompt becomes mandatory</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because some default system behavior still exists even if it is not exposed</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The instructor said the call shapes vary because different interfaces support different extras even though they all invoke the model." data-explanation-wrong="The method names differed for functional reasons, not branding alone.">
+            <h3 class="quiz-question">Why are there multiple API call styles in the lesson?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because each model can only be called once</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because different call interfaces support different capabilities such as parsing structured output</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because OpenAI randomly renames functions on each request</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The biggest practical gain is predictable machine-readable output that can slot into a workflow." data-explanation-wrong="The change matters because it improves software integration, not because it sounds more technical.">
+            <h3 class="quiz-question">What is the strongest software-engineering argument for structured output in this lesson?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It turns LLM output into predictable fields that downstream code can trust more easily</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees the model is factually correct</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It eliminates prompt design altogether</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The prompt stack becomes powerful precisely because multiple sources of instruction can conflict, and the model is still generative rather than fully rule-bound." data-explanation-wrong="The issue is not a lack of prompts. It is the difficulty of harmonizing many prompts reliably.">
+            <h3 class="quiz-question">What design tension sits underneath the prompt hierarchy discussion?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompts are too short to carry enough information</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Structured output makes prompts obsolete</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Many layered instructions can conflict, yet the model still behaves probabilistically rather than as a strict rules engine</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The transcript explicitly linked imperfect guardrails to the challenge of making soft generative systems obey hard constraints." data-explanation-wrong="The model does not become deterministic simply because you add more instructions.">
+            <h3 class="quiz-question">Why did the instructor say strong guardrails are difficult to implement perfectly?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because LLM APIs do not accept strings</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because generative models can receive mixed instructions and are not simple hard-rule systems</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because assistant prompts always overwrite system prompts</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The parsed-structure example reframed the LLM from 'writer of prose' to 'component that returns usable fields'." data-explanation-wrong="The biggest change was the output contract, not a new browser or training run.">
+            <h3 class="quiz-question">How does the parsed extraction example change the role of the model inside a larger system?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It turns the model into a spreadsheet replacement only</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for user input</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes the model behave more like a typed data-extraction service that other code can consume</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The system prompt is the main place for behavioral boundaries, so it is where policy and role definitions live." data-explanation-wrong="The transcript linked guardrails mainly to the system prompt, not to the output field definitions themselves.">
+            <h3 class="quiz-question">If you wanted to enforce tone restrictions and safety rules in the examples from class, where would they belong most naturally?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>In the system prompt or instruction layer</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only inside the model name string</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only after the response is printed</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" type="button" onclick="checkQuiz('quiz-module2')">Check Answers</button>
+        <button class="quiz-reset-btn" type="button" onclick="resetQuiz('quiz-module2')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>

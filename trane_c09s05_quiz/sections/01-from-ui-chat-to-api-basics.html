@@ -1,0 +1,319 @@
+<section class="quiz-section" id="section-1">
+  <div class="section-content">
+    <header class="section-header">
+      <span class="section-number">01</span>
+      <h1 class="section-title">From UI Chat to API Basics</h1>
+      <p class="section-subtitle">This section covers the first practical transition in the session: moving from a chat interface into explicit model calls, credentials, token awareness, and simple notebook setup.</p>
+    </header>
+
+    <article class="study-card animate-in">
+      <span class="study-kicker">Study</span>
+      <h2 class="study-title">The point was not "learn Python first"</h2>
+      <p>
+        The instructor used a deliberately small API example to show what a chat UI usually hides. In code, you choose a model,
+        pass the input, add instructions, provide an API key, and inspect the response object directly. The session also briefly
+        revisited tokens so learners could remember that the model processes token IDs rather than intact human sentences.
+      </p>
+      <ul class="study-points">
+        <li>Code exposes control that a UI often hides: model choice, instructions, output handling, and future automation hooks.</li>
+        <li>An API key is a credential tied to account access and billing, so storing it as a secret is safer than hardcoding it.</li>
+        <li>Tokens are units of vocabulary, not always full words; they can be words, subwords, or individual characters.</li>
+        <li>The Colab walkthrough emphasized ordinary setup discipline: make a copy, save the secret, grant access, and run the setup cells in order.</li>
+      </ul>
+    </article>
+
+    <div class="quiz-container" id="quiz-section1">
+      <div class="quiz-toolbar">
+        <div>
+          <span class="quiz-kicker">Section Quiz</span>
+          <p class="quiz-level-note">Current difficulty: <span data-quiz-level-label>Medium</span></p>
+        </div>
+        <div class="section-score" aria-label="Section score">
+          <span class="score-pill score-pill-correct"><strong data-section-correct>0</strong> correct</span>
+          <span class="score-pill score-pill-incorrect"><strong data-section-incorrect>0</strong> incorrect</span>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="low">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The lesson framed code as a way to control how the model is used, not just a different place to type the same question." data-explanation-wrong="The shift was about control and integration, not about making the UI disappear.">
+          <h3 class="quiz-question">1. Why did the instructor move from a chat UI to code?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the UI cannot answer any questions</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because code exposes more control over the model call</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tokens only exist in Python</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The API key is the credential the service checks before answering." data-explanation-wrong="The model name matters later, but the call needs valid authentication first.">
+          <h3 class="quiz-question">2. What must you have before the API will answer successfully?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A valid API key</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A vector store</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A weather tool</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The instructions or system command are what the UI usually hides from the user." data-explanation-wrong="The hidden part was about behavior setup, not the actual question text.">
+          <h3 class="quiz-question">3. Which input is often hidden in a chat UI but explicit in code?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The internet connection</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The response language</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The instructions or system prompt</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. A token is a vocabulary unit, which may be smaller than a full word." data-explanation-wrong="The session made a point of saying tokens are not always whole words.">
+          <h3 class="quiz-question">4. What is a token?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A hidden neural network layer</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A unit of vocabulary such as a word, subword, or character</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A special kind of API key</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The transcript explicitly said a token could be part of a word, not only a whole word." data-explanation-wrong="The example with unusual word splitting was there to show that tokens can be smaller pieces.">
+          <h3 class="quiz-question">5. Can a token be only part of a word?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Yes</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>No, never</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Only in image models</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Learners were told to make their own copy first so notebook changes would persist." data-explanation-wrong="The first step was about saving work, not about changing the model.">
+          <h3 class="quiz-question">6. What should you do first after opening the shared Colab notebook?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Run the image generation block</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Make your own copy</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Delete the setup cells</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The reason to avoid hardcoding the key is that it is a paid credential and can be exposed if the notebook is shared." data-explanation-wrong="The concern was security and misuse, not style.">
+          <h3 class="quiz-question">7. Why did the instructor discourage pasting the key directly into the notebook?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it slows tokenization</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model cannot read strings</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it could expose a paid credential</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Creating the client establishes the connection details before the request is made." data-explanation-wrong="The client setup happens before the actual question is sent.">
+          <h3 class="quiz-question">8. What does creating the client object mainly do in the lesson?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It establishes access to the API service</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It retrains the model</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It converts images into tokens</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The instructor recommended printing the output text when the full object dump became too noisy." data-explanation-wrong="The point was to focus on the answer rather than the metadata.">
+          <h3 class="quiz-question">9. If the full response object is overwhelming, what did the instructor suggest printing?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The entire notebook history</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Just the output text</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The API key value</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The public training key came with a clear warning not to send internal company information through it." data-explanation-wrong="The caution was specifically about proprietary or internal data.">
+          <h3 class="quiz-question">10. What warning came with the shared training key?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Do not ask about the weather</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Do not use the word token</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Do not send proprietary Trane information through it</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track active" data-quiz-level="medium">
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The lesson treated code as a way to shape behavior, inspect outputs, and plug model calls into software workflows." data-explanation-wrong="The advantage was broader than just editing prompt text.">
+          <h3 class="quiz-question">1. What is the clearest practical advantage code had over the chat UI in this session?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It exposes controllable parameters and makes the model easier to integrate into software</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prevents every model error</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It automatically provides live web data</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. An invalid or missing key means the service cannot authorize the request." data-explanation-wrong="The system does not infer credentials from the notebook.">
+          <h3 class="quiz-question">2. If the API key is wrong, what happens?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model guesses a free account</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The request fails instead of returning a normal answer</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model switches to image mode</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. The token refresher matters because the underlying model still operates on tokenized input and output, not on intact sentences." data-explanation-wrong="Tokens were not a side issue; they explain how the model sees language.">
+          <h3 class="quiz-question">3. Why was the token discussion relevant to an API lesson?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tokens only matter in notebooks</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the API replaces tokenization with keywords</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model still processes token IDs beneath the API call</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. A strong system instruction can redirect the task even if the user asks something else." data-explanation-wrong="This question is really about prompt control, not model confusion.">
+          <h3 class="quiz-question">4. If the instructions say "respond only with positive or negative," what will likely happen when the user asks a different style of question?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model will still try to classify according to the instruction</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model will always ignore the instruction</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook will crash immediately</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The raw response object contains extra metadata that a polished UI usually hides." data-explanation-wrong="The API did return text; it just also returned more surrounding detail.">
+          <h3 class="quiz-question">5. Why did the raw API output look messier than a polished UI response?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the answer was encrypted</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it included metadata and internal details alongside the answer</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model was broken in notebooks</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The instructions field maps to the system-level behavior setup the UI usually conceals." data-explanation-wrong="The field is behavioral, not about authentication or formatting alone.">
+          <h3 class="quiz-question">6. What does the instructions parameter most closely correspond to in the lesson?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The API provider's billing page</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook's saved filename</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The hidden system prompt or system command</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Saving the key in the secrets panel reduces accidental exposure if the notebook is shared or displayed." data-explanation-wrong="This was a credential-safety practice, not a UI preference.">
+          <h3 class="quiz-question">7. Why was the secrets panel the recommended place for the API key?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It stores the credential more safely than hardcoding it into the notebook cells</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes the model respond with shorter text</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It increases the model's context window</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The transcript's debugging example showed that NameError-like problems often came from skipped setup cells." data-explanation-wrong="The learner issue was procedural, not because sentiment analysis was impossible.">
+          <h3 class="quiz-question">8. A learner got a NameError after changing the prompt text. What was the most likely cause?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model had no cutoff date</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The token IDs were too large</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The earlier import or environment setup cells had not been run properly</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. One benefit of using secrets in Colab is that the setup can carry over to future notebooks." data-explanation-wrong="The transcript said the setup persistence was one of the nice parts of the workflow.">
+          <h3 class="quiz-question">9. What part of the setup did the instructor say would carry over across future notebooks?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The full response history</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The stored secret</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The random seed of the model</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The tiny sentiment example keeps the call mechanics visible before more advanced features get layered in." data-explanation-wrong="The lesson did not present sentiment as the end goal. It was a teaching scaffold.">
+          <h3 class="quiz-question">10. Why was the first exercise a tiny sentiment example rather than a full application?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because a small task makes the mechanics of the API call easier to see</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because sentiment is the only task the API supports</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the instructors wanted to avoid user prompts completely</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="quiz-track" data-quiz-level="deep">
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The session treats an LLM API as a software dependency with controllable parameters rather than as a generic chat endpoint." data-explanation-wrong="The strongest shift is operational and architectural, not aesthetic.">
+          <h3 class="quiz-question">1. Which statement best captures the conceptual shift in this section?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An API is mostly the same as a UI, except it has uglier output</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An API turns model use into a programmable component with explicit inputs, credentials, and outputs</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An API matters only when the model is newer</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Hidden default instructions imply that observed UI behavior may already reflect invisible system choices." data-explanation-wrong="The UI is not instruction-free; it simply hides some of the setup.">
+          <h3 class="quiz-question">2. What is the most important implication of saying the UI likely has a hidden default system prompt?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Behavior in the UI may already be shaped by unseen rules even when users do not specify them</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The UI ignores all user input</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The API can never use default behavior</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Tokenization matters because the model's internal representation, context limits, and cost accounting all operate on tokens rather than human word boundaries." data-explanation-wrong="Tokens are not just trivia; they explain the system's actual interface to language.">
+          <h3 class="quiz-question">3. Why does tokenization matter beyond vocabulary trivia?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it only affects image generation</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it determines browser compatibility</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model's representation, limits, and costs all operate on tokens rather than human words</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Making a notebook copy is about preserving the working artifact that learners will modify, not about changing ownership of the original link." data-explanation-wrong="The key issue was persistence of edits.">
+          <h3 class="quiz-question">4. Why was copying the notebook essential from a workflow perspective?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It changes the API provider</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives the learner a persistent editable artifact instead of a disposable view</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It disables tokenization errors</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The key warning is a data-governance issue: a public external API is not the place for confidential internal information." data-explanation-wrong="This was a governance boundary, not a question of prompt quality.">
+          <h3 class="quiz-question">5. Why is the warning about proprietary Trane information fundamentally important?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it recognizes that data security and company boundaries matter independently of whether the model can answer well</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because internal data makes the model token limit smaller</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because public APIs reject all enterprise terms automatically</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. Looking at the full object early can help learners understand what the API is actually returning before they narrow to the key field." data-explanation-wrong="The raw object was noisy, but it was not pointless.">
+          <h3 class="quiz-question">6. Why was it still useful to inspect the full response object at least once?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the answer text is never included anywhere else</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it converts the output into JSON automatically</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it reveals the broader shape of the return object before you narrow to the answer field you care about</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The API separates concerns that the UI usually compresses into one interaction." data-explanation-wrong="The separation was about program structure, not about adding more confusion.">
+          <h3 class="quiz-question">7. What important separation does the API call make explicit that the UI often hides?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It separates token IDs from billing records</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It separates credentials, behavior instructions, user input, and output handling into explicit pieces</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It separates text from every other modality forever</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Code is useful because it lets one call become part of a broader automated flow or application logic." data-explanation-wrong="The lesson consistently pointed beyond one-off chatting toward software usage.">
+          <h3 class="quiz-question">8. Why does using code better support future workflows than only using a UI?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the call can be embedded into larger automation or application logic</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because code removes the need to choose models</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because UIs cannot display text output</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Yes. Token IDs are the model's working representation, which explains why odd splits and partial-word behavior can occur." data-explanation-wrong="The point is about internal representation, not about whether humans can still read the output.">
+          <h3 class="quiz-question">9. What does the difference between token IDs and human words mainly teach?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That people should stop writing natural language prompts</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That every token is a full sentence</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That the model's internal representation of language does not line up perfectly with human word boundaries</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The pedagogical value of the minimal demo is that it isolates the moving pieces before the class adds more complexity." data-explanation-wrong="Small does not mean unimportant; it means easier to reason about.">
+          <h3 class="quiz-question">10. Why was the minimal sentiment demo a good teaching scaffold?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because sentiment analysis is the final business goal of the course</span></button>
+            <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it isolates the API mechanics before the class adds structure and tools</span></button>
+            <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it avoids needing credentials</span></button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <button class="btn reset-section-btn" type="button" onclick="resetQuiz('quiz-section1')">Reset Section</button>
+    </div>
+  </div>
+</section>
