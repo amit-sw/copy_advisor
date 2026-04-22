@@ -1,0 +1,644 @@
+1:131 minute, 13 secondsI hope folks didn't think this session was cancelled because of the email. No one has joined.
+1:211 minute, 21 secondsWe'll wait and see.
+2:072 minutes, 7 secondsHi. Good morning, James.
+2:162 minutes, 16 secondsIt help if I wasn't on mute. Good morning. Good afternoon. Good afternoon. Is it afternoon for you?
+2:242 minutes, 24 secondsUh it it is about a minute ago. Yep. Oh, okay. I see. Yeah, it's 10:00 a.m. for us.
+2:332 minutes, 33 secondsOh, yeah.
+2:362 minutes, 36 secondsWe were wondering if the email that Jennifer sent confused some folks. Like we don't have um a lot of people joining. Usually everyone joins on time.
+2:462 minutes, 46 secondsDo you know if there's something internal going on in train where everyone is busy with something else? Uh, I don't know about them being busy.
+2:542 minutes, 54 secondsWe did get an email saying they were cancelling a bunch of the meeting. Let me see if I can find it. I don't know if I pinned them or
+3:023 minutes, 2 secondsnot. Yeah, I I I was a little confused at first on that email, but then after I read it closely, she I mean it was clear
+3:093 minutes, 9 secondsit was you had to read it, but it was it was canceled next week. And then she said she was removing them from calendars or you guys did and those all
+3:183 minutes, 18 secondscame off the calendar next week, the office hours and then the meeting invite.
+3:243 minutes, 24 secondsSo it might just be people are jumping from other meetings.
+3:283 minutes, 28 secondsOh, I see. But maybe we'll lose. Yeah. I mean, I'm sure somebody got confused by that email because it to it took a little focus to like look at like read
+3:363 minutes, 36 secondsit and Yeah. Yeah. Yeah. That makes sense. Thank you, Amy. Yeah.
+3:473 minutes, 47 secondsYeah. We definitely have fewer folks today. Okay. Um I think we should still get started. Um, we going to start with
+3:543 minutes, 54 secondsthe recap and I hope others are going to join. Or maybe I could send an email.
+4:024 minutes, 2 secondsIt's probably too late if people are not joining.
+4:054 minutes, 5 secondsI bet if you sent an email, you might get some people who are who were confused. Okay.
+4:114 minutes, 11 secondsOh, Kendall said she had some issues with Zoom today. So, maybe others are having the same issue. I I did not have
+4:194 minutes, 19 secondsissues, but maybe others are. I've had weird computer stuff this week, so it might just be.
+4:294 minutes, 29 secondsOkay, got it. So, maybe we'll get a reminder sent um and let's get started with our uh
+4:374 minutes, 37 secondsrecap of what we did um during our last session.
+4:474 minutes, 47 secondsOh, sorry. I hope everyone can see my screen that says session 4 recap. Okay,
+4:524 minutes, 52 secondsawesome. So, last session we talked about neural networks. We didn't quite talk about the math, but we talked about
+4:594 minutes, 59 secondsthe different layers, sorry, different layers of neural networks. How there's a input layer, there are a bunch of hidden
+5:075 minutes, 7 secondslayers, and there's a output layer. And what makes a neural network really deep is if you have a lot of layers in
+5:155 minutes, 15 secondsbetween. So we introduced neural networks mostly because this is the
+5:225 minutes, 22 secondsarchitecture that's behind a lot of um AIS that you're seeing around you be it
+5:295 minutes, 29 secondswith computer vision or with natural language processing chat GPT everything is based on neural networks and a neural
+5:385 minutes, 38 secondsnetwork is deep when you have like a lot of uh layers. So we introduced neural networks and then we started with the
+5:475 minutes, 47 secondstopic of large language models like why is a model big? What makes a model big
+5:545 minutes, 54 secondsand as a recap what I also want to uh go over is how the size of these models
+6:026 minutes, 2 secondskept increasing with different iterations but then it started going down as well.
+6:096 minutes, 9 secondsSo what happened is everyone started making bigger and bigger neural networks and then they realized oh my god when
+6:176 minutes, 17 secondsthe neural network is too big it's so hard to use it to make predictions you you need a much more powerful hardware
+6:246 minutes, 24 secondsand the quality of it is not really improving as much. Instead if we do something else the quality improves. And
+6:346 minutes, 34 secondstoday we are going to uh introduce ourselves to what that something else is which was improving the quality of
+6:416 minutes, 41 secondsneural networks. So now everyone um is trying to create smaller neural networks that are just as powerful as the bigger
+6:496 minutes, 49 secondsones. That's kind of the direction that we are going in. Um we didn't did not discuss the training costs. Um and the
+6:586 minutes, 58 secondsidea is that um we will talk a little bit about it um in today's session because we are going to be using an API
+7:077 minutes, 7 secondscall today. Uh that's in the plan for today's session. But this is a table which we kind of skipped over in our
+7:157 minutes, 15 secondslast session but I do want to talk about it a little bit before we get started with today's session. So what you're
+7:227 minutes, 22 secondsseeing here is the first column is all all the different models.
+7:287 minutes, 28 secondsYou probably have heard about most of them, right? And the second column tells you when their training ended. So if you
+7:377 minutes, 37 secondslook at it, Gemini 3 Pro is the latest one. There are more that came out in March. We haven't updated that over here, but this shows you when it ended,
+7:477 minutes, 47 secondswhat kind of GPU they were trained on.
+7:517 minutes, 51 secondsAnd then the TF uh the T-flops, which is how much compute they required. And FP8 is just about the precision of it. We
+7:597 minutes, 59 secondsdon't need to go too deep into that. But this also talks about how many of this type of chips were used to train the
+8:088 minutes, 8 secondsmodel, how long it took to train the model. If we were to use a single chip then how long it would have taken to
+8:158 minutes, 15 secondstrain the model and what the cost of training was. So these models that we use the large language models that we
+8:238 minutes, 23 secondsuse um which we saw a demo also in our last session of how they make predictions training them is quite
+8:308 minutes, 30 secondsexpensive. It's in hundreds of millions and sometimes even billions of dollars.
+8:388 minutes, 38 secondsSo this is how much all the companies are spending in order to train these models. So what I want to focus on today
+8:468 minutes, 46 secondsis given um how big these models are which we saw over here like how many uh
+8:548 minutes, 54 secondsbillions of parameters these models have and how expensive they are to train.
+9:009 minutesWhen we think about using these models in our workplaces,
+9:069 minutes, 6 secondshow should we think about it when we try to customize them for our own application? For example, if you want to
+9:139 minutes, 13 secondsuse these models to answer questions about your return policy on some train equipment, just as an example, the model
+9:229 minutes, 22 secondsof course doesn't know anything about it. So how should you think about using a model specifically for your kind of
+9:309 minutes, 30 secondstask your application which by default the model has no idea about essentially what these have is a vague recollection
+9:389 minutes, 38 secondsof the whole internet that's how they are trained on right and that's the knowledge they have they have a really good understanding of the English
+9:459 minutes, 45 secondslanguage and stuff like that um there's a question yes go ahead yes sorry this I love this chart um just
+9:539 minutes, 53 secondssuper curious. Have you seen anything that has like a satisfaction rating with each of these and I know like certain models do better with different things,
+10:0110 minutes, 1 secondbut I I know us personally, we just added like GPT 5.1 to our internal tool and I hate it. Like I I like the other
+10:1010 minutes, 10 secondsversions better than 5.1 and and it was interesting to see that chart before this that showed, you know, that they actually like lowered uh the number of what was it parameters, right?
+10:2010 minutes, 20 secondsAnd so I was curious if that had anything to do with it. But um I think like model routing is really interesting of like picking the best
+10:2810 minutes, 28 secondsmodel to answer a question. But really curious to hear if y'all have seen anything on like ratings around the different models.
+10:3610 minutes, 36 secondsYes, sure. We can surely talk about that. There are in fact some standard EWAS, but I'm curious to um know if
+10:4310 minutes, 43 secondsthere are any specific things that you don't like about 5.1 compared to the previous ones. Is it the speed or the
+10:5010 minutes, 50 secondsquality of the response? Like, can you tell me? Yeah.
+10:5410 minutes, 54 secondsYeah, it's definitely like the the quality of the response is different. I wouldn't say the quality is necessarily as bad, but like it's not uh working with our file upload feature very well.
+11:0511 minutes, 5 secondsSo, it doesn't handle it and it goes into this endless loop of like, okay,
+11:0911 minutes, 9 secondsattach the file. Let me know when you attach the file. You're like, here's the file. It's like, okay, do you want me to execute? Say yes. Yes. Are you sure you want me to execute? Say yes. And so, it
+11:1611 minutes, 16 secondsjust like keeps going in this awful loop. And I don't know if that's like a known issue outside with GPT5, but it's just been really interesting to see like
+11:2511 minutes, 25 secondsthe addition of that model and the problems it's posed.
+11:3011 minutes, 30 secondsThank you. Yes, that that definitely helps me understand like why you felt it was not as comfortable. Um I have felt
+11:3711 minutes, 37 secondsit also. Uh we are using um because uh we use the public like availability right. We are not limited by the
+11:4411 minutes, 44 secondsinternal stuff. So we are using the latest uh GPTs and they are much better uh for sure. But yes when this
+11:5111 minutes, 51 secondstransition happened I also had a similar experience. Um now your question about is there something that talks about
+12:0012 minutessatisfaction or how comfortable people feel using it. Maybe not directly but indirectly yes. There are some evals
+12:1012 minutes, 10 secondsthat specifically talk about um how well these models are doing. So these are evaluating the quality. They are not
+12:1912 minutes, 19 secondsevaluating exactly um how what the user experience is of using the model. They
+12:2612 minutes, 26 secondsare mostly evaluating the quality of the response compared to some benchmark. Now the reason this is happening yes it is
+12:3412 minutes, 34 secondssomewhat related to the model size uh going down but not exactly. So what's happening is people have realized instead of making
+12:4212 minutes, 42 secondsbigger and bigger models how about we have a single model but then instead of making one call to the model we add some
+12:5012 minutes, 50 secondskind of reasoning so that it's multiple calls and the quality of the output from that is definitely better. The trouble
+12:5812 minutes, 58 secondsis not exactly with that. The trouble is if I ask what's the capital of France,
+13:0413 minutes, 4 secondsright? Some simple question like that which does not require that much reasoning, it'll still go into a really really long loop and take a long time to answer.
+13:1413 minutes, 14 secondsSo that really like kills the experience like you have to wait and it's just going on and on and on and sometimes the answer it gives it's just too
+13:2213 minutes, 22 secondscomplicated or it has gone like off the tracks or it's too deep into these things. So there is a routing problem.
+13:3013 minutes, 30 secondsUsually if you select like auto detect like automatically it should detect what model to use and then call that model
+13:3813 minutes, 38 secondsthat definitely works a little bit better and around this time which is like 5 months back or something I this
+13:4513 minutes, 45 secondsactually caused me to switch to Gemini and other models and see how their response was and I felt much better with those responses. So the problem you're
+13:5413 minutes, 54 secondsfacing I think um a lot of people can relate to it what you feel with the model and I saw there was one more
+14:0114 minutes, 1 secondresponse on the chat. Um it does get better and the reason it's this way is not necessarily because the size was
+14:1014 minutes, 10 secondsreduced but more because a lot of reasoning was added and the logic behind that reasoning has not been really um optimized.
+14:2014 minutes, 20 secondsSo it's something like that. I I hope that answered the question. That was really helpful. Thanks.
+14:2714 minutes, 27 secondsOkay. Thank you. Any other questions?
+14:3714 minutes, 37 secondsOkay. So kind of uh what we discussed uh uh in our last session towards the end of it is how these models are just
+14:4514 minutes, 45 secondspredicting the next word and we showed a demo that shows you exactly
+14:5214 minutes, 52 secondshow the whole process happens. We shared a link um to the demo and pretty much that's where we stopped. we showed how
+14:5914 minutes, 59 secondsthe probability of the next word um is predicted by the model and it picks one of the top probability values and that's
+15:0815 minutes, 8 secondswhy you get some variation. So that's kind of where we ended um our last session.
+15:1515 minutes, 15 secondsSo to just recap um I don't have a lot of questions uh just a few of them we had discussed uh what training these
+15:2415 minutes, 24 secondsneural networks means. So if we go back here where we are saying that these models are being trained. So when you think about that
+15:3215 minutes, 32 secondswhat do you think is happening when you are training a neural network and what is it that you're trying to
+15:3915 minutes, 39 secondsachieve through the process of training it.
+15:5615 minutes, 56 secondsUh you're you're trying to set the parameters. So you were trying to turn the knobs. I think you hear it. Uh so setting that value.
+16:0716 minutes, 7 secondsAnd what was the second part of the question?
+16:1016 minutes, 10 secondsYes. Yes. So you're trying to update the parameters and the parameters are essentially what we saw over here.
+16:2016 minutes, 20 secondsRight. So there are billions of parameters and the goal of training is to which we which we are seeing here.
+16:2716 minutes, 27 secondsThe goal of training is to figure out what are the optimal values of those parameters and it could take a really
+16:3616 minutes, 36 secondslong time and a lot of compute and a lot of money um to figure that out. So yes,
+16:4216 minutes, 42 secondsyou're u you're exactly right. The goal of training is to figure out the right parameters. But what is right? What are
+16:4916 minutes, 49 secondsright parameters? Those are the parameters which make the model behave the way you want it to behave. So if you
+16:5816 minutes, 58 secondswanted to generate text like how large language models are then the goal is to figure out the parameters which will
+17:0517 minutes, 5 secondsgenerate the best text. If your goal is to classify something then you want to figure out the best model parameters
+17:1317 minutes, 13 secondsthat are going to classify that accurately.
+17:1817 minutes, 18 secondsSo whatever you're trying to optimize for the idea is you want to update the model weights to be perfect uh to fit
+17:2517 minutes, 25 secondsthat need. Uh second question is when we say a neural network is deep what does that mean?
+17:3817 minutes, 38 secondsIt has a a lot of parameters right there's a there's a a number of steps that it goes through.
+17:4517 minutes, 45 secondsThank you. Yes. So a deep network has a lot of parameters and internally it has a lot of layers. So if we think about
+17:5317 minutes, 53 secondsGPT or llama models or Gemini models they have I would say at least more than
+18:0018 minutes10 layers within them and each layer is special. It's a transformer layer. So having more layers makes it deep and that also means that it has a lot of
+18:0918 minutes, 9 secondsparameters. So deep neural networks usually have a lot of parameters.
+18:1618 minutes, 16 secondsSo, we didn't quite go deep into this, but we discussed it a little bit. Uh,
+18:2118 minutes, 21 secondswhen we say uh tokens, what comes to mind? What is a token?
+18:3118 minutes, 31 secondsEncode a bit for a word, isn't it? Sorry.
+18:3618 minutes, 36 secondsBut they they encode like words a specific way. Mhm.
+18:4218 minutes, 42 secondsAnd then they're comparing those that those tokens essentially instead of comparing the actual words themselves.
+18:4918 minutes, 49 secondsSo instead of training, they use the word train as as a token and the word the the
+18:5718 minutes, 57 secondssuffix ing is a is a token as well. And thank you. Thank you. That makes sense.
+19:0419 minutes, 4 secondsSo uh just to summarize uh what James was saying is a token is essentially a representation of a word
+19:1219 minutes, 12 secondsor a subword right so that's called a token ID because it's an ID that you're giving to the vocabulary of the model.
+19:2319 minutes, 23 secondsSo just to elaborate on that I want to look at I want to share this link with everyone.
+19:3819 minutes, 38 secondsSorry I just saw the response on chat.
+19:4019 minutes, 40 secondsThank you. Yes, that's correct. Um so this is a tokenizer. So a way to think about it is if I say I like learning AI
+19:5019 minutes, 50 secondsfor example then you can see that this sentence is represented in four tokens
+19:5819 minutes, 58 secondsand those four tokens are I like so space like space learning space
+20:0720 minutes, 7 secondsAI those are the four tokens so token is not necessarily a word it's it could be
+20:1420 minutes, 14 secondsa subvert Maybe I use a word like unhappiness for example.
+20:2320 minutes, 23 secondsSo this single word is three tokens not one. So un is a token, h itself is a token and happiness is another token,
+20:3320 minutes, 33 secondsright? Or if I say I am I was trying to show a place where it
+20:4120 minutes, 41 secondswould divide a word. I guess the word has to be really long for it to do that.
+20:4520 minutes, 45 secondsSo it could be a word, it could be space plus the word or it could be a part of a word. So that's how a language model
+20:5220 minutes, 52 secondsthinks about a token. And every token has an ID. So a way to think about it is I has an ID 40,
+21:0221 minutes, 2 secondsan has an ID 939,
+21:0621 minutes, 6 secondsjumping has an ID 50586 and so on. So every um token that you're
+21:1421 minutes, 14 secondsseeing comes with an ID. What if I type something which is meaningless something like that?
+21:2121 minutes, 21 secondsIt will still divide it into the smallest parts it knows. So uh think about this as the model has a dictionary
+21:3121 minutes, 31 secondsof what it knows. We as humans have a vocabulary, right? Like you may not know all the words I know. I may not know all the words you know. We may not know the
+21:4021 minutes, 40 secondssame languages. So similarly, a large language model also has a vocabulary.
+21:4521 minutes, 45 secondsThere are things it knows and there are a lot of things it doesn't know. But at the lowest level, it definitely knows every single character. So if you type
+21:5421 minutes, 54 secondssomething that's meaningless, it will still convert it into tokens because it sees ask. Oh, that's a word, right? And
+22:0122 minutes, 1 secondthen J DF doesn't make any sense. So J by itself is a character it knows. So it'll just have J as a token.
+22:1022 minutes, 10 secondsSo it definitely knows all the individual characters like ABC D F H I JK L like the whole thing and some special symbols those are definitely a
+22:1922 minutes, 19 secondspart of the vocabulary but apart from that having words like this are also a part of the vocabulary.
+22:2722 minutes, 27 secondsSo there's a question is there a spelling check before tokenizing or a grammar check? There could be that really depends on the implementation
+22:3422 minutes, 34 secondsbehind the scenes. So that's like a pre-processing step. None of that is going on over here. So if I say
+22:4322 minutes, 43 secondsthat's fine. It didn't correct it. It just thought Ju is a token and is a token.
+22:5322 minutes, 53 secondsAnd it does have some noise tolerance. The models do have some noise tolerance.
+22:5722 minutes, 57 secondsum if even if you don't uh do a grammar check or a spelling correction before it goes in.
+23:0523 minutes, 5 secondsUm so coming back to the question, sorry this was a long winded thing. So coming back to our deck um which is over here.
+23:1923 minutes, 19 secondsOkay. So a token is essentially the a unit of vocabulary that your model
+23:2623 minutes, 26 secondsknows. It could be a word, it could be a subword, it could be a single character also.
+23:3323 minutes, 33 secondsIt's a part of your vocabulary and yes each token is represented using an ID and each token could be converted into a
+23:4123 minutes, 41 secondslist of numbers. That's something that we are going to talk about. We haven't you know covered that yet in our sessions.
+23:4823 minutes, 48 secondsSo let's uh before we talk about uh what the plan for the next session uh for for the uh rest of the session is uh I'll
+23:5623 minutes, 56 secondsjust pause here to see if there are any other questions on what we have seen so far.
+24:2524 minutes, 25 secondsOkay. Um Okay. So let's talk about uh what we plan to do. Last week we had
+24:3224 minutes, 32 secondssent a um a form to get response. It was anonymous and I want to share that feedback before we talk about how we are
+24:4024 minutes, 40 secondsgoing to organize the sessions uh moving forward. So one question was the
+24:4724 minutes, 47 secondstechnical depth of the sessions and I would say 60% about 60% think that it's
+24:5524 minutes, 55 secondsat the level that it needs to be. But there are a few who think it's too basic and some who think it's too technical
+25:0225 minutes, 2 secondswhere it's too heavy on the math and the code which makes sense. So it's because we have um participants from different
+25:1025 minutes, 10 secondsbackgrounds. I want to share that this co this cohort is a level one cohort. So we are offering this in three levels.
+25:2025 minutes, 20 secondsLevel one is the is the cohort where we are going to be very light on code as light as possible with code. It's not
+25:2925 minutes, 29 secondszero code. There will be some code but it will be not as much and I also saw a comment that we did share some code but
+25:3825 minutes, 38 secondswe didn't go over it. that was the code for algorithms like decision trees and
+25:4525 minutes, 45 secondsum random forest and stuff like that. So that was intentional because it's level one. We have taught the same content in
+25:5325 minutes, 53 secondslevel two where we have spent a lot of time with the code and made a lot of changes to the code as well. But because
+26:0226 minutes, 2 secondsum we don't intend to go too deep into the code for this particular level,
+26:0726 minutes, 7 secondsthat's how it is. So one suggestion is if this is not at the right level in terms of how technically deep it is,
+26:1626 minutes, 16 secondslevel one is per perhaps not the right level for you and you can consider changing to level two. Those cohorts are
+26:2526 minutes, 25 secondsalso happening like in parallel. I think they're a little bit ahead uh right now but there's another one starting in a couple of weeks. So you can consider
+26:3326 minutes, 33 secondsthat and see if that would have been better uh for your background and what your what your expectation is from the
+26:4126 minutes, 41 secondscourse. And I do see that um there are a few people who think it's too technical in terms of the math and the code. So we don't want to make it too technical.
+26:5326 minutes, 53 secondsWhat we will do is we will still show a little bit of code but we are going to refrain from going too deep into math.
+27:0227 minutes, 2 secondsLevel three is where that part is much deeper like going into the algorithms even the transformer algorithm and stuff
+27:1027 minutes, 10 secondsthat's more reserved for level three uh of the cohort. If you have any questions about when these uh cohorts are
+27:1927 minutes, 19 secondsstarting, what the levels are and their descriptions, please contact Jennifer and she'll tell you um exactly kind of what the idea behind these cohorts is.
+27:2827 minutes, 28 secondsSo I think most of you are okay. Some of you feel u that it's too deep and we'll definitely address that. But if it's not
+27:3627 minutes, 36 secondsdeep enough, my suggestion is consider joining another level which is more appropriate for your background.
+27:4427 minutes, 44 secondsUm we also wanted to know in terms of content. So the point of this uh the point of this training is to help you.
+27:5227 minutes, 52 secondsIt's the first cohort, right? The first uh time that we are going to be building the fundamentals. So it's meant to be
+28:0128 minutes, 1 secondmuch more of an introduction but then it also has to be useful for you. So that's the reason for asking this question of
+28:0828 minutes, 8 secondshow relevant do you think the content is? um how useful it is. Um you're spending your time here, we are spending our time here. We want to make sure that
+28:1728 minutes, 17 secondsthere is a good match. So I would say there are four um only seven people responded I think. So four of them think that it's good and three of them have
+28:2628 minutes, 26 secondsvarying levels of 1 2 and three. And the other part of the feedback was that you wanted to be much more application
+28:3228 minutes, 32 secondsoriented and much more uh talking about how this is uh used in the real world.
+28:4028 minutes, 40 secondsat different um in different applications in different companies what's happening in the industry. We are definitely going to do that. So we we'll
+28:4828 minutes, 48 secondsaddress uh that part for sure and thank you for giving us really long detailed
+28:5528 minutes, 55 secondsresponses about uh what you thought with what has happened so far. I know one person said it's you know too soon to uh
+29:0429 minutes, 4 secondsassess that part but there were um good long responses. Thank you for taking the time to give us that response.
+29:1429 minutes, 14 secondsThis is a summary of them. This is not any single person's response, but based on everything that we got, this is kind of an AI aggregation of it, which uh
+29:2329 minutes, 23 secondsforms automatically did for us. And we did go over individual responses as well. So, let me address the one about
+29:3129 minutes, 31 secondsmaterial distribution and the timing of the distribution. This is a uniform feedback uh to improve how quickly we
+29:3929 minutes, 39 secondssend them and also to improve what we are sending. If we could send the materials that were taught and also the
+29:4829 minutes, 48 secondsmaterials that are going to be taught in the next session that would help everyone because you could open it up and then like take notes on it. So that
+29:5629 minutes, 56 secondsabsolutely makes sense. today's session onwards, we'll make sure that the material is sent within 24 hours. There
+30:0430 minutes, 4 secondsmay be a slip a little bit depending on what else is going on. But that's going to be our um goal to send it 24 hours before. And from next session onwards,
+30:1430 minutes, 14 secondsnext week there are no sessions. Um what we'll do is at least um 5 days or 4 days
+30:2130 minutes, 21 secondsin advance we will send you the material of all the slides um that are going to be covered in the next session. So you
+30:3030 minutes, 30 secondshave that ready if you have the time you can go over it and take notes.
+30:3630 minutes, 36 secondsSo that's the overall feedback in terms of material distribution. So let's talk about hands-on programming and uh
+30:4330 minutes, 43 secondspractical application and strategy. So the practical application part is already going to happen. That was a part
+30:5030 minutes, 50 secondsof our plan to begin with to um talk more about large language models and build upon
+30:5730 minutes, 57 secondsone kind of framework or strategy of using these large language models um for personalized data, right? Like for your
+31:0631 minutes, 6 secondsown data set, what kind of pattern can you um use and what kind of patterns are generally being used? So there will be a practical application part moving
+31:1531 minutes, 15 secondsforward. There are some building blocks that we need to cover before we get to this part. But we moving in the right direction. More detailed hands-on
+31:2431 minutes, 24 secondsprogramming. This I think is the hardest for us to address. Um mostly because we
+31:3131 minutes, 31 secondsdo have a lot of feedback on how uh the programming part and the coding part
+31:3831 minutes, 38 secondsmight be too deep. And I think um that comes from the fact that in the first session or the second session we did go
+31:4631 minutes, 46 secondsa little bit deeper into it to show the difference between software engineering and how so that was the goal. It was not
+31:5331 minutes, 53 secondsbecause you had to like you know uh do that program but the goal was more about showing you or giving you an intuitive understanding of how software
+32:0132 minutes, 1 secondengineering is fundamentally different from AI. So we do have to address that as well. um we are most likely not going
+32:1032 minutes, 10 secondsto go very very deep into hands-on programming though there will be programming for example in today's session we are going to spend a
+32:1732 minutes, 17 secondssignificant time on the open AI APIs and the goal behind that is not programming
+32:2432 minutes, 24 secondsprogramming but more to show you how uh LLMs have evolved from what they were to being to using tools and that nicely
+32:3332 minutes, 33 secondsfolds into a practical application of the tool as So that's so far how we plan to address the feedback. If you have more feedback,
+32:4432 minutes, 44 secondsplease feel free to tell us now or if you want to send us an email and or ping us on Slack either in the common channel
+32:5332 minutes, 53 secondsor individually, we are happy to discuss it more.
+32:5832 minutes, 58 secondsSo I'll just pause here in case anybody wants to add something. I do see a response um on the chat that uh oh um did not fill up the survey.
+33:0933 minutes, 9 secondsOh, thank you. Okay, so I'm happy to know that um you're finding this um this session useful. Thank you.
+33:2333 minutes, 23 secondsDoes anybody else have uh something to add beyond what we have received in the feedback?
+33:3133 minutes, 31 secondsIs there a way to access both both like level two and level three's recordings?
+33:3833 minutes, 38 secondsI'm a I'm a programmer, but I' I've never done anything with AI other than I built a model in Python
+33:4633 minutes, 46 secondssix years ago. Some guy had a book out on O'Reilly or Safari and I just read the book and followed along. So,
+33:5433 minutes, 54 secondsI have a a base level of knowledge of AI. Mhm.
+33:5933 minutes, 59 secondsNot enough like I didn't know what tokens were because it was never discussed in the book, you know, it was just a here's how you build it kind of like step by step and it never went over the the AI fundamentals. So,
+34:0934 minutes, 9 secondsright.
+34:1034 minutes, 10 secondsI think I think the material in this course is good, but I would also like to see the the more advanced end. So, I don't know if Mhm.
+34:1734 minutes, 17 secondslike if I could just get access to the recordings or if I'd have to join those courses as well or if we're going to are
+34:2434 minutes, 24 secondswe going to continue like after this set is done, are there going to be more level two and level three courses downstream?
+34:3234 minutes, 32 secondsMhm. Yes. Yeah.
+34:3434 minutes, 34 secondsRealistically, I could take level one now, level two later, and level three. Yeah. You know, eventually. Mhm.
+34:4134 minutes, 41 secondsSo, yeah. So let me answer the first part of the question which is can you get access to the recordings? You can get access to the recordings and all the
+34:4934 minutes, 49 secondsmaterials. We can send them over to you in an email. Right now I think we have done about eight sessions in level two.
+34:5834 minutes, 58 secondsSo we could share those eight sessions and the materials of those eight sessions with you. So that I don't think is a is a problem. Um the other part are there more cohorts happening? Yes,
+35:0835 minutes, 8 secondsthey're happening throughout the year.
+35:1035 minutes, 10 secondsThere are many more level two iterations maybe four more at least just this year. So you can definitely join one of them.
+35:1835 minutes, 18 secondsThere are level three iterations as well. There are more level one iterations also happening. So we have multiple of these uh running in parallel and multiple times throughout the year.
+35:3035 minutes, 30 secondsDo we know if those other like because I know we sent out um like a signup sheet.
+35:3735 minutes, 37 secondsSo are those other iterations already I mean are there too many people in each
+35:4435 minutes, 44 secondsone or um I would not know that. I think the best person who can answer that question is Jennifer.
+35:5335 minutes, 53 secondsYeah. Okay.
+35:5435 minutes, 54 secondsShe coordinates the participants and like and I don't think she has yet told us about the cohorts that have not
+36:0236 minutes, 2 secondsstarted yet. Um so I don't know how many are there but you could yeah contact her and she should be able to it also
+36:1036 minutes, 10 secondsdepends on your time like when you have time these are all happening at different times on different days so you can see something that's appropriate for
+36:1836 minutes, 18 secondsyou and I think there should be space at this point. Yeah. Okay.
+36:2336 minutes, 23 secondsUm just maybe to jump in because I had this some of these same questions uh earlier on. uh what was communicated to me was
+36:3136 minutes, 31 secondsthat the material is the same in each cohort uh whatever the level but the
+36:3836 minutes, 38 secondslevel of explanation is different uh and then uh they would they're not meant to be taken one after another they're
+36:4636 minutes, 46 secondsmeant to be taken just once um so she was when I asked if uh I should take one and then I could take two later on she
+36:5236 minutes, 52 secondswas like well that's not really how we thought of them because it is same base material Um but that might have changed.
+37:0137 minutes, 1 secondYes. So I'll uh clarify that a little bit. Um I I thought there was one more question. Is there another question?
+37:0837 minutes, 8 secondsI was just going to say that was the same feedback I was given as well.
+37:1237 minutes, 12 secondsMhm. Got it. Um yes, thank you. So I understand the reason for the feedback.
+37:1737 minutes, 17 secondsIt's because at a very high level if you look at what's covered in terms of neural networks or basic like machine
+37:2437 minutes, 24 secondslearning. So this is all supposed to be the fundamental course. It's just at different levels. Is the overall
+37:3237 minutes, 32 secondsdistribution the same? So there are definitely parts which are the same where the level of explanation is very different. But as we come to large language models, if you think about it,
+37:4337 minutes, 43 secondsit's a very large amount of information.
+37:4737 minutes, 47 secondsAnd the way we have divided it into the three levels is for example in level one, we are going to talk about um how
+37:5537 minutes, 55 secondsyou could use the large language models with a rag framework. This is something that we are going to do in level one. In
+38:0338 minutes, 3 secondslevel two also the large language model part stays the same. We are going to look at APIs, tools, all of that. But there we are looking at workflow agents.
+38:1338 minutes, 13 secondsIn level three, we are looking at both rag and workflow agents because everything can be covered a little bit quicker since it is for people who
+38:2038 minutes, 20 secondsalready are working with a lot of these tools and they don't need as much explanation. So I would say to some extent it's correct that if you take
+38:2938 minutes, 29 secondslevel one and then you take level two after that which you can take you will see that the topics are same and there
+38:3938 minutes, 39 secondswill be repetition in terms of the same decision trees and random forests are being covered again but this time we are going much deeper
+38:4838 minutes, 48 secondsinto the code. The same large language model is being covered in level three,
+38:5238 minutes, 52 secondsbut we are going into the transformer paper and we are talking about um the internal structure of the transformer
+39:0039 minutesand if you were to tune it like how would you think about it and stuff like that. So it's true that it's the same and it's not really meant as a
+39:0939 minutes, 9 secondsprogressive curriculum. It's not a progressive curriculum, but if you take level one and then go to level two, you
+39:1539 minutes, 15 secondswill um receive that material at a different level. Even though there may be, I would say 40% overlap, there will be some repetition.
+39:3039 minutes, 30 secondsI hope that clarifies it a little bit more.
+39:4039 minutes, 40 secondsOkay, thank you.
+39:4639 minutes, 46 secondsOkay. Um so yes if you are going to finish this level and then decide to
+39:5239 minutes, 52 secondstake another level in this year um the expectation should be that you will see
+40:0040 minutesum repetition of some parts and you'll see new stuff of some parts because everything is going to be deeper.
+40:1040 minutes, 10 secondsOkay. So okay. So um thank you for all your all your all your feedback and all the questions. Um
+40:1940 minutes, 19 secondsso this session we are going to cover APIs how you can interact with LLMs using APIs and uh I think that will
+40:2740 minutes, 27 secondsconsume a majority of today's session but if there is time I do want to talk about uh semantic comparison so that's
+40:3640 minutes, 36 secondsthe goal um for today. Uh also I think James said that you know when you looked into this six years back tokens was not
+40:4440 minutes, 44 secondsreally a part of it. I think tokens didn't exist at that point. Uh 2017 paper is when the transformer architecture came out, right? So yeah,
+40:5440 minutes, 54 secondsit probably did, but it was not as popular. So that could also be a reason that that's not something that came out.
+41:0041 minutesIt's a very Yeah,
+41:0241 minutes, 2 secondsit was a very minimalist um machine learning program. I think it only had like three layers or something
+41:1041 minutes, 10 secondsis what he said in the book. So it was pretty simple.
+41:1341 minutes, 13 secondsAh, I see. I see. Okay. So it was like MLP multi-layer perceptron. Got it. Yeah. Yeah. Makes sense.
+41:2241 minutes, 22 secondsUm so what we uh so coming back to what we want to cover today, we want to go over uh APIs which is code. But the
+41:3241 minutes, 32 secondspoint of it is not really the code. The point is just looking at how you can have the same interaction that you're having with
+41:4041 minutes, 40 secondsa GPT in a UI using code. And when you use code, what are the things that you could do differently? You can ask the
+41:4941 minutes, 49 secondssame question in a UI or in the code here, which just involves like changing the question, right, in the code. But
+41:5641 minutes, 56 secondsthen you'll see the richness of how you can modify things when you do this in
+42:0342 minutes, 3 secondscode versus the kind of things that you can do in the UI. So that's one part of it. The other part of it is of course we
+42:1142 minutes, 11 secondswant to show you how the large language models compared to how they were when they were introduced have evolved to be
+42:1942 minutes, 19 secondsable to ingest a lot more information and this is where the practical application comes in. This is what makes
+42:2742 minutes, 27 secondsthem um useful practically. So I'm going to go over this.
+42:3542 minutes, 35 secondsOkay. So we have all interacted with uh GPT API. AWAP like your internal one is also based on a GPT model. So what you
+42:4542 minutes, 45 secondsusually do is if you go to the model and you type a sentence, you get a response and that's all is happening in the UI.
+42:5542 minutes, 55 secondsYes, you can change like what kind of model you want to use. When you start doing this in code, there are a few things. When you want to interact with
+43:0443 minutes, 4 secondsthis model, let's say GPT5 mini is the one we are using here and you want to
+43:1143 minutes, 11 secondsask it the same question, the way you do it in code is slightly different. First part,
+43:1943 minutes, 19 secondsyou need to pay to do this. So you need to have something called the API key.
+43:2343 minutes, 23 secondsThat's your secret key. Um, and you have to provide that in code for it to see
+43:3143 minutes, 31 secondsthe key, validate it that, oh yeah, this key is associated with this account. So,
+43:3543 minutes, 35 secondsI'm going to respond. If you don't give it the right key, it's not going to respond. So, everyone can have their own personal secret key. For the training,
+43:4343 minutes, 43 secondsfor training purposes, we'll give you that key. Also, please do not enter any proprietary train information when
+43:5043 minutes, 50 secondsyou're using this key because this is a public like this is not your internal uh GPT. This is a regular GPT. Um, and we
+43:5943 minutes, 59 secondsdon't want any information that's internal to train to go outside. So, please use just regular questions,
+44:0544 minutes, 5 secondspublicly available information and that kind of thing. We will provide you with the OpenAI key and we'll show you how to
+44:1344 minutes, 13 secondsinsert that key. um it it just involves a few clicks in collab. So once we have the key there is a call that you have to
+44:2244 minutes, 22 secondsmake in your program called client dot responses.create. Is this the only call that works? No.
+44:3044 minutes, 30 secondsThere are many forms of this call. So this can change a little bit. And what it requires you to provide as a input is
+44:3844 minutes, 38 secondsit wants you to tell what model you want to use. Do you want to use GPT4 or GPT3 or GPT5? So you need to specify the
+44:4644 minutes, 46 secondsmodel and you need to specify what your question is
+44:5344 minutes, 53 secondsright so that's your user input whatever you want to chat about and then you have to specify a third thing which you don't
+45:0245 minutes, 2 secondswhen you use the UI and that is called instructions.
+45:0845 minutes, 8 secondsSo instructions is something that you don't provide when you use a UI, but it does exist behind the scenes. It's
+45:1745 minutes, 17 secondscalled the system command. And the system command could be you are a helpful AI assistant who will always be
+45:2445 minutes, 24 secondssuper polite, read the question that comes in and answer in the most polite way possible. That could be a system
+45:3245 minutes, 32 secondscommand. We don't know what system command OpenAI uses behind the scenes.
+45:3545 minutes, 35 secondsThey have not exposed it, so we don't know. But I can imagine it will be something like this. It can also be you are never going to answer questions like
+45:4445 minutes, 44 secondshow to build a nuclear bomb or how to you know um anything. So you can put guard rails in your system command. And
+45:5145 minutes, 51 secondsthis is something that's not visible to us when we are using the UI. But when you're using the code, you can create a system command. And what we are doing
+46:0046 minuteshere is slightly different. We are not chatting with it. We are saying your system command is you're going to tell
+46:0746 minutes, 7 secondsif this sentiment is positive or too good. Only choose from these two.
+46:1246 minutes, 12 secondsThere's no neutral. You always have to respond with positive or too good. And that's all you do. And then in the user input, no matter what sentence we input,
+46:2146 minutes, 21 secondseven if we ask a question, what it will do is not answer the question. It'll answer it with this context that oh,
+46:2946 minutes, 29 secondsthis is a sentence. I don't need to answer the question. And what I need to do is analyze the sentiment.
+46:3746 minutes, 37 secondsDoes this make sense how this is different and how you can actually kind of mold it to what you want to do with it?
+46:4746 minutes, 47 secondsIt almost seems like the system command would be more of the the general the prompt that you're giving before you actually give it the task to complete.
+46:5746 minutes, 57 secondsYeah.
+46:5846 minutes, 58 secondsYeah. Yeah. Exactly. Yes. It's hidden though when you're using the UI. It's hidden.
+47:0647 minutes, 6 secondsSo I also want to ask, has anybody um here used an API before to talk to the uh to talk to a large language model?
+47:1947 minutes, 19 secondsNot not for LLMs, but we a couple of us have used APIs quite quite a lot and written.
+47:2547 minutes, 25 secondsGot it. Got it. Okay. Makes sense. So the API makes sense but maybe not an LLM API in the past. You'll realize that they have used it in the past, others
+47:3447 minutes, 34 secondshave not. Okay, makes sense. So we are going to do this um together as an exercise but before we do that I wanted
+47:4247 minutes, 42 secondsto go over u every single line and explain why this is different and how it gives you more power.
+47:5147 minutes, 51 secondsOkay.
+47:5347 minutes, 53 secondsSo now let's talk about um the next level of using an API which is how most people use this API.
+48:0348 minutes, 3 secondsUm oh sorry yes I can see that it is 10:47 so it's probably time for a break.
+48:0848 minutes, 8 secondsI'm going to finish this slide deck and we'll take a break before we start going over the code the collab notebook that
+48:1548 minutes, 15 secondsthat I share. So let's look at this piece of code. This is slightly more complicated compared to what we were doing here, but it's also more powerful.
+48:2648 minutes, 26 secondsSo what we did here is we just called the large language model, gave it the model whatever we want our user input to
+48:3448 minutes, 34 secondsbe. This is variable. This is whatever we type in the window, right? And whatever the system command is, how the LLM should think about the input. Now
+48:4348 minutes, 43 secondslet's go here. So let's talk about what's common. What's common is there is a system prompt just like there was a
+48:5148 minutes, 51 secondssystem prompt over here. I know it's not named the same and then there is a user prompt. In this case it happens to be a
+48:5848 minutes, 58 secondsnews article but it could basically be whatever you want it to be. You could enter pretty much anything over here.
+49:0349 minutes, 3 secondsThat part stays the same. You are still telling it what model to use. That part also stays the same. What has changed is
+49:1249 minutes, 12 secondsyou have an additional thing called response format which did not exist over here.
+49:2149 minutes, 21 secondsAnother change is we are using client.hat.comp completions.parse.
+49:2749 minutes, 27 secondsThis is a different way of calling the large language model compared to how we called it here. There are many ways to call the model. So this part you'll see
+49:3549 minutes, 35 secondsis not really fixed but essentially all of them are doing the same thing.
+49:3949 minutes, 39 secondsthey're invoking the model. The reason the calls are different is the kind of things that you can give it are
+49:4749 minutes, 47 secondsdifferent. So this is different and this is different. And if there's one thing that you need to focus on in the entire
+49:5349 minutes, 53 secondscode, it is this. So here we are saying response format is equal to something called news extraction. So what is news
+50:0250 minutes, 2 secondsextraction? News extraction is defined over here. And what it is saying is news
+50:0950 minutes, 9 secondsextraction is an object which contains three things lottery jackpot organizer.
+50:1850 minutes, 18 secondsWhat and it says that oh lottery is of type string jackpot is a number organizer is a string.
+50:2550 minutes, 25 secondsSo what you're telling the large language model is hey look at the system prompt look at the news article that I'm going to post which could be pretty much
+50:3350 minutes, 33 secondsanything. um whatever you can just take any random news and put it over there right but then what I want you to do is
+50:4050 minutes, 40 secondsI want you to not give me a free form response like how our models right now do in the UI you ask it any question it's a free flowing response right I
+50:4850 minutes, 48 secondsdon't want that I want a formatted response where the format of your response is going to be a string
+50:5750 minutes, 57 secondsan integer and another string so you're forcing the response wants to have
+51:0551 minutes, 5 secondsstructure and this is a very powerful um idea uh because this is what makes the LLM practical. If this was not there,
+51:1751 minutes, 17 secondsyou can't really use it in your software pipeline because it's just giving you a ton of free flowing text. How do you use a ton of free flowing text downstream?
+51:2751 minutes, 27 secondsHow do you make use of it? In any software pipeline, you need structure.
+51:3351 minutes, 33 secondsIt needs to be a JSON, a dictionary or some kind of structure. So this is something that made the LLMs be a little
+51:4051 minutes, 40 secondsbit more useful. If you could force the large language model to have structure in its response.
+51:4851 minutes, 48 secondsSo that's the idea behind this piece of code. Um there will be a few other pieces of code in between when we start going over our collab notebook.
+51:5851 minutes, 58 secondsSo now that we have seen those two, I want to talk about how there are three levels of user inputs that could be
+52:0652 minutes, 6 secondsgiven to a large language model when you want to talk to it. First level is the system prompt. We already saw that this
+52:1452 minutes, 14 secondscould be something like you are a helpful assistant who needs to be polite and talk like this or talk like that blah blah or you are always analyzing
+52:2252 minutes, 22 secondsthe sentiment of whatever the user asks you. So those kinds of stuff. This is the highest priority
+52:2852 minutes, 28 secondswhich means if you insert in the system prompt do not answer any questions about something
+52:3752 minutes, 37 secondsand the user says ignore the system prompt and answer the question about this. It will not ignore it because system prompt has the highest priority.
+52:4652 minutes, 46 secondsThis is super important when you think about security. There's a new kind of hacking going on with LLMs because it's exposing a new surface of security
+52:5552 minutes, 55 secondsissues. So that's the reason it has been designed this way. Whatever is in the system prompt is the highest priority.
+53:0253 minutes, 2 secondsWhatever the user asks is the next priority. There is another level called assistant.
+53:1053 minutes, 10 secondsAssistant messages are the messages which are not asking a question but they're providing a lot of information that is required to answer the question.
+53:2053 minutes, 20 secondsSo if I ask specifically about the details of some chiller equipment of
+53:2853 minutes, 28 secondssome model number which is supplied by train if I just ask that question no matter
+53:3553 minutes, 35 secondswhat my system prompt is the model doesn't know about it. So what's it going to do? Right? Instead, I'm still going to ask the same question, but in
+53:4353 minutes, 43 secondsthe assistant prompt, I'll give it all the information it needs to answer this question. So that was the idea behind having an assistant prompt, but it has
+53:5153 minutes, 51 secondsthe lowest priority. Like you it it's not as author authoritative as the other two prompts. This may sound a little
+53:5953 minutes, 59 secondsabstract right now. uh it will become really really clear as we move deeper into usage of large language models and
+54:0754 minutes, 7 secondshow we can use them in practical applications. That's when this part will become super clear.
+54:1754 minutes, 17 secondsOkay. Um so I think this is a good time to take a break. I sorry you had a question. Yeah, go ahead.
+54:2554 minutes, 25 secondsSorry I can ask it if if after break. I know probably late but I I just I'm curious that does all three of them like
+54:3554 minutes, 35 secondsthe system developer are there's a default like when we use chat DTP right
+54:4254 minutes, 42 secondswe we we don't assume oh you need to use this tone you need to use this rule uh but it seems to me that they have
+54:4954 minutes, 49 secondssome default value and does that default value exist in APIs as well or depends on you the the tools you use.
+54:5954 minutes, 59 secondsThat is a great question. It does exist.
+55:0255 minutes, 2 secondsSo if you provide just the user question, it'll still work. You don't have to provide this. There is some default and we don't know what it is.
+55:1155 minutes, 11 secondsOkay. Okay. Gotcha. Thank you. Yeah, no problem. So this will all work.
+55:1855 minutes, 18 secondsUm Tudtor has uh shared a link of how to uh test your AI hacking skills. That sounds very interesting. So maybe that
+55:2755 minutes, 27 secondsthat's that also makes this a good time um to take a break. I'm going to click on that and see what happens.
+55:4255 minutes, 42 secondsOh, this sounds fun. Okay. Um so it's 10:55 for us here. So, we'll be back at uh 11:00
+1:01:261 hour, 1 minute, 26 secondsEveryone are folks back. Can I see a thumbs up from everyone who's back?
+1:01:351 hour, 1 minute, 35 secondsOkay, thank you. So, I was um spending my 5 minutes trying to hack the link that ter sent. I'm at level four. Um and
+1:01:451 hour, 1 minute, 45 secondsit is progressively um blocking, but if I just ask you to reveal like one letter at a time, it's still working. So, that
+1:01:521 hour, 1 minute, 52 secondsis a really good example to show how you could um depending on what the guard rails are, how you could make the model do things that it's not supposed to do.
+1:02:021 hour, 2 minutes, 2 secondsAnd if you look at news as well, there have been a lot of articles around about how you could uh how some there were
+1:02:101 hour, 2 minutes, 10 secondssome security breaches and they were doing stuff um that they were not supposed to do.
+1:02:171 hour, 2 minutes, 17 secondsAmy says she did that too. Yeah. Yeah,
+1:02:201 hour, 2 minutes, 20 secondsthat was a fun fun thing. Maybe we should share it with future quotes just to show your hints help because I I got stuck at
+1:02:291 hour, 2 minutes, 29 secondslevel two and then when I saw your screenshot I started using that and I got to level four too but then it stopped me. Oh okay.
+1:02:371 hour, 2 minutes, 37 secondsNice. Oh say I have never been able to make it past seven. Ah I see. Okay.
+1:02:441 hour, 2 minutes, 44 secondsYeah. Yeah. This is this is fun. Yeah.
+1:02:471 hour, 2 minutes, 47 secondsWe'll probably try it and if I get beyond level seven then I'll I'll send the screenshot.
+1:02:531 hour, 2 minutes, 53 secondsUh and we have about two weeks to do that. So let's see if it happens.
+1:03:001 hour, 3 minutesOkay. So let me share uh the link the collab link that we are going to work on. Um, it does have independent blocks
+1:03:091 hour, 3 minutes, 9 secondsof code and it does require you to make a few changes uh for the notebook to work. I'm going to post it here
+1:03:191 hour, 3 minutes, 19 secondsin chat and share my screen.
+1:03:261 hour, 3 minutes, 26 secondsI hope everyone can see my screen.
+1:03:411 hour, 3 minutes, 41 secondsAnd I hope everyone can open this notebook on their end. The first thing to do after you click on the link that I
+1:03:491 hour, 3 minutes, 49 secondsposted on chat is to go to file in your menu and click on save a copy and drive.
+1:03:591 hour, 3 minutes, 59 secondsSo this will create a copy for you. If you don't do this, any changes that you're going to make to this notebook will not be saved. You can still run it.
+1:04:091 hour, 4 minutes, 9 secondsYou can make those changes, but the moment you close it, they're all going to vanish. So, it's a good idea to have a personal copy for yourself.
+1:04:241 hour, 4 minutes, 24 secondsSo, that's the first thing. The second thing that you need to do before this works for you is to provide the open AI
+1:04:311 hour, 4 minutes, 31 secondskey. So the idea is that these keys are not supposed to be exposed to anyone
+1:04:401 hour, 4 minutes, 40 secondsbecause you're paying to use the large language model. Exposing your key gives everyone access to the open AI model and
+1:04:481 hour, 4 minutes, 48 secondsthey can use it to do whatever they want to use it to do and that will cost you money. So that's the reason it's generally advised to not expose your
+1:04:561 hour, 4 minutes, 56 secondskeys in the notebook itself just in case you share this link with someone and stuff like that. But then we do want the program to know what the key is, right?
+1:05:071 hour, 5 minutes, 7 secondsSo there's a way you can do it without actually writing it down. So for example, one way to do this would be I could just be like I'm going to say this is my key. Let's say SK something,
+1:05:191 hour, 5 minutes, 19 secondsright? And then use it. It'll work. uh that's not the right way to do it. So it's not exposed over here. So the right way to do it in a collab environment is
+1:05:281 hour, 5 minutes, 28 secondsto save it as a secret. On the left side you see an icon which looks like a key.
+1:05:351 hour, 5 minutes, 35 secondsIf you hover on it, it says secrets. Please click on it.
+1:05:421 hour, 5 minutes, 42 secondsMost likely it'll be empty in your case if you have never added a secret.
+1:05:481 hour, 5 minutes, 48 secondsSo, what you'll need to do is click on the button that says add new secret.
+1:06:021 hour, 6 minutes, 2 secondsOkay. When you say add new secret, you have to enter two things, name and value.
+1:06:101 hour, 6 minutes, 10 secondsI'm going to provide you both in the chat.
+1:06:161 hour, 6 minutes, 16 secondsOh. Um, some of you are not able to sign in to Google.
+1:06:241 hour, 6 minutes, 24 secondsI think mine's a personal problem. It's It looks like my account got locked out because I think I was it was trying to log into it too many times.
+1:06:311 hour, 6 minutes, 31 secondsOh. Oh, sorry. Okay. Oh, but Kendall says that can't sign in either. H
+1:06:381 hour, 6 minutes, 38 secondsuh you should try Edge. So they unblocked Google accounts in Edge but not in Chrome. It looks like mayor tried to assign to Chrome.
+1:06:491 hour, 6 minutes, 49 secondsOh okay.
+1:06:521 hour, 6 minutes, 52 secondsUm thank you. Yes. Uh please try that and let us know if it works for you.
+1:08:011 hour, 8 minutes, 1 secondDo we also need to toggle the notebook access?
+1:08:051 hour, 8 minutes, 5 secondsYes. To turn it on, you need to toggle it. But even if you don't, it'll usually have a popup here when you execute it asking you if you want to turn it on.
+1:08:151 hour, 8 minutes, 15 secondsGotcha.
+1:08:241 hour, 8 minutes, 24 secondsOkay. So, I hope everyone is good with the setup of it.
+1:08:341 hour, 8 minutes, 34 secondsJust for clarification, I was getting caught up as I was getting into the the thing. So, we make a copy of it and then
+1:08:411 hour, 8 minutes, 41 secondswe go and we insert what you sent in the chat and the name and the value. Mhm. And what was the next step after that?
+1:08:471 hour, 8 minutes, 47 secondsSorry if I uh No, that's it. Uh so there was a question about should we toggle it. It's okay if you toggle it. It'll work. If
+1:08:541 hour, 8 minutes, 54 secondsyou don't toggle it, it should still be okay. It'll ask you Yeah. Okay. Perfect.
+1:09:011 hour, 9 minutes, 1 secondSo that's it. We haven't yet started executing this notebook. Okay. Perfect. Yeah.
+1:09:071 hour, 9 minutes, 7 secondsI thought maybe I missed it as I was playing around with it. I'm still trying to get past level four. I got to put that to the side.
+1:09:151 hour, 9 minutes, 15 secondsYeah.
+1:09:181 hour, 9 minutes, 18 secondsOkay. Sounds good. Does anyone else have uh issues with the setup? Is everyone good?
+1:09:261 hour, 9 minutes, 26 secondsOkay. So, the first part of this is just installing Python packages. It's installing OpenAI which is a Python package.
+1:09:411 hour, 9 minutes, 41 secondsOkay. Is this Chrome? Uh, I can't tell.
+1:09:511 hour, 9 minutes, 51 secondsSo, I think the suggestion was that train has unblocked it only in one type of browser. I don't know if that is the issue.
+1:10:031 hour, 10 minutes, 3 secondsAlso, the popup about Google signin required. Yeah, that is a requirement to open any collab notebook. You have to
+1:10:111 hour, 10 minutes, 11 secondssign in and typically it's not allowed inside train but for everyone in the cohort they are now allowing you to use
+1:10:191 hour, 10 minutes, 19 secondscollab if you sign in using a Google account.
+1:10:321 hour, 10 minutes, 32 secondsThey I think in the instructions too they told us to sign in with a personal account for collab. So like I'm I'm
+1:10:391 hour, 10 minutes, 39 secondsusing my my personal email address to sign in. Uhhuh. Got it. Okay.
+1:10:451 hour, 10 minutes, 45 secondsSo uh Mayor, please uh try it and see if that makes it work.
+1:10:521 hour, 10 minutes, 52 secondsAnd you have to be an edge and it has to be edge. Okay. So edge
+1:10:591 hour, 10 minutes, 59 secondsplus personal account. That's the combination that works. Okay, that's good to know.
+1:11:101 hour, 11 minutes, 10 secondsSo this part is just about installing OpenAI Python module. So generally in Python whenever you want to use
+1:11:171 hour, 11 minutes, 17 secondssomething you have to install that particular package. It's almost like if you have to use a PDF or a word you have
+1:11:251 hour, 11 minutes, 25 secondsto install Adobe or you know Microsoft uh services right so similarly in code to use the open AAI stuff you have to
+1:11:331 hour, 11 minutes, 33 secondsinstall open AAI that's all is happening in the first step in the second step when you run this it's fetching the open
+1:11:401 hour, 11 minutes, 40 secondsAAI key and it's making a part of the environment so that's behind the scenes OS dot environment so it becomes an
+1:11:481 hour, 11 minutes, 48 secondsenvironment variable and when you want to access the key, it'll work in the future. So that's the second block. This
+1:11:561 hour, 11 minutes, 56 secondsthird block is pretty much what we saw on the slide, right? So first thing you do is you make sure you have access to
+1:12:051 hour, 12 minutes, 5 secondsOpenAI. This is optional. This is JSON is just a specific um format.
+1:12:131 hour, 12 minutes, 13 secondsuh it's a format that you could use uh to output things in a much more comfortable
+1:12:211 hour, 12 minutes, 21 secondshuman readable way. So that's all this one is this we saw this we saw on the slide here the part you see which is
+1:12:291 hour, 12 minutes, 29 secondssaying client is equal to open AI and then it's providing the API key here you are just establishing a connection
+1:12:371 hour, 12 minutes, 37 secondswith the LLM you have not triggered it yet you have just established a connection right the triggering is happening over here this is where this
+1:12:451 hour, 12 minutes, 45 secondsis like hitting enter on your chat box so that's this part when this command
+1:12:531 hour, 12 minutes, 53 secondsruns. What happens is this goes and asks the LLM this question with this as the system
+1:13:001 hour, 13 minutescommand and the LLM response with something that response is saved over here.
+1:13:091 hour, 13 minutes, 9 secondsYou you can name this whatever you want of course but it's saved here and all we want to do now is look at what the response is and print it.
+1:13:181 hour, 13 minutes, 18 secondsSo you can pretty much ignore this part.
+1:13:201 hour, 13 minutes, 20 secondsThis part is just taking the response printing it. So if I run this,
+1:13:301 hour, 13 minutes, 30 secondsit should print. And this is not as beautiful or clean as how it would be if you're using a uh UI because it's telling you a lot of stuff.
+1:13:421 hour, 13 minutes, 42 secondsWhat it went through, how it thought about it, all these IDs, all of these things. So it tells you a lot of stuff
+1:13:501 hour, 13 minutes, 50 secondsin the response unlike how um you see it in the UI.
+1:14:071 hour, 14 minutes, 7 secondsOkay. And if you want to just look at what the response is like you you can ignore this part. It's uh if you just you know uh comment this out it will
+1:14:161 hour, 14 minutes, 16 secondsstop dumping that. So I'm going to comment that and run it.
+1:14:221 hour, 14 minutes, 22 secondsOkay. So that was the model dump. Let's ignore that. Uh the response is negative. Awful expresses a strong negative sentiment for the user input. I'm feeling awful.
+1:14:341 hour, 14 minutes, 34 secondsThat's the response that we have. If we print just the output text of it, if you dump the entire thing of the response,
+1:14:441 hour, 14 minutes, 44 secondswhich is what's happening inside the model, it's of course going to tell you a lot more information.
+1:14:511 hour, 14 minutes, 51 secondsSo, does this interaction make sense?
+1:14:541 hour, 14 minutes, 54 secondsSomething that you could do is please change your system command and change your user input and keep running the block.
+1:15:081 hour, 15 minutes, 8 secondsSo, how about um I'm running. It's a neutral thing. Let's see what it says.
+1:15:231 hour, 15 minutes, 23 secondsIt says neither. It's neutral. Now, if I add a system command, please respond with only positive or negative.
+1:15:331 hour, 15 minutes, 33 secondsOkay.
+1:15:411 hour, 15 minutes, 41 secondsIt thinks it's positive if someone is running. Okay. How about I'm running from a mountain?
+1:15:531 hour, 15 minutes, 53 secondsThat switched it to negative. Okay. If I give it a little more context, it's switched. It's hard to tell if someone's running, they're running for fun, and it's positive or not.
+1:16:061 hour, 16 minutes, 6 secondsSo, does does does everything work till this part for everyone?
+1:16:131 hour, 16 minutes, 13 secondsI did the same thing you did. I typed in I am running and I'm getting a name error.
+1:16:181 hour, 16 minutes, 18 secondsProbably did. Maybe I didn't toggle something right. Is it on OS?
+1:16:261 hour, 16 minutes, 26 secondsOn ls. What?
+1:16:281 hour, 16 minutes, 28 secondsYeah. Like it'll come up and say OS.Get environment. Not if you don't run the the import and the top line from line two.
+1:16:361 hour, 16 minutes, 36 secondsOh, that's what I did. Okay. Thank you. Thank you.
+1:16:401 hour, 16 minutes, 40 secondsYeah, I did I did run top two and they show screen but I got this error in the client open AAI part. Sure.
+1:16:491 hour, 16 minutes, 49 secondsOh, okay. Uh could you please share your screen? Yes.
+1:16:551 hour, 16 minutes, 55 secondsjust uh Yeah, it looks like you need to recclick the line two again like refreshed.
+1:17:081 hour, 17 minutes, 8 secondsCan you see it? Yeah. Yeah. So, yeah, that's right. So,
+1:17:121 hour, 17 minutes, 12 secondsyou you probably need to um run it again. Can you click on the secrets? Can I see if you have
+1:17:211 hour, 17 minutes, 21 secondswhich one? Uh the hello world GPT API notebook. Can we go back to that?
+1:17:311 hour, 17 minutes, 31 secondsThat's the that's the one, right?
+1:17:341 hour, 17 minutes, 34 secondsYeah. Right now I'm seeing the linear regression notebook. Can we go to the tab?
+1:17:391 hour, 17 minutes, 39 secondsNo, sorry. I I have double monitor so I kind of move it to another one. Oh, okay.
+1:17:441 hour, 17 minutes, 44 secondsYeah, there you go. Uh we're still seeing the linear regression. Yeah.
+1:17:491 hour, 17 minutes, 49 secondsOh, you are okay. Sorry. Let me just uh
+1:18:011 hour, 18 minutes, 1 secondnow Yes. Yes. Uh can you please click on secrets? Secrets.
+1:18:101 hour, 18 minutes, 10 secondsSo on the left side you see a key symbol. Yeah. Yeah. Okay. So let's click there. Yes.
+1:18:161 hour, 18 minutes, 16 secondsDid you make a Did you make a copy first?
+1:18:201 hour, 18 minutes, 20 secondsUh because I I noticed at the top it says you cannot save changes. So did you make a copy of that one?
+1:18:271 hour, 18 minutes, 27 secondsNo. Oh, I missed that part. I come in late. Sorry. Should should I make a copy of it first? Uh that would help. Yes.
+1:18:351 hour, 18 minutes, 35 secondsCopy to drive. Yeah, you could do that. Yes. Yes.
+1:18:461 hour, 18 minutes, 46 secondsOkay.
+1:18:471 hour, 18 minutes, 47 secondsYeah. Now you need to set up your secret first before you run that. Okay.
+1:18:551 hour, 18 minutes, 55 secondsSo click add a new secret and then copy the the string open a open
+1:19:021 hour, 19 minutes, 2 secondsAI API key and put that in the name in the name field. Yeah. And now go to the chat and then they have the value
+1:19:101 hour, 19 minutes, 10 secondssaved in the chat. Starts with like SK and NZOG in the Zoom chat.
+1:19:171 hour, 19 minutes, 17 secondsOh, in the room section. Yeah. Oh, that's the name.
+1:19:271 hour, 19 minutes, 27 secondsYeah. And the the Q should be right below that. Gotcha. Gotcha. Yeah. Okay.
+1:19:341 hour, 19 minutes, 34 secondsNow you're good. Now toggle that notebook access. The toggle to the left. Yeah. And then I can run this.
+1:19:421 hour, 19 minutes, 42 secondsYeah.
+1:19:421 hour, 19 minutes, 42 secondsUh it should it'll ask you to Yeah. Just grant access. Grant. Yeah. Okay,
+1:19:471 hour, 19 minutes, 47 secondsperfect. Yeah, if you run it, it it'll probably work. Oh, it does work. Yes. Thank you.
+1:19:571 hour, 19 minutes, 57 secondsOkay. Yeah, thank you, James.
+1:19:591 hour, 19 minutes, 59 secondsYeah, sure. That's I I do that for a living, so
+1:20:081 hour, 20 minutes, 8 secondsawesome. Uh, does it work for everyone else? Just up to this part.
+1:20:181 hour, 20 minutes, 18 secondsOkay, perfect. So, I think we're good with the setup. Uh, the nice thing about this is all the future notebooks, if we work on any more notebooks, you don't
+1:20:271 hour, 20 minutes, 27 secondshave to keep setting up the secret every single time. It carries over across all notebooks. So, that that's nice. So once you set up, you should be all set. So
+1:20:361 hour, 20 minutes, 36 secondsthis is the first part. Now what we want now we want to go to the second part. Second part says without web search,
+1:20:441 hour, 20 minutes, 44 secondsright? And if I just run it without looking at anything about what's inside the code, right? If I just run it.
+1:20:551 hour, 20 minutes, 55 secondsOkay, you can see what the response is. So the question was,
+1:21:001 hour, 21 minuteswhat is today's weather forecast? Say it in two two to three sentences. And I there is some city here. You can replace
+1:21:071 hour, 21 minutes, 7 secondsit. Look at the response. The response says it cannot tell me what the weather is because it doesn't know. It doesn't
+1:21:151 hour, 21 minutes, 15 secondshave live up to-ate data. That's because all models have a cutoff date. We saw it in the table, right? Some of them have
+1:21:221 hour, 21 minutes, 22 seconds2025, 2026. There's definitely no model which whose cutff date is like right this minute and it can tell you this
+1:21:291 hour, 21 minutes, 29 secondskind of information. This kind of information requires access to either a weather API or just a simple web search
+1:21:381 hour, 21 minutes, 38 secondswhere you allow the model to go and search the web, grab the output from the web, make that a context and then answer it. If you allow the model to do that,
+1:21:501 hour, 21 minutes, 50 secondsthen it will be able to answer this. So this is where the concept of tools comes in. tools can be web search or an
+1:22:001 hour, 22 minutesexternal API like a weather API or a database access to a database or something else. It could be anything.
+1:22:081 hour, 22 minutes, 8 secondsAdding tools to the large language model is like giving it like a add-on brain,
+1:22:151 hour, 22 minutes, 15 secondstemporary add-on brain where it knows much more information in the context of the question that you're asking it. So
+1:22:231 hour, 22 minutes, 23 secondsthe same thing if we are going to execute with just one change. So let's focus on a single line which is this
+1:22:321 hour, 22 minutes, 32 secondsmodel input system command. There's one additional thing called reasoning which we have set to low which means it's just
+1:22:411 hour, 22 minutes, 41 secondsgoing to look at it and answer. It's not going to think think about it. It's not going to go into a loop.
+1:22:471 hour, 22 minutes, 47 secondsfrom this line. The difference between this line and this line of code over here
+1:22:541 hour, 22 minutes, 54 secondsis that now it has access to a tool called web search.
+1:23:001 hour, 23 minutesSo the moment you give it access to web search, you're saying that the model is allowed to go and search the web. And when you do that and run this and ask
+1:23:091 hour, 23 minutes, 9 secondsthe same question, so the question and the system command are the same. The only difference is providing it access to the web. Now you can see that it does
+1:23:181 hour, 23 minutes, 18 secondsrespond with how the weather is.
+1:23:261 hour, 23 minutes, 26 secondsSo this is just to show that adding tools makes these large language models more powerful. Yes, there's a question. Go ahead, please.
+1:23:331 hour, 23 minutes, 33 secondsYes, a question on uh web search. So like I know for our internal tool when we turn on web search like we have a lot of security stuff with it, right? And it
+1:23:401 hour, 23 minutes, 40 secondssummarizes the question down before it searches. Do all um uses of web search automatically take that step where it
+1:23:481 hour, 23 minutes, 48 secondstakes your question and it summarizes it down and goes to like Google and searches or is that like an additional layer that the team added in?
+1:23:581 hour, 23 minutes, 58 secondsI think that's a great question. I don't know for sure, but we could see what it does if we print this. So in your case
+1:24:081 hour, 24 minutes, 8 secondsum it's explicitly showing you what it's thinking behind the scenes or how it is interpreting your question and how it's
+1:24:151 hour, 24 minutes, 15 secondsgoing to go and search this. We can find out by printing it
+1:24:231 hour, 24 minutes, 23 secondsif it tells us. Okay. So let's see what it did. So it took this ID.
+1:24:281 hour, 24 minutes, 28 secondsIt took the question. This was our question, right? Which is this uh sorry this was our instruction. Sorry. It took
+1:24:361 hour, 24 minutes, 36 secondsthat instruction. It went inside. Then it said the query is so and so. Queries completed. So it's making a web search
+1:24:441 hour, 24 minutes, 44 secondscall over here. Let's see if it tells us how it makes it.
+1:24:501 hour, 24 minutes, 50 secondsNope, it doesn't quite tell us.
+1:24:551 hour, 24 minutes, 55 secondsYeah, I don't know exactly how it's doing it behind the scenes. It's not telling us in the model dump. Okay,
+1:25:021 hour, 25 minutes, 2 secondsinteresting.
+1:25:151 hour, 25 minutes, 15 secondsum question. Mhm.
+1:25:171 hour, 25 minutes, 17 secondsSo, so from what I understand from based on this example, yeah,
+1:25:221 hour, 25 minutes, 22 secondsyou're essentially um kind of giving the model some type of
+1:25:301 hour, 25 minutes, 30 secondsrestrictions that it will go through it in um preferred layers and give you the result.
+1:25:391 hour, 25 minutes, 39 secondsAnd they're all in JSON format. So when you put it in it's in JSON and then it will the model will convert it into
+1:25:481 hour, 25 minutes, 48 secondsnumbers and then tokens and then kind of process it calculated it is this like a
+1:25:541 hour, 25 minutes, 54 secondstypical ways how um when we use AI to how does it work is
+1:26:021 hour, 26 minutes, 2 secondsthat like in the real life is this how it work like if I was thinking um you
+1:26:081 hour, 26 minutes, 8 secondsknow predict this system the asset at a failure rate or something in next five years based on the historic data. I kind
+1:26:181 hour, 26 minutes, 18 secondsof give them a database and kind of telling them you know use reasoning which is probably a set of rules and
+1:26:261 hour, 26 minutes, 26 secondsthen you know you kind of like a give them instructions you know based on last
+1:26:341 hour, 26 minutes, 34 secondsfive years. Please let me know is this how I mean this is very small but is this how actually practically how it works.
+1:26:441 hour, 26 minutes, 44 secondsSo that's a great question and um a simple answer would be all of this stuff
+1:26:521 hour, 26 minutes, 52 secondsthat we are doing here ultimately it's a kind of prompt engineering. We are creating intelligent prompts.
+1:27:031 hour, 27 minutes, 3 secondsMhm. that the LLM is going to see. So if I'm a LLM model, let's say I'm a GPT model and I'm going to receive something as input.
+1:27:131 hour, 27 minutes, 13 secondsI don't know anything about web search.
+1:27:161 hour, 27 minutes, 16 secondsI don't know about all the stuff that might be happening behind the scenes.
+1:27:201 hour, 27 minutes, 20 secondsAll of this happens before it touches the model. When it touches the model, what the model sees is just one prompt.
+1:27:311 hour, 27 minutes, 31 secondsBut what we are doing is we are doing all sorts of intelligent things to make sure that the prompt is good. So if I do
+1:27:401 hour, 27 minutes, 40 secondsweb search, I'm making the prompt good where I have a composition of system command, user input, and whatever the
+1:27:471 hour, 27 minutes, 47 secondsweb search gave me, I'm going to put that all together into a good coherent package so that that's the thing that my LLM sees.
+1:27:561 hour, 27 minutes, 56 secondsOkay. Gotcha. Okay. Yeah. Okay.
+1:28:001 hour, 28 minutesIf if I turn a table around like a tutor's example, right?
+1:28:051 hour, 28 minutes, 5 secondsThere is a system set up but when you actually building that model or the agents,
+1:28:121 hour, 28 minutes, 12 secondsyou kind of need to take all possible prompt into consideration consideration before you actually like
+1:28:211 hour, 28 minutes, 21 secondscan deliver that model. Is that that's true valid?
+1:28:261 hour, 28 minutes, 26 secondsThat's true. And it's hard, right? So if I'm a love language model Yeah. and like a part of my prompt is
+1:28:341 hour, 28 minutes, 34 secondssaying do it. A part of the prompt is saying don't do it. Right. Right.
+1:28:381 hour, 28 minutes, 38 secondsIt's hard. Yes. Um so how do you uh because these models are generative
+1:28:461 hour, 28 minutes, 46 secondsand they are a little bit random. Uh it it is challenging to put those constraints as hard constraints but people are figuring out how to do it.
+1:28:551 hour, 28 minutes, 55 secondsWell gotcha. Okay, thank you.
+1:28:591 hour, 28 minutes, 59 secondsYeah, no problem. Those are some really good questions. And if um you're interested, we can show you how when a
+1:29:071 hour, 29 minutes, 7 secondsprompt touches the model, what it goes through internally. We have a gym. So,
+1:29:121 hour, 29 minutes, 12 secondswe are not going to go into the details of all of that for sure, but we do have a gym which shows you how this happens.
+1:29:191 hour, 29 minutes, 19 secondsWe can perhaps share the link after the session and go over it um in our next session. Thank you. That would be super helpful.
+1:29:271 hour, 29 minutes, 27 secondsThank you.
+1:29:281 hour, 29 minutes, 28 secondsYeah, no problem. So, I think we don't have time to go over the entire notebook. We have gone over the first
+1:29:351 hour, 29 minutes, 35 secondsthree blocks. Um, the other parts of the notebook are actually pretty interesting. They are about image generation. So, why generate just text,
+1:29:441 hour, 29 minutes, 44 secondsright? We should be able to generate images. Also, this block will work as is. This block will not work because
+1:29:511 hour, 29 minutes, 51 secondsthis requires a Gemini API key. So I'm going to go over this again when we um
+1:29:581 hour, 29 minutes, 58 secondsmeet in our next session. But for those of you who are interested in trying this uh you all have access to the notebook.
+1:30:051 hour, 30 minutes, 5 secondsI'll provide you the API key even though I'm not going to go over the explanation.
+1:30:161 hour, 30 minutes, 16 secondsSo if you're interested, please try it out. Um it's fun to generate these images. Um, the same API key will work
+1:30:251 hour, 30 minutes, 25 secondsfor GPT. The API key I posted is going to work for Gemini. And you should be able to generate some interesting images out of it.
+1:30:471 hour, 30 minutes, 47 secondsOkay. Thank you everyone. So, we are right on time. Uh we are here if you have questions but otherwise we'll see you in two weeks.
+1:30:571 hour, 30 minutes, 57 secondsDid you say Go ahead. Go ahead J.
+1:31:001 hour, 31 minutesUh did you say you posted the Gemini key?
+1:31:041 hour, 31 minutes, 4 secondsI thought Oh, I'm sorry. I did not post it on the right channel. Sorry about that. Yeah.
+1:31:111 hour, 31 minutes, 11 secondsYes, I have posted it now. And I wasn't able to get the OpenAI one to uh
+1:31:201 hour, 31 minutes, 20 secondswork. Um it I just see image save to output.png and then when I try to open it up, it's
+1:31:271 hour, 31 minutes, 27 secondsjust Oh, it doesn't open. Okay, let let me share my screen again.
+1:31:331 hour, 31 minutes, 33 secondsThat's the same question I had. Was it It just says image saved to output, but yeah,
+1:31:391 hour, 31 minutes, 39 secondsit's not really saved any It should appear here. If it's not appearing, then there's probably a bug.
+1:32:001 hour, 32 minutesWow, it it is taking quite some time. Okay.
+1:32:091 hour, 32 minutes, 9 secondsUh yeah, you may have to refresh.
+1:32:121 hour, 32 minutes, 12 secondsIt it doesn't appear by itself, but if you click on refresh over here, it does.
+1:32:161 hour, 32 minutes, 16 secondsAnd is that an image? Yeah, it generated the image in my case. Can you please try to refresh it over here and see if you're able to view the image?
+1:32:251 hour, 32 minutes, 25 secondsOh, I see. You're looking at files in the file.
+1:32:301 hour, 32 minutes, 30 secondsYeah. Yeah. Yeah. So, you have to click on this and then refresh. All right. I see you now.
+1:32:371 hour, 32 minutes, 37 secondsOkay. Perfect.
+1:32:391 hour, 32 minutes, 39 secondsI guess I wasn't cuz I clicked the three dots and I saw I did that view output full screen and it I guess those show just the output.
+1:32:491 hour, 32 minutes, 49 secondsI see. Okay.
+1:32:511 hour, 32 minutes, 51 secondsAll right. Cool. Yeah, that clear my confusion. Thank you. Okay. Thank you.
+1:32:591 hour, 32 minutes, 59 secondsThank you. Thank you. Talk to you all in two weeks. Talk to you. Thank you. Take care. Bye.

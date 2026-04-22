@@ -1,0 +1,622 @@
+0:2323 secondsHello. Good morning, Ali. How are you?
+0:2626 secondsGood morning. I'm doing good. How are you? I'm good, too, thank you.
+0:3535 secondsWe are a little bit early so I'll give others a chance to join. Y
+0:4848 secondsum one quick question. When is the course supposed to end? Is it like in two weeks? Um I think there are four more weeks.
+0:5757 secondsOkay.
+0:5858 secondsUh let me just go back to see. So um this is the ninth session and there are 12 sessions.
+1:071 minute, 7 secondsSo 9 10 11 12 4 weeks. Okay.
+1:121 minute, 12 secondsMaybe I can give you an exact date. So this is nine.
+1:161 minute, 16 secondsI'm just trying to like uh estimate like how long I have for the project and like you know.
+1:211 minute, 21 secondsYeah. Yeah. Yeah. Makes sense. Makes sense. So it should be the 27th of Oh, should No, sorry. Um,
+1:341 minute, 34 secondsI think it's still May 4th. Okay.
+1:461 minute, 46 secondsUh, let me double check that. So 13th is the 10th session,
+1:541 minute, 54 seconds20th is the 11th session,
+1:581 minute, 58 seconds27th, sorry, 27th should be the last session. And I assume project is due 27th, right?
+2:062 minutes, 6 secondsYeah. Okay. Yeah. Yeah.
+2:422 minutes, 42 secondsHi everyone, welcome to the session after 2 weeks.
+2:482 minutes, 48 secondsUm, I'm just going to wait for 30 seconds before we begin.
+3:413 minutes, 41 secondsOkay, while we are waiting for everybody else to join in, are there any questions before?
+3:533 minutes, 53 secondsSo, we're going to talk about projects today, but uh if anybody has any questions about the projects, anything else, just let us know.
+4:074 minutes, 7 secondsSo, yeah, we can get started.
+4:094 minutes, 9 secondsSo, as usual, um we are going to start with a recap and I know it has been two weeks um since our last session.
+4:194 minutes, 19 secondsUm so to recap what we went over, we are in the final um stages in terms of
+4:254 minutes, 25 secondsconcepts and our destination was to understand deep agents
+4:324 minutes, 32 secondsum which are different from workflows right which we have talked so far. So
+4:384 minutes, 38 secondsthis kind of uh summarizes our journey in learning about LLMs. So we looked at
+4:464 minutes, 46 secondshow we can make a call to a large language model using an API, how we can give it access to tools like web search
+4:564 minutes, 56 secondsor any other internal tool like access to a database and stuff like that and how that makes it much more powerful.
+5:045 minutes, 4 secondsThen we looked at how we can create a graph like a workflow graph of how you can sequence multiple large language
+5:135 minutes, 13 secondsmodel calls one after the other so that you create a much more powerful instru um powerful um pipeline which can do
+5:235 minutes, 23 secondsmuch more complex tasks with just one LLM. it was there wasn't a lot that you could do and when we create a graph you
+5:325 minutes, 32 secondscould have shared memory between all of these LLM calls and again it could have access to a lot of different file
+5:405 minutes, 40 secondssystems to a lot of different tools but the primary thing is you would be the one who decides exactly what the
+5:485 minutes, 48 secondsworkflow is so you decide the graph and what we are doing right now is moving on from this structure
+5:575 minutes, 57 secondsto deep agents and the difference is in deep agents as well you do specify the tools you do um
+6:076 minutes, 7 secondshave a prompt which is a highle prompt of what needs to be done but the difference is you let the agent plan
+6:176 minutes, 17 secondsso you kind of let the agent create the graph itself and also decide what tools to call and in what sequence to call
+6:266 minutes, 26 secondsthem. When do you decide that you're done? So, it doesn't have to be a completely autonomous system. There can
+6:336 minutes, 33 secondsbe a little bit of a hybrid where you may not want to give up all the control.
+6:386 minutes, 38 secondsYou may still want some level of control and then give some autonomy to the agent. And our goal is to help you
+6:476 minutes, 47 secondstransition from a workflow to a deep agent um in steps like show you how it
+6:546 minutes, 54 secondslooks. uh by showing you a small piece of code uh a small uh increment in code.
+7:027 minutes, 2 secondsSo that that has been our goal. That's what we did in our last session and we I think went over like five notebooks. So
+7:097 minutes, 9 secondswe'll go over the next few notebooks which will show you a kind of a hybrid approach
+7:157 minutes, 15 secondsbetween a workflow and a deep agent and u get you to a complete deep agent towards the end.
+7:247 minutes, 24 secondsSo again to recap this is this was was an example of a workflow agent that we looked at maybe four weeks back. So that
+7:317 minutes, 31 secondswas two sessions back where we looked at the code where when a prompt comes in there's a classifier LLM which thinks
+7:407 minutes, 40 secondsabout oh given this prompt should I call this agent or this agent or this agent or this agent. So it's like a router that routes your call to the agent and
+7:507 minutes, 50 secondsthat agent then executes and then provides you with a response. This was very simple and there were some really
+7:577 minutes, 57 secondsgood questions in that session about how does the classifier know which agent to call. Um and in the code it was through
+8:058 minutes, 5 secondsthe names. So through its understanding of natural language it knows but you could specify instructions in the prompt
+8:138 minutes, 13 secondsof the classifier itself to help it understand how to route that request. So these are the things um that we talked
+8:228 minutes, 22 secondsabout and in our journey of going towards uh deep agent right now uh we
+8:298 minutes, 29 secondsare here. So we are still in like step two where we have multiple agents. They have been stringed together. We have a
+8:368 minutes, 36 secondssynthesizer as well but we haven't gone beyond that. And the idea is today's session should be good for us to um
+8:458 minutes, 45 secondscomplete the journey. um if there's some spillover we'll do it in the next session. So what we did is first we just
+8:548 minutes, 54 secondsum showed very simple code almost like an API call um to an LLM about stocks.
+9:019 minutes, 1 secondSo I hope everyone remembers that the previous session was about this agent who is going to give you some investment advice. Please don't use it for real.
+9:129 minutes, 12 secondsIt's just um to show you the workflow.
+9:159 minutes, 15 secondsSo this uh so we started with a call where we did not give the LLM any tools.
+9:219 minutes, 21 secondsWe just made the call and we forced a structure in its output. That was a notebook that we looked at. And then we
+9:299 minutes, 29 secondssaw how you could create multiple agents. A fundamental agent with a completely different prompt compared to a technical agent with a different
+9:389 minutes, 38 secondsprompt compared to a risk agent which had a different prompt. All of them were forced to provide an output with a fixed
+9:469 minutes, 46 secondsschema. So they can't give you like free form text as output. So the large language models were forced to follow a schema of how they output. So each agent
+9:559 minutes, 55 secondswould be run for sure in this workflow like each one will for sure be run.
+9:599 minutes, 59 secondsThere's no autonomy yet. And it would provide you with a fixed structure output. And then you have a synthesizer
+10:0810 minutes, 8 secondsagent which takes all of this information and then has its own prompt through which it gives you a report
+10:1610 minutes, 16 secondsagain in a very structured uh form. So this is something that we have covered so far. Any questions?
+10:3410 minutes, 34 secondsUh these notebooks were shared maybe more than a week back uh with everyone and also during the session there was a
+10:4210 minutes, 42 secondsquestion about could you um show us a few examples of what workflows look like
+10:5010 minutes, 50 secondsbecause we have really looked at one workflow which is a simple router and the other one is what we are looking at right now but we are moving towards a
+10:5810 minutes, 58 secondsdeep agent structure. So what are some other examples of workflows? We'll be answering that question um when we talk
+11:0611 minutes, 6 secondsabout projects. So I'll show you a few examples then. Um so that was not sent in post session reading materials. What
+11:1311 minutes, 13 secondswas sent was all of these notebooks uh which we shared during the session but it was maybe like 10 days back.
+11:2511 minutes, 25 secondsDoes this refresh everyone's memory of what we have done so far? Is it clear? Okay. I see some head nods. Um, okay.
+11:3311 minutes, 33 secondsSo, if there are no questions, I have just one question. I want you to think about what's the difference between a
+11:4111 minutes, 41 secondsworkflow agent and a deep agent and describe it in your own words.
+12:1312 minutes, 13 secondsUh, is it fair to say that a deep agent's kind of more um abstract and that you're not planning specifically
+12:2012 minutes, 20 secondsthese specific tasks and way to delegate that that it should do and you're kind of leaving it more open-ended for the agent itself to determine.
+12:2912 minutes, 29 secondswhat to do. Yes, that summarizes it really well. Um, I do have a follow on question for you.
+12:3712 minutes, 37 secondsHow do you feel about that? Giving autonomy to agent.
+12:4612 minutes, 46 secondsIt seems really good until it's bad. Okay, that's fair. Any other comments?
+12:5812 minutes, 58 secondsI was just say it seems a little scary to just like give it some freedom, you know. So
+13:0713 minutes, 7 secondsconstraints need to be put in place somehow so it's not just, you know,
+13:1113 minutes, 11 secondsChris said it's good until it's bad. We don't want it to be bad. So we need to know how to tell it to not be bad, I guess.
+13:1913 minutes, 19 secondsOkay, thank you Jen. Yeah, that sounds good. Any other comments?
+13:2713 minutes, 27 secondsThere's probably different tasks and different jobs you can le have different level of autonomy. I think so. Grady based on impact, based on outcome,
+13:3613 minutes, 36 secondswhatever. I think there's different different rules. We can't have one rule fits all like either it's all or nothing. Let it go do what it wants or let it not do anything.
+13:4813 minutes, 48 secondsGot it. Yes. Uh sounds good. So to summarize what you said um it really depends on your domain and application
+13:5613 minutes, 56 secondsand how many components it has and maybe there are some components where you want to give it a lot of autonomy and some where you probably don't want to and in
+14:0514 minutes, 5 secondsgeneral the feeling is that we don't want it to just go run wild. We we do want to put some guard rails around it on what it can do and what it cannot do.
+14:1714 minutes, 17 secondsSo all of that makes sense and this is a if I were to draw a parallel with what was happening with machine learning in
+14:2514 minutes, 25 secondsgeneral um with AI in general over the past um two decades.
+14:3214 minutes, 32 secondsSo when researchers were for example let's take an example of we want a model to automatically tell us if there is a
+14:4014 minutes, 40 secondscat in an image that is something we want the model to accomplish. Um people tried um different
+14:4814 minutes, 48 secondsways to do this and the first few techniques were very manual where you would be like oh I'm going to detect
+14:5614 minutes, 56 secondscorners. I'm going to detect different shapes. I'm going to um model the relationship between different shapes.
+15:0415 minutes, 4 secondsThere would be probabilistic models. There would be basian models. In fact,
+15:0915 minutes, 9 secondsmy research was like that, like handwritten rules, right? Like with a lot of different mathematical functions,
+15:1615 minutes, 16 secondshow do you put them together and then see if that's able to model um what you're trying to predict. So one of uh
+15:2415 minutes, 24 secondsone of the project that I was doing during my PhD is there were these three-dimensional
+15:3215 minutes, 32 secondsimages of the skin and the idea was to be able to find the boundary between
+15:3915 minutes, 39 secondsdermis and epidermis and it was more like hills and valleys and deep learning was not that far ahead
+15:4715 minutes, 47 secondsthe way it's today. So I used very traditional models where mathematically I was modeling the shapes of the hills
+15:5415 minutes, 54 secondsand valleys with uncertaintity of where the peak will be, how wide the hill will be, how narrow the hill is going to be.
+16:0216 minutes, 2 secondsIt's quite hard to handcode all of these things. Then deep learning came along and people stopped doing that
+16:1016 minutes, 10 secondscompletely. So if I want to detect a cat in an image, I'm not going to handcode the shape of the uh the eyes, the
+16:1716 minutes, 17 secondsposition, the relative position because it's quite hard. You're trying to model a three-dimensional object in two dimensions, right? Like a flat image and
+16:2616 minutes, 26 secondsthere are just so many perspectives. So instead of trying to handcode every possible rule, what people did is throw
+16:3316 minutes, 33 secondsthe entire data set at a deep learning model and be like you figure out what are the best features that you could
+16:4116 minutes, 41 secondsextract so that you're successful at figuring out if there is a cat or not in the image. So that was a way of giving
+16:4916 minutes, 49 secondsautonomy to the model itself. And typically eventually that wins if you have enough data.
+16:5716 minutes, 57 secondsSo it's a similar kind of uh progression where initially yes you can't just give it all the autonomy right because it's
+17:0617 minutes, 6 secondsnot that mature yet. So you do want to have some amount of control and in fact even now we do have some control in deep
+17:1317 minutes, 13 secondsagents. Deep agents don't have access to everything in the world right they only have access to the tools that you give
+17:2017 minutes, 20 secondsit access to. Yes they may call these tools any number of times. they may spawn like any number of sub agents
+17:2917 minutes, 29 secondswithin them. There's still some level of control that you you retain. So right now where we are uh mostly it's a hybrid
+17:3817 minutes, 38 secondsapproach where do where we do retain some amount of control and then we have slowly started uh giving more autonomy
+17:4617 minutes, 46 secondsto deep agents but maybe in the future it's just going to be like one prompt and all of this is done automatically
+17:5417 minutes, 54 secondsbehind the scenes. We do see all the models moving towards that even in our like GPT UIs etc. you do see how they
+18:0318 minutes, 3 secondsare thinking how they're calling different things within themselves the process of thinking and then they give you like the final response.
+18:1218 minutes, 12 secondsSo what we are going to do now is we are going to show you how you can build deep agents in a very controlled way and how
+18:2018 minutes, 20 secondsyou can give a little bit of autonomy to the agent in terms of what tools it can call versus how would the code look like
+18:2818 minutes, 28 secondsif you gave it full orchestration autonomy. So that's kind of the goal in going through all these notebooks.
+18:3818 minutes, 38 secondsOkay. So yeah the plan is to complete building a deep agent understand it at a much deeper level so that you can think
+18:4618 minutes, 46 secondsabout what kind of pattern makes sense for you for projects um that I think everybody wanted to build an agentic
+18:5418 minutes, 54 secondsworkflow almost everyone uh a few of you may want to build a deep learning model where you train it from scratch or
+19:0219 minutes, 2 secondssomething else uh which is totally fine the questions that came up with respect to projects was could we show you a few
+19:0919 minutes, 9 secondsexamples. Um so we are going to do that and I did ask everyone in our last session like if you have some ideas about projects and most of you were
+19:1719 minutes, 17 secondsstill thinking about it. So let's go over um the project ideas.
+19:2319 minutes, 23 secondsIs there anyone who knows um sorry uh what's the project that they want to build? I can fill that in first.
+19:4519 minutes, 45 secondsHey, this is Jared. Um, I had a an idea to build a release readiness
+19:5219 minutes, 52 secondsum, deep agent that would look at assets from Jira
+19:5919 minutes, 59 secondsum, and release notes. Um so it would go across several different systems and and pull that data in and try to
+20:0820 minutes, 8 secondssystematically say are we good ready to go are we not or make a suggestion
+20:2020 minutes, 20 secondsthat sounds great. Okay. So an agent um okay maybe a deep agent or a workflow agent which is able to give you a
+20:3020 minutes, 30 secondssuggestion of if we are ready to go with our release or not and it has access to different things like Jira release notes
+20:3820 minutes, 38 secondsetc. So a follow on question is um is there API access to these things where the agent can call and fetch that data?
+20:4720 minutes, 47 secondsYes, affirmative. Perfect. Oh that's great. Okay. Yeah,
+20:5220 minutes, 52 secondsthis sounds good. I think uh it should be possible to build this where you can replace the code with your own code for different tool calls.
+21:0021 minutesOkay, thank you J. Yeah, anyone else?
+21:0921 minutes, 9 secondsUh I just have one question. Are we allowed to use any external tools for example AWS Bedrock uh for integrating
+21:1621 minutes, 16 secondsagents? Um but uh it's going to be within the company. So I was thinking of integrating something to like an into a
+21:2421 minutes, 24 secondsbackend service uh to perform validations and generate certain configs but uh just wondering like the
+21:3021 minutes, 30 secondsfeasibility and if it's possible even right right um so using bedrock which is
+21:3821 minutes, 38 secondsyour internal tool and your internal data is perfectly fine in fact for this project the API keys and everything that
+21:4521 minutes, 45 secondsare used have to be internal right because this is train data and we use an external API key. But for your question
+21:5321 minutes, 53 secondsabout using bedrock, you can absolutely use that. However, what I would say is
+22:0022 minuteswe haven't gone over how you can use bedrock to put these agents together.
+22:0722 minutes, 7 secondsUm though bedrock does make it easy. You will have to create a few lambdas which are going to call the right agent. like your orchestration logic is probably
+22:1622 minutes, 16 secondsgoing to be in a lambda or if you want to use their tools that Amazon exposes about deep agents I guess you could do
+22:2422 minutes, 24 secondsthat so it would be a pattern that we haven't covered in the class but if it's something that you want to try yes
+22:3322 minutes, 33 secondsplease feel free to try it and if you drop into office hours we should be able to help you with the bedrock like configuration etc we have built
+22:4222 minutes, 42 secondspipelines in bedrock in the past. So, I think we should be able to help you um but not during the session. Uh perhaps
+22:4922 minutes, 49 secondswe can have like a separate one-on-one session or in the office hours. Yeah, absolutely.
+22:5522 minutes, 55 secondsOkay. Um do you have an idea of uh what the project is about? So like we have a backend service that basically pushes
+23:0223 minutes, 2 secondsdata after normalizing and we perform like uh quality and assurance on that data based on specific rules and these
+23:1023 minutes, 10 secondsrules are defined in a JSON config and it's quite difficult to define these rules as a human but uh LLMs are quite
+23:1823 minutes, 18 secondsgood at defining these rules obviously especially for large data. Uh so I was planning on building an agent that you provide like a simple English like I
+23:2723 minutes, 27 secondswant a config like this that performs these validations and the LLM will generate these uh these rules basically for us.
+23:3723 minutes, 37 secondsOkay, got it.
+23:3923 minutes, 39 secondsThat's a really great idea. So one thing I would say request is that for the purposes of discussion in the class itself, please do not share any train IP
+23:4923 minutes, 49 secondsitself. So you can basically have kind of additional stuff that's kind of from outside or that's kind of made up synthetic but then you can go back and
+23:5723 minutes, 57 secondsuse the same code inside following the standard SDLC processes on confession data.
+24:0724 minutes, 7 secondsDoes that make sense? Yeah, that totally makes sense. Yes. Thank you. Thank you Dr.
+24:1524 minutes, 15 secondsSo, my idea is not well not wellformed yet, but I was thinking about leveraging weather data and perhaps uh like sun
+24:2324 minutes, 23 secondsposition data to help manage your comfort in your house by, you know,
+24:2724 minutes, 27 secondsadjusting shades and that sort of thing. Um,
+24:3324 minutes, 33 secondsI mean, we do a lot with smart thermostats, a lot with, you know,
+24:3524 minutes, 35 secondsenergy optimization, but I, for me, it's how often can I keep my system turned off and managing it with uh, you know,
+24:4324 minutes, 43 secondsclosing and opening windows, closing and opening shades. So, I don't know if this it would lend itself that problem would
+24:5024 minutes, 50 secondslend itself to this or not, but that was my initial thought, opened ideas.
+24:5824 minutes, 58 secondsThank you. Yes, I think we should be able to like an agent should be able to do that and you can control kind of what
+25:0825 minutes, 8 secondskind how it how it should be thinking about it. I think this is a general enough problem that the LLM does have
+25:1625 minutes, 16 secondssome internal logic which would make sense. But yes, you could um you could build an agent which does this. Would it
+25:2425 minutes, 24 secondsreally work when you use that inside your house? I think that can only be found out once it's deployed.
+25:3425 minutes, 34 secondsOkay. Thank you.
+25:3525 minutes, 35 secondsThe part that would be helpful is like what time to best do based on where the sun's position is and what the outdoor temperature is. Here's the thought is that I know if it if I'm starting to get
+25:4425 minutes, 44 secondswarm, I go close the shades. But when is it the right time to do that to capture,
+25:4825 minutes, 48 secondsyou know, to keep my house cool? Maybe it can do something to say, "Okay, it feels like you should you don't need to close it yet, but you probably should
+25:5525 minutes, 55 secondsbecause the sun's going to be in this position and the temperature is going to be that." It was the high level thought if that again.
+26:0426 minutes, 4 secondsYeah, that makes sense. Yeah, picking ideas are not my strong suit. So,
+26:0926 minutes, 9 secondsno, this is a great idea. And the weather API is available uh to pull this data from. What makes it unique is
+26:1726 minutes, 17 secondsyou're taking into account the location and because the sun is going to be different depending on different
+26:2426 minutes, 24 secondslocations and also the weather. Is it cloudy or rainy or just sunny or clear and stuff like that? And then the
+26:3226 minutes, 32 secondsorientation of the house, right? Like is it northwest? Like how is the house situated? What are the positions of the
+26:3826 minutes, 38 secondswindows? So a lot depends on that. In fact, I think if you move into a house,
+26:4326 minutes, 43 secondsit takes you one full year to figure out at different times of the year what's the best way to kind of even plant
+26:5026 minutes, 50 secondsthings or open the shades and all of those things. So, this would be very useful. I think this is a great idea.
+27:0127 minutes, 1 secondThank you.
+27:0227 minutes, 2 secondsThank you. Thank you, Rob. Any other ideas? So, we have three project ideas so far.
+27:1027 minutes, 10 secondsI was thinking Oh, go ahead. Okay.
+27:1527 minutes, 15 secondsI was thinking not probably an LLM, but trying to take uh historic user set
+27:2227 minutes, 22 secondspoint changes from our thermostats and try and find patterns and uh suggest individualized uh schedules
+27:3127 minutes, 31 secondsthat would automate what they regularly do. Mhm. or something mathematically equivalent.
+27:4027 minutes, 40 secondsGot it. Okay.
+27:4627 minutes, 46 secondsOkay. So, a model which looks at historically how the users have changed or adjusted their thermostat and then
+27:5527 minutes, 55 secondsuse that to predict what needs to be done in the future, right? Like where you would perhaps adjust the thermostat. Got it.
+28:0428 minutes, 4 secondsThat sounds good. That that is if they regularly change set point at 7:30 when they go to work and then change it back at 6:00 or something when they get home.
+28:1428 minutes, 14 secondsGot it. Yeah. So individual like usage patterns. Yeah.
+28:1928 minutes, 19 secondsUm so are you thinking about it as a model that's trained per user? Yeah, it would be a model that's trained per user, right?
+28:3028 minutes, 30 secondsYeah, it's kind of got to be per user. Okay, makes sense. Yeah.
+28:3728 minutes, 37 secondsOkay. So perhaps a lightweight model which can quickly train on one users information and do this for them like a
+28:4528 minutes, 45 secondsforecasting model. Got it. Yeah, that sounds good.
+28:4828 minutes, 48 secondsAnd we can perhaps use some of the models that we have already learned about. I would start with the random forest. Um and before that actually yes,
+28:5728 minutes, 57 secondsyou need some data. So we'll see if there is any publicly available data for this. Okay,
+29:0629 minutes, 6 secondsthank you. Thanks.
+29:1229 minutes, 12 secondsSo, this is Matt. Um, I'm interested in seeing what I can implement on an embedded device. Um, so we've got like a
+29:2029 minutes, 20 secondsbunch of devices, a bunch of gateways that have a an HTTP API,
+29:2529 minutes, 25 secondsrestful API, um, that's accessible locally and remotely, and it's got a UI.
+29:3129 minutes, 31 secondsAnd I'd like to see if I can um I don't know if it'd be training a model or or not, but just see see if there's a you
+29:3929 minutes, 39 secondsknow a chatbot style way of accessing that API and telling it to do different things, creating schedules and data logs and things like that.
+29:5029 minutes, 50 secondsAnd so I could I could do it internet connected, but it would be also be really interesting to see what what models I could fit into the resources of
+29:5829 minutes, 58 secondsthe embedded device itself. So it doesn't have to be connected. So I guess I'd start with just some public APIs um to train on.
+30:0830 minutes, 8 secondsUm could you tell us a little bit more about the configuration of the embedded device like how much memory and Yeah,
+30:1730 minutes, 17 secondssure. It's um and we've had some interns do some small models on these before.
+30:2330 minutes, 23 secondsUm, that's one well that our legacy devices are one gig of uh memory
+30:3030 minutes, 30 secondsand and I believe 3 gigabytes of flash with probably two of that available.
+30:3730 minutes, 37 secondsOkay. And they're pretty slow, right? Okay. Um Okay, that sounds good.
+30:4630 minutes, 46 secondsSo, what would it have to predict? What would the model be doing?
+30:5130 minutes, 51 secondsWell, I think I'm just more interested in um just being able to access the API um using the LLM. So, say read a um a
+31:0131 minutes, 1 secondvalue of a certain endpoint or configure a schedule using this um this uh sequence of operations using the API.
+31:1131 minutes, 11 secondsOkay, got it. Okay. So, call uh LLM API
+31:1731 minutes, 17 secondsand get a response about a sequence of operations.
+31:2331 minutes, 23 secondsOkay, makes sense. Um, sure. Yeah. So, I think the rest API part where you call an LLM model that sounds like something
+31:3331 minutes, 33 secondsthat you should be able to do and we can kind of simulate it um in a collab.
+31:3831 minutes, 38 secondsIt really depends uh the response it gives you will depend on kind of what the question is that you're going to ask. Now within this memory
+31:4831 minutes, 48 secondsI'm not sure if we can fit even a small large language model. Dr. Gupta, do you have any comments based on the latest developments of small language models?
+32:0032 minutesI think it's going to be slightly challenging.
+32:0332 minutes, 3 secondsSo there are models that will fit in but they're not very good.
+32:0832 minutes, 8 secondsYeah. So like an internet connected device would be fine too if we were just calling um one of the existing models. Yeah.
+32:1732 minutes, 17 secondsGot it. Okay. Yeah. So that that should be good. Okay. Thank you.
+32:2432 minutes, 24 secondsOkay. This is good. So we have at least five ideas. Does anyone else want to go next?
+32:3432 minutes, 34 secondsI'd had the idea of taking something like a CNN and applying transfer learning to it. Um,
+32:4232 minutes, 42 secondskind of what Matthew was saying in um about being more in the embedded space.
+32:4932 minutes, 49 secondsUh, I'd like to see if I could create
+32:5532 minutes, 55 secondsor use computer vision to determine from a drone's point of view a target in like a bullseye in a field or something. Uh,
+33:0833 minutes, 8 secondsthis would be something that run as an onboard algorithm on a Raspberry Pi or something.
+33:1833 minutes, 18 secondsUm, okay, that sounds good. So, this should be I think doable. Um, would you what would it be predicting? What is it trying to identify?
+33:2933 minutes, 29 secondsWell, it wouldn't be predicting anything. It would more so determine yes
+33:3633 minutes, 36 secondsor no if a target is I guess if a target is within the
+33:4533 minutes, 45 secondsdrone's point of view. Um okay what would the target be?
+33:5633 minutes, 56 secondsUh something like a bullseye. Something that stands out. Yes.
+34:0234 minutes, 2 secondsGot it. Yeah, I think you mentioned that before. Okay, makes sense. So, as long as you constrain it to an object. Uh,
+34:1034 minutes, 10 secondsthis is completely doable. In fact,
+34:1434 minutes, 14 secondsyeah, I'm wondering if this is a image classification or a object detection. I think both work. So, what are Okay,
+34:2334 minutes, 23 secondsmaybe we should start with just um image classification. So in computer vision um there are many ways to think about
+34:3134 minutes, 31 secondswhat the model predicts. If it's predicting a yes or no on an image, it can be one of two
+34:3834 minutes, 38 secondsthings. One is a simple classification where the model looks for an object like a bullseye in the image and it just says
+34:4634 minutes, 46 secondsyes or no. The other is where it doesn't just look for it and say yes or no. When it finds the object, it puts a box around it. That's object detection.
+34:5734 minutes, 57 secondsAnd if there are multiple, it'll put like multiple boxes around it. And if there are none, then there's no box. So that's an automatic no.
+35:0535 minutes, 5 secondsThat's object detection. And maybe I'll just write potentially yolo. Maybe that's something we can move to later.
+35:1135 minutes, 11 secondsSo there is a model called YOLO. Um it's good. It's real time. It's small. It
+35:1735 minutes, 17 secondsfits in a Raspberry Pi. Um in fact um Mr. Ratul who's here with us. He has a lot of experience uh with hardware and
+35:2635 minutes, 26 secondswith putting YOLO models on something like uh Raspberry Pi or Jetson Nano and things like that. So this is small
+35:3435 minutes, 34 secondsenough that it would run. However, we have not covered YOLO in our um cohort.
+35:4235 minutes, 42 secondsWe did cover CNN with transfer learning.
+35:4435 minutes, 44 secondsBoth of these are possible uh to build on a Raspberry Pi and as long as you have a constraint target like this one,
+35:5235 minutes, 52 secondsit should be possible to build either of them. Awesome. Thank you.
+35:5835 minutes, 58 secondsThank you. So, this sounds good. Um yeah, we do have a few more participants um who need to decide on their projects.
+36:0736 minutes, 7 secondsSo, does is does anyone want to go next?
+36:1236 minutes, 12 secondsYeah, I was thinking about um training a model on sensor data to predict failure
+36:1936 minutes, 19 secondsand then uh using those predictions to um feed that into recommendations for
+36:3036 minutes, 30 secondsuh maintenance to uh mitigate that failure.
+36:3836 minutes, 38 secondsOkay, makes sense. Um, this sounds good. Uh,
+36:4336 minutes, 43 secondscan you tell me a little bit more about um the nature of the sensor data? What kind of sensor?
+36:5236 minutes, 52 secondsUm, so yeah, we have uh a new product that takes uh HVAC data from your indoor and outdoor unit. But I was looking on
+37:0137 minutes, 1 secondKaggle and I was thinking maybe using there's some NASA turboan sensor data. Yeah. Yeah. Okay. Okay.
+37:1837 minutes, 18 secondsThat sounds great. Yeah, we should be able to use uh some of the models we have seen so far as well to make this
+37:2437 minutes, 24 secondskind of prediction. So um the challenge is going to be that the fail the number
+37:3137 minutes, 31 secondsof examples of failures are usually low compared to the number of examples of
+37:3837 minutes, 38 secondshealthy um equipment. So there there's going to be skew and in general random
+37:4537 minutes, 45 secondsforest is an algorithm that does okay with skew. But if you have like 99% of the data which is good and just 1% that
+37:5437 minutes, 54 secondsis failure then there are a few pre-processing steps we need to do before being able to build a model that has good performance. But otherwise this
+38:0338 minutes, 3 secondssounds doable. This sounds good and it's awesome that you have already identified a date data set on Kaggle.
+38:1438 minutes, 14 secondsOkay, thank you. Um, anyone else?
+38:3038 minutes, 30 secondsOkay. So, we have about 1 2 3 4 5 6 7.
+38:3638 minutes, 36 secondsUm, that's great. We have at least seven ideas. All of them sound doable. So, one of the things that we also do is we um
+38:4538 minutes, 45 secondshave one-on-one sessions uh towards the end so that we can help you answer
+38:5338 minutes, 53 secondsspecific questions you may have about your project and just to help you get started um with some basic stuff. So, we'll most
+39:0139 minutes, 1 secondlikely be sending each one of you an email in the next 2 days asking you to set up a one-on-one session with us so
+39:1039 minutes, 10 secondsthat we can discuss your project. So far, these ideas sound great. Uh we also wanted to show you a few examples of
+39:1739 minutes, 17 secondsthings that you could do. All of them are workflow examples though they are not usual machine learning model
+39:2539 minutes, 25 secondsbuilding examples. These are all workflow examples. Um we showing this because we had a question in the last
+39:3239 minutes, 32 secondssession about what are some examples and also because most of the responses from our survey said that they would like to build a workflow agent.
+39:4239 minutes, 42 secondsSo these are a few examples we'll send them in the post session material as well. So if you have not decided on a
+39:5139 minutes, 51 secondsproject yet and if any of these examples sound good to you, please feel free to pick them up.
+39:5939 minutes, 59 secondsWe'll of course be using um synthetic data or publicly available data. Doesn't have to be synthetic. It can be some
+40:0740 minutes, 7 secondsother kind of uh public data to create these uh workflows. And then we'll also help you understand what changes you can
+40:1640 minutes, 16 secondsmake. How do you evaluate these workflows which is a big part right?
+40:2040 minutes, 20 secondsLike you could build an agent tech workflow but you have to be able to evaluate how good it is. So that's also something that we're going to talk um
+40:2840 minutes, 28 secondslater in our sessions and help you when you pick one of these projects to build.
+40:3440 minutes, 34 secondsSo I'll give everyone like 30 seconds to go over these. I have another deck,
+40:3940 minutes, 39 secondsanother slide as well with a few other ideas.
+40:5140 minutes, 51 secondsAre there um constraints on the project ideas in terms of um like Jared's idea for example we were talking offline
+41:0041 minutesright and and so Jira is a platform that has AI agents built into it that you can train but that would sort of circumvent the whole using the notebook and
+41:0841 minutes, 8 secondsactually coding to do the project. So is this we need to be aligned on something that we can build in the the notebook you know architecture that we have.
+41:2041 minutes, 20 secondsUm it's not necessary. Yeah that's that's a great question. So we are doing this with notebooks because that's the easiest way to share. Yes.
+41:2841 minutes, 28 secondsIf you want to do this internally like using bedrock or something else yes please feel free to do that. Um the
+41:3641 minutes, 36 secondsconstraint is what Dr. Gupta said that you're not supposed to share any of that data with us.
+41:4441 minutes, 44 secondsUm, we can help you with the config and just setting it up, but if there's any IP like train IP, um, that should not be shared with us.
+41:5541 minutes, 55 secondsAnd if we had our own like personal clot accounts and we're doing something completely separate just for the the sake of learning, right, that that's that's viable, too. Okay.
+42:0442 minutes, 4 secondsYeah. Yeah, that's absolutely fine. Yes.
+42:1242 minutes, 12 secondsOkay, these are a few other ideas of what could be done as a project.
+42:4142 minutes, 41 secondsOkay. So, we'll send these over as well um if you're unable to um go through all of them right now. And do let us know if
+42:4942 minutes, 49 secondsyou decide on picking up any of these um nine projects that we have over here.
+42:5742 minutes, 57 secondsOkay. Um so that so with this I think we can move on to our uh workflow and
+43:0443 minutes, 4 secondsbuilding our deep agent. It's probably a good time to take a 5 minute uh break and when we come back we are going to start working on the notebooks.
+43:1443 minutes, 14 secondsSo it's 7:41 a.m. for me. We'll be back at 7:46.
+48:4348 minutes, 43 secondsHello.
+48:4548 minutes, 45 secondsHi everyone. Um, can I get a thumbs up from everyone who's back? Thank you.
+48:5348 minutes, 53 secondsThree, four,
+48:5948 minutes, 59 secondsoh, five, six. Okay. Yeah, looks like most of us are back. Um I have shared the links to these notebooks and you
+49:0649 minutes, 6 secondsperhaps have this link uh already. This is where we stopped our previous session
+49:1349 minutes, 13 secondswhere we looked at how we could have a fourth agent called a synthesis agent
+49:2049 minutes, 20 secondsand define a schema a structured output schema for that agent.
+49:2849 minutes, 28 secondsUm so just to kind of refresh our memory what this does is it creates um agents
+49:3649 minutes, 36 secondsone which like each agent does a different kind of research about a stock
+49:4449 minutes, 44 secondsoption. What the user is providing as an input in this notebook is a sentence like oh should I hold or sell Apple
+49:5249 minutes, 52 secondsstock or what should I do with Amazon stock and things like that. that request comes in. All of these definitions are
+49:5949 minutes, 59 secondsabout just schema but essentially that request goes to the fundamental agent with this prompt, the technical agent
+50:0750 minutes, 7 secondswith this prompt and a risk agent with this particular prompt. So the same request goes to all of them and they all
+50:1650 minutes, 16 secondsthink about it. Now note that this LLM has no external tool access which means it just has some generic knowledge about
+50:2550 minutes, 25 secondsall the stocks and it's just responding based on that which doesn't sound great for investment but this is just to show
+50:3250 minutes, 32 secondsyou how this would work if there were no tools. So it'll provide some generic advice based on what it knows. Then
+50:4050 minutes, 40 secondsit'll give all of that to the synthesis agent which uses this prompt to provide you with a final recommendation.
+50:4950 minutes, 49 secondsOkay. So you can see inside run specialists what's happening is it's just calling each of these agents in
+50:5650 minutes, 56 secondssequence. So it'll first call fundamental, then it'll call technical,
+50:5950 minutes, 59 secondsthen it'll call risk, and then finally it's going to take that and it will call uh the specialist. Oh, sorry. No, no,
+51:0851 minutes, 8 secondsno, no. That's not right. Sorry. Um this is the question and this is where it runs the specialists, right? So after it
+51:1651 minutes, 16 secondsgets all of these responses that is stored in the specialist reports, it takes that and then it calls the
+51:2451 minutes, 24 secondssynthesis agent. So it's very explicit like calling the agents here then synthesizing it and then finally giving
+51:3151 minutes, 31 secondsyou a final report. So this is what we did in our last session. And it of course doesn't sound great because this doesn't have access to any real tools.
+51:4051 minutes, 40 secondsSo when we give LLMs access to tools that makes them powerful but we are doing it in two steps. First we are
+51:5051 minutes, 50 secondsgoing to show you how you can add tool calls where we just have a mock tool.
+51:5651 minutes, 56 secondsIt's not a real tool. And that's your notebook number six where we are going to add some mock calls to tools. And
+52:0552 minutes, 5 secondsthese tools are pretty basic where the price DB in case like if you had a
+52:1252 minutes, 12 secondsdatabase which had all the prices like how you internally have Jira or some database which has a lot of information.
+52:1952 minutes, 19 secondsIf there was a database and instead of going to a real database we just created like a fake database that has only four items in it which also means that this
+52:2852 minutes, 28 secondsis not actually going to work and these values are also all fake. Right? So we have a fake database for each of them
+52:3652 minutes, 36 secondsand we're going to say oh there is a tool call which is going to call this fake database and as long as it has one
+52:4452 minutes, 44 secondsof these tickers it's going to work in retrieving that information for you and now the LLM is going to make a
+52:5252 minutes, 52 secondsprediction based on the information that it gets from the database fake database so that's the addition in notebook 6
+53:0153 minutes, 1 secondrest Everything stays the same. Yes, we have mood synthesis prompt from being a separate cell to the same cell. Very
+53:0853 minutes, 8 secondssmall like copy paste changes, but all of it you can see is pretty much the same.
+53:1653 minutes, 16 secondsRest of it is all the same. It's just that we have provided these mock
+53:2353 minutes, 23 secondsdatabases and some mock definitions of how you could get the data from that database.
+53:3353 minutes, 33 secondsDoes this make sense? It's all made up so far. But the important thing to note here is we need to define the tool
+53:4353 minutes, 43 secondscalls. Here we are doing a fake tool call definition and once you do that
+53:5053 minutes, 50 secondswhen you are building the payload you will be able to call these fake tools
+53:5753 minutes, 57 secondsand provide that as a tool output provide that as additional information
+54:0454 minutes, 4 secondsthat the agent is able to get from a tool. So you can see that here. So if we if I look at the previous code of where
+54:1254 minutes, 12 secondsthis is called um this was the call.
+54:1854 minutes, 18 secondsSo note what the input is the fundamental prompt which we defined what the user asked and what the specialist report structure is supposed to be.
+54:2854 minutes, 28 secondsRight now let's look at here where is it? Yes. So here you have a
+54:3454 minutes, 34 secondsspecialist input where this specialist input is something that you get from
+54:4154 minutes, 41 secondsbuild specialist payload. What is build specialist payload? It's something that makes the tool calls to get all the additional data. So that's the breakdown
+54:4954 minutes, 49 secondsof the structure. you're getting not just the user query that that's of course a part of it but but you're getting a lot more additional data from
+54:5954 minutes, 59 secondsyour tools and providing that as an input when you run the agent
+55:0655 minutes, 6 secondsand it's giving you the same additional information for every agent. There's no
+55:1255 minutes, 12 secondsdifference here in this case and it'll only work with these stocks.
+55:1855 minutes, 18 secondsit's not going to work with anything else. So that's a difference in how you can make a tool call and how it's going
+55:2755 minutes, 27 secondsto add that information before it gives you the final report.
+55:3655 minutes, 36 secondsOkay, I hope that makes sense. Um let me check where the query is defined here.
+55:4255 minutes, 42 secondsOkay, this is a sample query.
+55:4755 minutes, 47 secondsOkay. Now note that this is special compared to what was done over here. Do
+55:5555 minutes, 55 secondsyou see the difference? Like the query is just one free form like whatever sentence, right? Give me a beginner friendly educational first pass view of
+56:0356 minutes, 3 secondsAmazon or Apple or Microsoft or any any stock. It's a free query.
+56:1056 minutes, 10 secondsIt's not the case over here.
+56:1256 minutes, 12 secondsYes, there is a query. But then when you're calling the specialist, you are providing it with the ticker.
+56:2056 minutes, 20 secondsWhy? Why do we need to do this? We have to do this when you add tools. And that would be the key thing. When you're
+56:2856 minutes, 28 secondscalling tools, a lot of tools will require you to provide specific
+56:3556 minutes, 35 secondsstructured data like a JSON or something as an input. And that's how a tool works,
+56:4156 minutes, 41 secondsright? tool doesn't work with natural language most of the time. Yes, of course, like you know, browser search and all work with any any input like
+56:4956 minutes, 49 secondsthis. But if you want the stock, you can't just give this question and get the stock value. You have to give the
+56:5656 minutes, 56 secondsticker value with tools like Yahoo Finance and stuff, right? And what happens after that is it's going to go
+57:0457 minutes, 4 secondslook up that particular ticker and it's going to fetch the data that's related to that ticker. If you don't give it the ticker value, it wouldn't know how to
+57:1357 minutes, 13 secondscall the tool. But this defeats the purpose. So what are you expecting the user to do? Give a free form query like this and then give you the exact ticker
+57:2157 minutes, 21 secondsvalue, which is not a very user-friendly way to interact with the agent, right?
+57:2657 minutes, 26 secondsBut this is an intermediate step. We are going to look at how we can relax this requirement and still get the ticker
+57:3457 minutes, 34 secondsvalue in the future notebooks. But for now the difference between the previous notebook and this notebook is there are
+57:4157 minutes, 41 secondstool calls and that has come with an additional um constraint that we have to provide the ticker value.
+57:5057 minutes, 50 secondsDoes it make sense so far? This is notebook six.
+58:0158 minutes, 1 secondAny questions? Okay, awesome. Thank you.
+58:1158 minutes, 11 secondsA quick quick question and I I think maybe you you alluded to it'll be on a on a later something like this will be on a later notebook, but are are we
+58:1858 minutes, 18 secondsessentially going to like train the agent how to use the tool so that we don't have to give it the
+58:2558 minutes, 25 secondsspecific uh stock ticker?
+58:3158 minutes, 31 secondsUm yes um we are going to um make a call to resolve the stock
+58:3958 minutes, 39 secondsticker a separate call ahead of calling any of these agents and I think we'll do that in notebook number eight. Yes.
+58:5058 minutes, 50 secondsGot it. Okay. Yeah that that'll fix this. Yeah.
+58:5758 minutes, 57 secondsOkay. So this is again fake tool calls right so let's replace it with real ones and the reason we went with fake is
+59:0659 minutes, 6 secondsbecause the code is much simpler it's just this much where do whatever you want with the data that you want to add
+59:1459 minutes, 14 secondsthree really tiny function definitions and we are done and you could make that a tool call. This also shows you that if
+59:2259 minutes, 22 secondsyou have an internal database or anything else which you could make a call to to get information or even a website if the information is in a
+59:3159 minutes, 31 secondswebsite and you want to fetch it from there. So if you have a tool for that,
+59:3559 minutes, 35 secondsyou can pretty much integrate any tool into the LLM where whatever the tool um responds with as long as it's strings
+59:4359 minutes, 43 secondswhich could be like English and numbers and all of those things as long as it's string you can provide that all as an
+59:5059 minutes, 50 secondsinput to your agent. Um this shows that and specifically what we are going to do in notebook number seven which I have
+59:5859 minutes, 58 secondsalso shared um in our chat is we are going to switch to using real tools like Yahoo Finance.
+1:00:051 hour, 5 secondsSo you'll see that Yahoo Finance is added. Uh pandas is also added. It's a dataf frame. It a dataf frame is a data structure in Python which is very very
+1:00:141 hour, 14 secondspopular. You can think about it as something that is able to create tables inside Python.
+1:00:221 hour, 22 secondsSo those are the two additional things that we install.
+1:00:271 hour, 27 secondsThis part again stays the same. What changes a lot is the tool wrappers.
+1:00:331 hour, 33 secondsThis is real now, right? So it is working with a real tool and it does different things like given a symbol um get the history for a period of 5 days.
+1:00:451 hour, 45 secondsNow why 5 days? It's arbitrary. You can change it to any period of time. So this has values within each one where you can
+1:00:521 hour, 52 secondsget financial statements, you can get the stock price, you can get technical indicators, you can get any recent news.
+1:01:011 hour, 1 minute, 1 secondUm all of this is possible to get um using the Yahoo Finance module in
+1:01:081 hour, 1 minute, 8 secondsPython. So we use real tools now and the rest kind of stays the same. You have the same build specialist payload but
+1:01:171 hour, 1 minute, 17 secondsinstead of calling like mock stuff now we are calling real stuff to get all of these things and again the input that we
+1:01:261 hour, 1 minute, 26 secondsare providing though it doesn't have to be this way is the same for every agent and you'll see why it is this way when
+1:01:321 hour, 1 minute, 32 secondswe go to a u to a deep agent because a more efficient thing to do uh to do would be provide only the technical report right to the technical prompt.
+1:01:421 hour, 1 minute, 42 secondsWhy provide everything all of the indicators to every single sub agent? So
+1:01:501 hour, 1 minute, 50 secondsthat will become a little bit more clear when we move all of these agents to become deep agents. Right now they are not deep agents yet. We control
+1:01:581 hour, 1 minute, 58 secondseverything. This will be called first then this is going to be called then this is going to be called and then the synthesizer is going to be called. We
+1:02:061 hour, 2 minutes, 6 secondsare deciding all of it right now and we did not overengineer it. We just gave it like all the tool output to every single agent.
+1:02:151 hour, 2 minutes, 15 secondsBut then the constraint of calling it using this symbol and the user query
+1:02:221 hour, 2 minutes, 22 secondsstays where unless you provide it with an explicit symbol, this whole program is not going to work which is again not very beginner friendly.
+1:02:331 hour, 2 minutes, 33 secondsI'm not going over the specific code inside Yahoo Finance tools because that's not really uh the focus. The
+1:02:411 hour, 2 minutes, 41 secondsfocus is that you can integrate any tool like Yahoo Finance and how you can make it a part of your input when you're
+1:02:511 hour, 2 minutes, 51 secondscalling each of the agents this way where you can have a function to create the payload and provide that as an input to every single agent.
+1:03:011 hour, 3 minutes, 1 secondMake sense so far?
+1:03:071 hour, 3 minutes, 7 secondsOkay. So what we have done so far is we have four agents. Three of them are called one after the other. Fourth one
+1:03:141 hour, 3 minutes, 14 secondsis called with the output from each agent. And now we are using real data actual data that we get from Yahoo
+1:03:231 hour, 3 minutes, 23 secondsFinance. The pitfall is that you expect the user to provide the ticker symbol.
+1:03:291 hour, 3 minutes, 29 secondsSo the next notebook resolves it. And you may need to do these kinds of things when you create your project where when
+1:03:381 hour, 3 minutes, 38 secondsyou're using a tool and it's expecting like here a ticker value or something else in your case you may have to do
+1:03:451 hour, 3 minutes, 45 secondsthis kind of pre-processing to make the flow work. So notebook 8.
+1:03:531 hour, 3 minutes, 53 secondsSo this is called request normalization.
+1:03:581 hour, 3 minutes, 58 secondsI have provided the notebook in the chat. Please make a copy of all the notebooks. We'll also send the entire sequence of notebooks in our post session materials.
+1:04:091 hour, 4 minutes, 9 secondsOkay. So, a lot of stuff again stays the same. No new installs um in this notebook. This is all the same. The same
+1:04:171 hour, 4 minutes, 17 secondsstructure, same prompt, same tool wrappers, no change. The new thing is step five which is where you're adding a
+1:04:261 hour, 4 minutes, 26 secondsrequest normalization helper. So what this means is when a user provides a free form text you are trying to extract
+1:04:351 hour, 4 minutes, 35 secondsthe ticker symbol from it there is some pre-processing you're doing over here to see did the
+1:04:431 hour, 4 minutes, 43 secondsuser provide the ticker in the query itself. If they did then just fetch that. If they did not, then you're going
+1:04:511 hour, 4 minutes, 51 secondsto invoke an LLM or you can pretty much do anything you want. So this is one way to pre-process this. And if there was no
+1:04:591 hour, 4 minutes, 59 secondsticker and it was some other comment like the user could have said how do I bake an ice cream also, right? So those use cases you have to think about and
+1:05:081 hour, 5 minutes, 8 secondssee what are you supposed to do when something like that happens, right?
+1:05:121 hour, 5 minutes, 12 secondsMaybe there is no explicit ticker. Maybe the question itself is not about any company.
+1:05:191 hour, 5 minutes, 19 secondsWe don't know. So when you're building the request context, you are trying what you are doing is you're seeing if the
+1:05:271 hour, 5 minutes, 27 secondscompany name has been provided. If it has been provided, then you will use it.
+1:05:331 hour, 5 minutes, 33 secondsIf it's not provided, then you have some like catch for it. Similarly, you have a function called extract the explicit
+1:05:401 hour, 5 minutes, 40 secondsticker because we have modified our request context to now receive the request and then extract this
+1:05:481 hour, 5 minutes, 48 secondsinformation before actually going and calling our agents. You can remove this step of providing the symbol explicitly.
+1:05:581 hour, 5 minutes, 58 secondsSo now you'll see the code goes back to just having a user query. that user query instead of just dumping it on the
+1:06:061 hour, 6 minutes, 6 secondslarge language models, we are going to call this first get a structured or a better detailed input prompt for our
+1:06:151 hour, 6 minutes, 15 secondslarge language model and we'll send that as a request.
+1:06:221 hour, 6 minutes, 22 secondsAnd again, this may not be the best way to do this. This is just one like simple way to do it. You could completely change it. You could make that an LLM call. A lot of things are possible.
+1:06:321 hour, 6 minutes, 32 secondsUm just think about it as this is a pre-processing blob which extracts the ticker information.
+1:06:431 hour, 6 minutes, 43 secondsSo this is again a test. What if the user asks this or this or this or this?
+1:06:481 hour, 6 minutes, 48 secondsIs it able to actually resolve what the ticker is or correctly or not? So this block is just for like testing if it
+1:06:551 hour, 6 minutes, 55 secondsactually works well or not. And in fact there are cases where it doesn't work.
+1:07:011 hour, 7 minutes, 1 secondum when we tested in some cases it didn't. So this can perhaps be improved um to do better. So when you create your
+1:07:081 hour, 7 minutes, 8 secondsproject you can also run these kinds of tests and see what are the cases where it doesn't work and then like make your logic for pre-processing a little bit better.
+1:07:181 hour, 7 minutes, 18 secondsOkay. So now here what we are doing is uh just defining functions for payload.
+1:07:261 hour, 7 minutes, 26 secondsSo whenever you see build a payload of any kind uh was there a payload? No,
+1:07:321 hour, 7 minutes, 32 secondsthis was just context. You can think about it as what we are doing here is prompt engineering. We are going to cover prompt engineering in the next
+1:07:401 hour, 7 minutes, 40 secondssession um in a week from now. But basically instead of just taking what the user has asked and dumping it on the
+1:07:491 hour, 7 minutes, 49 secondslarge language model, if we are able to create a better prompt either by using tools to get additional
+1:07:571 hour, 7 minutes, 57 secondsinformation or by using something else to resolve different things like the
+1:08:031 hour, 8 minutes, 3 secondsticker value, the search term or we do some something else, some some other method to make the prompt better.
+1:08:141 hour, 8 minutes, 14 secondsThat really helps the large language model to give you a better response. In this case, the way it's making it better
+1:08:201 hour, 8 minutes, 20 secondsis by doing tool calls, but it doesn't have to be. You can make it better through a lot of different kinds of steps. So, this is just building a
+1:08:291 hour, 8 minutes, 29 secondsreally good structured prompt that can be given to a large language model when it's invoked.
+1:08:391 hour, 8 minutes, 39 secondsSo this special prompt is being called here. So that's our specialized input and that's provided to each agent so
+1:08:471 hour, 8 minutes, 47 secondsthat the agent can respond by looking at all of this information in its context.
+1:08:571 hour, 8 minutes, 57 secondsSo the only new thing here was we are making it a little bit easier for the user where we don't require them to
+1:09:041 hour, 9 minutes, 4 secondsexplicitly have the ticker value. they could just call something like this. And if you remember in all our previous
+1:09:121 hour, 9 minutes, 12 secondsnotebooks, we explicitly had calls to each of these. Right? And then we were running the final synthesis agent,
+1:09:231 hour, 9 minutes, 23 secondsright? Here a small change. We have moved it all to one function so that all you need to do is call this one one
+1:09:311 hour, 9 minutes, 31 secondsfunction and that's going to resolve the ticker value and it's going to make sure that ticker value goes to all the tools.
+1:09:391 hour, 9 minutes, 39 secondsIt makes sure all of these tools are run in the right sequence and then the synthesizer is run and then it returns a
+1:09:471 hour, 9 minutes, 47 secondsfinal report. So it's all moved into just one function. So as a user you just have to make one call which is this and that gives you the final report.
+1:09:581 hour, 9 minutes, 58 secondsSo that's the second change compared to notebook number seven.
+1:10:051 hour, 10 minutes, 5 secondsDoes it make sense so far?
+1:10:081 hour, 10 minutes, 8 secondsI'll just give everyone like a minute to go over notebook 7 and notebook 8. And meanwhile I'll post the next couple of notebooks.
+1:12:241 hour, 12 minutes, 24 secondsI have posted the rest of the notebooks where notebook 13 is where you'll see how each
+1:12:331 hour, 12 minutes, 33 secondsagent can be made deep. But there is a notebook 14 which is you giving up all
+1:12:401 hour, 12 minutes, 40 secondsthe control. Um 13 is somewhere in the middle and 14 is where you're going to
+1:12:471 hour, 12 minutes, 47 secondsjust let the agent decide the complete workflow which is a true deep agent. And
+1:12:541 hour, 12 minutes, 54 secondsa nice exercise uh which we can do like separate from the session. You could all run these two notebooks and see which
+1:13:031 hour, 13 minutes, 3 secondsone seems to have a better quality of response. Giving it complete autonomy or you retaining the control at a high
+1:13:101 hour, 13 minutes, 10 secondslevel but making um each agent within the workflow to be a deep agent.
+1:13:191 hour, 13 minutes, 19 secondsHey, this latest link you shared is actually notebook 14, notebook 13.
+1:13:251 hour, 13 minutes, 25 secondsOh no. Okay. Oh, did I do that?
+1:13:321 hour, 13 minutes, 32 secondsOh, got it. Okay, I'm going to find notebook 13. Maybe I skipped it.
+1:13:391 hour, 13 minutes, 39 secondsThank you. Thank you for pointing that out. Of course.
+1:13:471 hour, 13 minutes, 47 secondsUh, I'm actually missing notebook 14.
+1:13:501 hour, 13 minutes, 50 secondsSo, maybe we'll send it in the post session materials. I need to go back to my drive and check. So there may be a hop between 12 and the notebook I share.
+1:14:001 hour, 14 minutesHowever, the notebook 14 that I have shared is not a full deep agent. It is the hybrid one. It is the final destin.
+1:14:091 hour, 14 minutes, 9 secondsSo there's a notebook 15 which I'll share towards the end of the session which is the actual like complete orchestration.
+1:14:301 hour, 14 minutes, 30 secondsOkay. So, I'm going to go back to notebook 9 where we have done a
+1:14:361 hour, 14 minutes, 36 secondslittle bit of a cleanup of orchestration and this is important. Um, is everyone okay to move on to this notebook? Is everything so far okay?
+1:14:591 hour, 14 minutes, 59 secondsYes. No. Okay. Perhaps people need just a little bit more time uh to look at it. I I'll wait for one more minute.
+1:16:401 hour, 16 minutes, 40 secondsOkay. So, this notebook is actually um quite simple.
+1:16:461 hour, 16 minutes, 46 secondsOh, sorry. I think I'm on the wrong uh give me one second. Am I on the right notebook? Yes. Okay.
+1:16:581 hour, 16 minutes, 58 secondsYes, notebook 9. Um so in notebook 9 I hope I'm sharing the right yeah okay
+1:17:051 hour, 17 minutes, 5 secondsso the change is small but it's very important the change between notebook 8 and notebook 9 is in how we are going to
+1:17:151 hour, 17 minutes, 15 secondsmodify our request context. So when you have a lot of agents that are working together to give you a final output,
+1:17:251 hour, 17 minutes, 25 secondsthey need to have some sort of shared memory between them. And what we did in our previous notebooks is that it was a
+1:17:331 hour, 17 minutes, 33 secondsPython dictionary that is changing that is changing here.
+1:17:381 hour, 17 minutes, 38 secondsIt's called request context that is changing from a Python dictionary to a class which forces the fields. So the
+1:17:461 hour, 17 minutes, 46 secondsthing about Python dictionary is it's much more um free in the sense that you could add things remove you it's not
+1:17:541 hour, 17 minutes, 54 secondsconstrained it's like a loose bag but when you use um different agents and
+1:18:011 hour, 18 minutes, 1 secondthey have to um do a bunch of tool calls and share some sort of uh memory between
+1:18:091 hour, 18 minutes, 9 secondsthem like the synthesizer needs to get the output from all of these things right so in that context uh This is very uh important. The other change that
+1:18:181 hour, 18 minutes, 18 secondshappens is how we are resolving the ticker like we saw in the previous case what we did. So I'm going to show you
+1:18:261 hour, 18 minutes, 26 secondsthe exact code which is different. Maybe I'll just go here.
+1:18:321 hour, 18 minutes, 32 secondsWhere is the Yeah. So you can see this here. Um this is basically um how it's
+1:18:401 hour, 18 minutes, 40 secondsresolving what the ticker is. If it's not able to resol resolve, it just says apple, which is just a very like simple logic that was implemented over here.
+1:18:501 hour, 18 minutes, 50 secondsBut if you look at notebook 9, this is not how it's done. So in notebook 9, we have symbol equal to I'll have to search
+1:18:581 hour, 18 minutes, 58 secondsfor it. Symbol request. Yeah.
+1:19:061 hour, 19 minutes, 6 secondsSo you can see that here it just directly calls this and it has the request context.
+1:19:161 hour, 19 minutes, 16 secondsNow let me go back over here. Here you see how it is a dictionary and here you see how it's not a dictionary. So let's go deeper into this.
+1:19:271 hour, 19 minutes, 27 secondsOkay. Sorry I need to go up I think.
+1:19:361 hour, 19 minutes, 36 secondsYeah, here.
+1:19:421 hour, 19 minutes, 42 secondsOkay. So, here you can see how this is building the payload and the payload pretty much have have the same thing.
+1:19:501 hour, 19 minutes, 50 secondsBut this request context is a special kind of structure. It's not a Python
+1:19:561 hour, 19 minutes, 56 secondsdictionary. Instead, it is a pedantic class. Yes. that it inherits from the
+1:20:041 hour, 20 minutes, 4 secondsbase model. You're going to see this a lot anytime you deal with LLM code be it agents or even if it's not an agent you
+1:20:131 hour, 20 minutes, 13 secondswill see them inherit a lot from base model and this comes from where is pedantic where do I import it?
+1:20:281 hour, 20 minutes, 28 secondsYes, I think we have used it before. It has been installed before um as well.
+1:20:341 hour, 20 minutes, 34 secondsAnd here you see how it's imported. This base model is something that's going to force the structure to follow this. So
+1:20:421 hour, 20 minutes, 42 secondsit has to have original query which is a string. It has to have the search term.
+1:20:461 hour, 20 minutes, 46 secondsIt has to have the result ticker. It has to have all of these fields exactly in this structure. This is very important especially in production when you're
+1:20:541 hour, 20 minutes, 54 secondsbuilding these things. The code is undergoing a lot of changes. Maybe it's interacting with a lot of things. If you keep this to be a dictionary like it was
+1:21:021 hour, 21 minutes, 2 secondskept over here, then a dictionary is much more uh flexible in the sense that you can add things to it, remove things
+1:21:091 hour, 21 minutes, 9 secondsto it. If it gets changed, it will get passed downstream and somewhere else it's going to fail when it sees a field that it's not expecting.
+1:21:201 hour, 21 minutes, 20 secondsInstead, if you do it this way, then we are basically mitigating that from happening. So this is just a better way to write code where we are going to
+1:21:301 hour, 21 minutes, 30 secondsdefine um here it's request context but you can give it any name and we are going to define a structure and that
+1:21:371 hour, 21 minutes, 37 secondswill be the structure that we pass everywhere which you can see it's building the context over here but
+1:21:451 hour, 21 minutes, 45 secondshere you can see the input to each thing has now changed from being a dictionary to a request context. So it's expecting
+1:21:531 hour, 21 minutes, 53 secondsyou to provide that input in exactly that form with those fields.
+1:22:001 hour, 22 minutesThat's the key difference from the previous case. So here this is just a cleaner way to write code.
+1:22:101 hour, 22 minutes, 10 secondsRest of the code, I know it's a lot of lines of code, but it's all the same.
+1:22:151 hour, 22 minutes, 15 secondsThere's no change. The only change is that instead of using a dictionary, we are using request context.
+1:22:241 hour, 22 minutes, 24 secondsOkay, the next couple of notebooks are about logging. Now, this is something that you can skip if you think logging
+1:22:331 hour, 22 minutes, 33 secondsis not as important. It is very important when we are demonstrating agentic workflow because it helps us to
+1:22:411 hour, 22 minutes, 41 secondsshow you for you to get an insight into which agent was called, how was it called, what was the input, what did
+1:22:491 hour, 22 minutes, 49 secondsthat agent respond with and then what happened. It's like a story, right?
+1:22:541 hour, 22 minutes, 54 secondswhich is showing you how the entire workflow was before you got the final output. Instead of it being like a big
+1:23:021 hour, 23 minutes, 2 secondsblack box where you sent a query in and something came out, this also helps with debugging. In case something went wrong,
+1:23:091 hour, 23 minutes, 9 secondsyou'll know exactly where it went wrong if you check the logs. So this is just for that purpose. The reason it has been divided into three notebooks is because
+1:23:181 hour, 23 minutes, 18 secondswe wanted to show how you can have different levels of logging as well. And mostly logging is possible only when you have some sorry when you retain a little
+1:23:271 hour, 23 minutes, 27 secondsbit of control on the workflow. If you make it completely deep agent then it becomes harder to log what's going on
+1:23:341 hour, 23 minutes, 34 secondsinternally. You'll have to rely on the module that you use to create the deep agent. So here this is actually uh
+1:23:421 hour, 23 minutes, 42 secondsnothing fancy is being done here. We are just creating a list um to which we are going to append logs where each log is a
+1:23:501 hour, 23 minutes, 50 secondsis a call. So I can show you where that happens.
+1:23:561 hour, 23 minutes, 56 secondsNothing here. This is all the same saying request normalization is what we saw. Yes. So this is where uh this is
+1:24:051 hour, 24 minutes, 5 secondsthe new code um in this notebook where all we are saying is we have a log which is a list of dictionaries where every
+1:24:131 hour, 24 minutes, 13 secondstime we log it's going to append the stage is it the tech in the technical stage or this stage is it in the synthesizing stage what is the time
+1:24:211 hour, 24 minutes, 21 secondsstamp and what is the payload what was the input that it received that's all it logs and the way this is called is
+1:24:281 hour, 24 minutes, 28 secondsinside each agent um you Just add the log here that you're
+1:24:351 hour, 24 minutes, 35 secondsbuilding the payload. Then you have another log here which is talking about the input that you have built.
+1:24:431 hour, 24 minutes, 43 secondsSimilarly, there is a log within each agent where you are going to log the start,
+1:24:501 hour, 24 minutes, 50 secondswhat happened when the model responded for each agent, the fundamental one,
+1:24:541 hour, 24 minutes, 54 secondstechnical one, risk one and then final finally the synthesizer. So it logs each time. So it's just a list of
+1:25:021 hour, 25 minutes, 2 secondsdictionaries and it'll dump that list once the entire once all the calls are made and you can see the trace of how it
+1:25:111 hour, 25 minutes, 11 secondsthought about it to give you the final answer.
+1:25:151 hour, 25 minutes, 15 secondsNow you may not be happy with just this much. You may want to have a deeper insight into what happened. So that's
+1:25:221 hour, 25 minutes, 22 secondsthis notebook where it's a little bit more sophisticated in its logging. So I'll show you where it adds that. This
+1:25:301 hour, 25 minutes, 30 secondsis all the same same same here. So here it explicitly has the agent names and
+1:25:371 hour, 25 minutes, 37 secondswhen it is logging it is going to log it separately as these are the logs for this agent, these are the logs for this agent, these are the logs for this
+1:25:441 hour, 25 minutes, 44 secondsagent. This is very very useful um when you think about it in the context of the final app. We shared that app in
+1:25:541 hour, 25 minutes, 54 secondsour previous session. I'll share it again. If you remember in the UI, you didn't just see all the logs dumped,
+1:26:001 hour, 26 minutesright? That would be hard to read. What you saw in that UI was logs that were specific to each agent. And within that,
+1:26:081 hour, 26 minutes, 8 secondsyou saw logs that were nicely um broken down by tool calls as well. That's
+1:26:161 hour, 26 minutes, 16 secondspossible if you're going to separate them. So again, this is just a lot about logging and our goal is not to teach you
+1:26:231 hour, 26 minutes, 23 secondslogging. This is just a pattern that you can use to create logs. You'll see this in the final code and we didn't want it
+1:26:311 hour, 26 minutes, 31 secondsto look like we don't know what's going on over here. So, this is just a way for us to show you that there is it's not
+1:26:381 hour, 26 minutes, 38 secondsvery sophisticated. It's just a very simple way of creating the logs and separating them by agents. And then the
+1:26:461 hour, 26 minutes, 46 secondsnext step is separating them by tool calls as well within each agent. And you'll see that change in code over here
+1:26:551 hour, 26 minutes, 55 secondswhere you're going to add a log for every tool call, the call that was made to the tool and the response that the tool gave you as well.
+1:27:051 hour, 27 minutes, 5 secondsThat's the addition for notebook number 12 where we make tool calls. So I know I haven't gone very deep into notebook 10,
+1:27:141 hour, 27 minutes, 14 seconds11, and 12 because it's all about logging and different levels of logging.
+1:27:191 hour, 27 minutes, 19 secondsAny questions so far?
+1:27:261 hour, 27 minutes, 26 secondsSo there's no big change in orchestration. There's no change in the pattern. Nothing has changed. It's just about visibility. These three notebooks.
+1:27:371 hour, 27 minutes, 37 secondsNow we are going to build on top of this. Now that we have all the logs in place, we have the entire workflow in place. We have real tools as well with
+1:27:451 hour, 27 minutes, 45 secondsYahoo Finance. If we were to convert this into a deep agent, we have to give
+1:27:531 hour, 27 minutes, 53 secondseach agent within the workflow a little bit more autonomy on something. And what we have done here is we have given it
+1:28:011 hour, 28 minutes, 1 secondautonomy on the tool calls. So the new addition is deep agents and some langraph stuff because we are using the deep
+1:28:101 hour, 28 minutes, 10 secondsagent library that's provided by langchain. Lang chain is the company that creates this infrastructure.
+1:28:181 hour, 28 minutes, 18 secondsSo that's the reason we have like added all of these things and we are going to use uh deep agents. How do we use deep
+1:28:251 hour, 28 minutes, 25 secondsagents? So again logging everything stays the same. I'll show you where the deep agents code is changing. Maybe I can just type agents.
+1:28:391 hour, 28 minutes, 39 secondsOkay.
+1:28:421 hour, 28 minutes, 42 secondsCreate equations. So I should that okay so within
+1:28:521 hour, 28 minutes, 52 secondssorry so within um the code you can see that now we have changed it to create
+1:29:001 hour, 29 minutesdeep agent. So let's look at what it was before this.
+1:29:141 hour, 29 minutes, 14 secondsBefore this there was no such thing.
+1:29:161 hour, 29 minutes, 16 secondsThere was run synthesis and this is how it ran. Right? You would build the synthesis input. This is how the workflow ran in the previous notebook.
+1:29:261 hour, 29 minutes, 26 secondscompared to that. If you look at this over here,
+1:29:301 hour, 29 minutes, 30 secondsum we are calling a deep agent where we provide it with the model and we provide it with the list of tools.
+1:29:391 hour, 29 minutes, 39 secondsThis is the same. We did not change the prompt at all. We did not change what the format of the final report needs to
+1:29:481 hour, 29 minutes, 48 secondsbe or anything like that. All we changed is we said it's a deep agent and here are all the tools you have access to. So let's look at what are all the tools
+1:29:561 hour, 29 minutes, 56 secondsthat each agent has access to. So it doesn't have to call all of them. It'll decide what to call and I just want to
+1:30:041 hour, 30 minutes, 4 secondsshow you the tools. So this is huge code. So lot of like scrolling up and down. Um it's easy to get lost in the code. So here's the list of tools.
+1:30:151 hour, 30 minutes, 15 secondsSame tools that we used in notebook number nine. I think getting the stock price, getting the financial statements,
+1:30:221 hour, 30 minutes, 22 secondsgetting technical indicators, getting recent company news,
+1:30:281 hour, 30 minutes, 28 secondsthey are exactly the same tools, all of them through Yahoo Finance. So, we specify a list of tools and we tell each agent that hey, you have access to all these tools. Do whatever you want.
+1:30:401 hour, 30 minutes, 40 secondsSo, it will think about, oh, do I need to use this? Do I need to use this? And it's going to make a tool call depending on what it thinks. does it need it or
+1:30:481 hour, 30 minutes, 48 secondsdoes it not need it? Based on that, it's going to make those tool calls and run them to completion and that's when it's
+1:30:551 hour, 30 minutes, 55 secondsgoing to return the output that it gets from these tools. So that's the change I would say. Another change uh which may
+1:31:031 hour, 31 minutes, 3 secondsnot be very obvious is this is a synchronous. It's not superbly useful in this case,
+1:31:101 hour, 31 minutes, 10 secondsbut the idea is when you add this,
+1:31:141 hour, 31 minutes, 14 secondsthere's usually a a weight. There has to be a weight somewhere inside
+1:31:221 hour, 31 minutes, 22 secondsor yeah, here. So, all this means is that it's not going it knows that there is a call here which may take time,
+1:31:321 hour, 31 minutes, 32 secondsright? So while that is taking time and it goes on, you are allowed to go do other things. Or if you have three or
+1:31:401 hour, 31 minutes, 40 secondsfour agents that are running, you run one agent and you wait for the response to come back and meanwhile you are able
+1:31:481 hour, 31 minutes, 48 secondsto provide the intermediate logs or intermediate outputs of what's going on etc. So it's not blocked. Python the way
+1:31:571 hour, 31 minutes, 57 secondsit works is it implements one line then the next line then the next line then the next line. If there's a line that takes 10 minutes, it takes 10 minutes.
+1:32:041 hour, 32 minutes, 4 secondsYou have no visibility into it. So this is just something which helps with u providing explicit instructions that oh
+1:32:121 hour, 32 minutes, 12 secondslike when you make this call to the LLM it's possible internally it's going to call like so many tools etc. So instead of saying invoke we have a invoke which is a synchronous invoke.
+1:32:241 hour, 32 minutes, 24 secondsSo it knows that it needs to invoke and it'll go do whatever it wants to do and it may take time. So you're just explicitly providing that instruction.
+1:32:331 hour, 32 minutes, 33 secondsSo I would say that's another change compared to the previous notebooks in addition to creating a deep agent.
+1:32:421 hour, 32 minutes, 42 secondsSorry I think we are running out of time. Uh we don't have time to go over the complete deep agent where the thinking of what to call is also
+1:32:511 hour, 32 minutes, 51 secondstransferred to an agent today. We'll cover that in the next session. We'll provide that code though in the post session reading materials and we'll go
+1:33:001 hour, 33 minutesover it when we meet again in a week. Um we'll also go over the stream lit app that I had shared uh previously which is
+1:33:091 hour, 33 minutes, 9 secondsbasically exactly this thing all coming together to create that agentic workflow.
+1:33:181 hour, 33 minutes, 18 secondsSo I hope this was okay. Um I hope you'll have time to go over this uh before our next session also. And please
+1:33:261 hour, 33 minutes, 26 secondslook for emails from us about your projects.
+1:33:311 hour, 33 minutes, 31 secondsThank you. We are here for a few minutes if you have any questions.
+1:33:411 hour, 33 minutes, 41 secondsThank you. Oh, thank you, Jen.
+1:33:501 hour, 33 minutes, 50 secondsThank you. Thank you.
+1:33:551 hour, 33 minutes, 55 secondsRight. See you next week. We're dropping off. Take care.

@@ -1,0 +1,483 @@
+<section class="module" id="module-3">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">MCP Server Calls and Introspection</h1>
+      <p class="module-subtitle">The last module switches metaphors from “private service desk” to “public transit network”: instead of exposing one local function, the notebook connects to a remote MCP server and then inspects the station map directly.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">MCP changes the integration boundary</h2>
+      <p class="animate-in">In Module 2, the notebook advertised a local function to the model. Here, it hands the model a remote <span class="term" data-definition="MCP stands for Model Context Protocol. It is a standard way to expose tools and resources to a model through a discoverable server interface instead of a one-off local function contract.">MCP</span> server endpoint, which means the tool surface lives outside the notebook and can be discovered through protocol calls.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">response = client.responses.create(</span>
+<span class="code-line">    model="gpt-5-mini",</span>
+<span class="code-line">    input="Get the latest stock quote for AAPL using the Alpha Vantage MCP server. It is okay to get delayed or most recent close.",</span>
+<span class="code-line">    tools=[</span>
+<span class="code-line">        {</span>
+<span class="code-line">            "type": "mcp",</span>
+<span class="code-line">            "server_url": f"https://mcp.alphavantage.co/mcp?apikey={ALPHAVANTAGE_API_KEY}",</span>
+<span class="code-line">            "server_label": "alphavantage",</span>
+<span class="code-line">            "require_approval": "never"</span>
+<span class="code-line">        }</span>
+<span class="code-line">    ]</span>
+<span class="code-line">)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Use the Responses API instead of the earlier chat-completions path for this remote-tool example.</p>
+            <p class="tl">Ask a concrete stock question that clearly needs fresh market data.</p>
+            <p class="tl">Expose a tool of type `mcp`, which tells the client this capability comes from a protocol server rather than a local Python helper.</p>
+            <p class="tl">Point the client at the Alpha Vantage MCP endpoint and include the provider key in the server URL.</p>
+            <p class="tl">Give the remote server a readable label so it has an identity in the tool configuration.</p>
+            <p class="tl">Allow the call without a separate approval step inside this notebook context.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">i</div>
+        <div class="callout-content">
+          <strong class="callout-title">Why this matters</strong>
+          <p>The notebook is no longer teaching only “how to expose one tool.” It is teaching how to consume a discoverable tool ecosystem where the model can be pointed at a remote capability surface.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The flow is now visible as a protocol, not just an answer</h2>
+      <p class="animate-in">This animation shows the architecture in motion. The user request goes to the model client, the client reaches the remote MCP server, the server exposes tool metadata, and the result comes back as provider-backed output.</p>
+
+      <div class="flow-animation animate-in" data-steps='[
+        {"highlight":"flow-user","label":"The notebook sends a stock question to the Responses API."},
+        {"highlight":"flow-client","label":"The OpenAI client sees that an MCP server is available as a tool surface.","packet":true,"from":"user","to":"client"},
+        {"highlight":"flow-server","label":"The client connects to the Alpha Vantage MCP server using the provided URL.","packet":true,"from":"client","to":"server"},
+        {"highlight":"flow-tools","label":"The server exposes tools such as quote access and metadata queries.","packet":true,"from":"server","to":"tools"},
+        {"highlight":"flow-answer","label":"The model returns output text backed by remote tool access.","packet":true,"from":"tools","to":"answer"}
+      ]'>
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-user">
+            <div class="flow-actor-icon">U</div>
+            <span>User Prompt</span>
+          </div>
+          <div class="flow-actor" id="flow-client">
+            <div class="flow-actor-icon">C</div>
+            <span>OpenAI Client</span>
+          </div>
+          <div class="flow-actor" id="flow-server">
+            <div class="flow-actor-icon">M</div>
+            <span>MCP Server</span>
+          </div>
+          <div class="flow-actor" id="flow-tools">
+            <div class="flow-actor-icon">T</div>
+            <span>Tool Surface</span>
+          </div>
+          <div class="flow-actor" id="flow-answer">
+            <div class="flow-actor-icon">A</div>
+            <span>Answer Text</span>
+          </div>
+        </div>
+
+        <div class="flow-packet"></div>
+
+        <div class="flow-step-label">Click "Next Step" to begin</div>
+
+        <div class="flow-controls">
+          <button class="btn flow-next-btn" type="button">Next Step</button>
+          <button class="btn flow-reset-btn" type="button">Restart</button>
+          <span class="flow-progress"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The notebook refuses to treat MCP as a black box</h2>
+      <p class="animate-in">This is the strongest “why” in the whole notebook. Instead of stopping after `response.output_text`, the author uses raw <span class="term" data-definition="JSON-RPC is a lightweight protocol for calling named methods over JSON messages. You send a method name plus parameters, and the server replies with a structured result.">JSON-RPC</span> to list tools and inspect one tool’s parameter contract directly.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">payload = {</span>
+<span class="code-line">    "jsonrpc": "2.0",</span>
+<span class="code-line">    "id": 1,</span>
+<span class="code-line">    "method": "tools/list"</span>
+<span class="code-line">}</span>
+<span class="code-line">response = requests.post(url, json=payload)</span>
+<span class="code-line">data = response.json()</span>
+<span class="code-line">if isinstance(data, str):</span>
+<span class="code-line">    data = json.loads(data)</span>
+<span class="code-line"></span>
+<span class="code-line">tools = data["result"]["tools"]</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Construct a protocol message asking the server to enumerate its available tools.</p>
+            <p class="tl">Post that message directly to the MCP endpoint, bypassing any high-level abstraction for a moment.</p>
+            <p class="tl">Parse the JSON response, but stay defensive in case the payload arrives as a string.</p>
+            <p class="tl">Pull the `result.tools` list out as a discoverable catalog of what the server actually offers.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">payload = {</span>
+<span class="code-line">    "jsonrpc": "2.0",</span>
+<span class="code-line">    "id": 2,</span>
+<span class="code-line">    "method": "tools/call",</span>
+<span class="code-line">    "params": {</span>
+<span class="code-line">        "name": "TOOL_GET",</span>
+<span class="code-line">        "arguments": {</span>
+<span class="code-line">            "tool_name": "GLOBAL_QUOTE"</span>
+<span class="code-line">        }</span>
+<span class="code-line">    }</span>
+<span class="code-line">}</span>
+<span class="code-line"></span>
+<span class="code-line">resp = requests.post(url, json=payload)</span>
+<span class="code-line">outer = resp.json()</span>
+<span class="code-line">inner_text = outer["result"]["content"][0]["text"]</span>
+<span class="code-line">data = ast.literal_eval(inner_text)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Build a second protocol message that calls a specific metadata tool on the server.</p>
+            <p class="tl">Ask for details about `GLOBAL_QUOTE`, which is the quote capability the course has already seen in raw API form.</p>
+            <p class="tl">Read the nested result structure out of the server response.</p>
+            <p class="tl">Convert the returned text payload into a Python object so the notebook can display the tool contract clearly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Inspection is a product and engineering skill, not just a coding trick</h2>
+      <p class="animate-in">The notebook renders the listed tools into <span class="term" data-definition="Markdown is a lightweight text format for headings, lists, code, and emphasis. Teams often use it when they want readable structured output without full HTML.">Markdown</span> because human-readable contracts reduce ambiguity. Engineers can debug faster, and product partners can reason about what the model is genuinely able to access.</p>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">L</div>
+          <h3 class="pattern-title">List</h3>
+          <p class="pattern-desc">`tools/list` reveals the server’s menu of capabilities.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">I</div>
+          <h3 class="pattern-title">Inspect</h3>
+          <p class="pattern-desc">`TOOL_GET` plus `GLOBAL_QUOTE` reveals the parameter and description contract of one capability.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-5);">
+          <div class="pattern-icon" style="background: var(--color-actor-5); color: white;">W</div>
+          <h3 class="pattern-title">Why</h3>
+          <p class="pattern-desc">Discoverability makes remote tools governable. You are not just trusting the model; you are reading the interface it was given.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warning animate-in">
+        <div class="callout-icon">!</div>
+        <div class="callout-content">
+          <strong class="callout-title">The deeper why</strong>
+          <p>Module 3 teaches a critical architecture habit for AI-heavy teams: use abstractions when they help, but inspect the underlying protocol when you need confidence, debugging leverage, or sharper product decisions.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module3">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. In this module the tool is an MCP server connection, not a locally declared function." data-explanation-wrong="The main shift is the integration boundary.">
+            <h3 class="quiz-question">1. What is the biggest change from Module 2 to Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook stops using stock data</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model gets access to a remote MCP server instead of one local function schema</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook removes all API keys</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. `tools/list` is the discovery request that asks the server what it exposes." data-explanation-wrong="This request is for enumeration, not for getting a quote itself.">
+            <h3 class="quiz-question">2. What does the `tools/list` method ask the server for?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A list of available tools and their schemas</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A replacement OpenAI client</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A chart image of AAPL</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. `server_label` is the readable name attached to the remote server in the tool config." data-explanation-wrong="That field is for naming, not authentication.">
+            <h3 class="quiz-question">3. What is `server_label` doing in the MCP tool definition?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It controls the quiz difficulty</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It stores the stock symbol</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives the remote server a readable identity</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The notebook checks for string payloads because the response shape may vary." data-explanation-wrong="This is a defensive parsing step.">
+            <h3 class="quiz-question">4. Why does the code test `if isinstance(data, str)` after reading a server response?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because strings are required for AAPL only</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the payload may need an extra JSON parse step</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model can only read strings</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The notebook calls `TOOL_GET` with `tool_name: GLOBAL_QUOTE` to inspect that capability." data-explanation-wrong="The second call is a metadata-inspection step.">
+            <h3 class="quiz-question">5. What is the purpose of calling `TOOL_GET` for `GLOBAL_QUOTE`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To inspect the details of one server capability</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To reset the notebook runtime</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To disable Alpha Vantage</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The notebook converts tool metadata into Markdown so a person can read the contract comfortably." data-explanation-wrong="This formatting step is for human clarity.">
+            <h3 class="quiz-question">6. Why does the notebook build a Markdown string from the listed tools?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To speed up provider latency</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To change the server schema</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To present the tool contract in a human-readable format</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. `type: "mcp"` is the marker that this tool comes from an MCP server." data-explanation-wrong="That field changes the meaning of the tool configuration.">
+            <h3 class="quiz-question">7. Which field makes the tool definition an MCP integration instead of a local function tool?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`"type": "mcp"`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`"method": "tools/list"`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`"id": 2`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The endpoint still needs authentication, so the provider key is passed in the server URL." data-explanation-wrong="This is still a real service boundary with auth requirements.">
+            <h3 class="quiz-question">8. Why is the Alpha Vantage API key included in the `server_url`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To make the quiz switch default to Medium</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the remote server still needs provider authorization</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON-RPC requires secret keys in every field</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The notebook prints `response.output_text` after the MCP-backed model call." data-explanation-wrong="The module still returns ordinary human-readable answer text at the end.">
+            <h3 class="quiz-question">9. What field is printed after the direct MCP-backed model call succeeds?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.vector_store_id`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.markdown_schema`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.output_text`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The deeper simple takeaway is that remote tools should be discoverable and inspectable, not opaque." data-explanation-wrong="This module is about visibility and protocol understanding.">
+            <h3 class="quiz-question">10. What is the strongest simple summary of Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook connects to a remote tool ecosystem and then inspects that ecosystem directly</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook stops caring about contracts</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook replaces JSON with screenshots</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. MCP is valuable here because it moves from one bespoke local tool to a discoverable remote interface surface." data-explanation-wrong="The key gain is interface generality and discoverability.">
+            <h3 class="quiz-question">1. A team wants to scale from one hardcoded quote helper to a broader remote tool surface. Why is the MCP pattern a better fit?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it removes the need for API contracts</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it exposes a discoverable remote capability surface instead of a single local function</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it forces all answers to be delayed quotes</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Listing tools gives both engineers and product stakeholders a concrete view of what the model can actually access through the server." data-explanation-wrong="The value is observability, not decoration.">
+            <h3 class="quiz-question">2. Why is `tools/list` especially useful in a cross-functional setting, not just for programmers?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it increases market-cap precision</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it avoids all authentication questions</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes the model’s reachable capability surface visible to humans</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The explicit direct JSON-RPC call is a form of interface verification: it shows the server contract independent of the model abstraction." data-explanation-wrong="This step is about checking the underlying interface.">
+            <h3 class="quiz-question">3. Why not stop after `response.output_text` returns a plausible AAPL answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because a high-level answer is less informative than inspecting the tool contract that made it possible</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the Responses API cannot return text reliably</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because models are forbidden to summarize quotes</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. If you want to understand what a remote tool does, reading its parameter contract is more actionable than reading only a single answer instance." data-explanation-wrong="The question is about interface understanding, not answer prose quality.">
+            <h3 class="quiz-question">4. Why is inspecting `GLOBAL_QUOTE` through `TOOL_GET` a higher-value learning step than just reading the model’s quote summary?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because summaries cannot contain ticker names</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the tool metadata reveals the reusable contract behind the answer</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because `TOOL_GET` turns off provider billing</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The `isinstance(data, str)` branch is defensive coding against non-uniform payload shapes." data-explanation-wrong="The branch exists because robustness matters at protocol boundaries.">
+            <h3 class="quiz-question">5. A bug report says tool discovery sometimes breaks because the payload shape changed slightly. Which existing pattern in the notebook is already aimed at that class of problem?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The `server_label` field</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The `print(response.output_text)` line</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The extra parse branch that handles string payloads before using the data</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Converting tool metadata into Markdown is a product-documentation move: it makes the interface readable and discussable." data-explanation-wrong="This choice is about human comprehension.">
+            <h3 class="quiz-question">6. Why is the Markdown rendering step valuable for product understanding, not just for engineering curiosity?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it turns protocol details into something stakeholders can review and discuss</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it improves the market price itself</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Markdown automatically validates API keys</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The remote tool surface still depends on provider authorization, so the server URL carries a credential." data-explanation-wrong="This module does not eliminate auth boundaries.">
+            <h3 class="quiz-question">7. If a PM asks why the server URL still includes a provider API key, what is the best answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because MCP duplicates all secrets for style</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because remote tool ecosystems still require authorization at the provider boundary</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because `server_label` cannot work without it</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. This step shows protocol literacy: you are reading the interface itself, not just trusting the model’s use of it." data-explanation-wrong="The point is about inspectability of the underlying tool surface.">
+            <h3 class="quiz-question">8. What capability does the notebook gain by manually issuing JSON-RPC calls to the MCP endpoint?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It bypasses all provider pricing</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It turns the model into a database</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It lets the notebook inspect and reason about the remote tool contract directly</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. If the model can call a remote server, teams need to know what that server actually exposes before trusting product behavior built on top of it." data-explanation-wrong="The strongest answer is about governance and trust.">
+            <h3 class="quiz-question">9. Why is discoverability especially important when remote tools become part of the product architecture?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because teams need visibility into what capabilities are really available and how they are shaped</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because discoverability replaces all logging</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because hidden tools are always faster</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The strongest “why” is that teams should use abstraction productively while still being able to inspect the underlying contract when needed." data-explanation-wrong="This module is about inspectable remote capability surfaces.">
+            <h3 class="quiz-question">10. Which statement best summarizes Module 3 for an AI-savvy product and engineering audience?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP removes the need to understand protocols</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tools are most useful when their contracts are both usable through the model and inspectable by humans</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The value of MCP is mainly visual formatting</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The move from local function tools to MCP is a move from app-specific capability wiring to protocol-governed remote capability discovery." data-explanation-wrong="The deepest shift is about the boundary and governance model of tools.">
+            <h3 class="quiz-question">1. What is the most meaningful architectural upgrade from Module 2 to Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model becomes a market-data provider</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook stops caring about schemas</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The tool surface moves from a bespoke local function contract to a discoverable remote protocol contract</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Inspecting `tools/list` and `TOOL_GET` is a governance move: it gives humans the ability to verify what the model has access to instead of treating the remote tool layer as magic." data-explanation-wrong="The main value is contract visibility and control.">
+            <h3 class="quiz-question">2. Why is raw JSON-RPC inspection an important complement to the high-level MCP client abstraction?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it lets humans verify and reason about the actual remote contract beneath the abstraction</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because high-level clients cannot return normal text</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON-RPC automatically improves quote quality</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The direct JSON-RPC requests turn protocol understanding into a first-class debugging tool, which matters when remote capabilities behave unexpectedly." data-explanation-wrong="The deeper value is observability and debuggability.">
+            <h3 class="quiz-question">3. If the model’s remote tool behavior starts surprising the team, why is the `tools/list` pattern especially valuable?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it forces the model to answer from memory</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it reveals the server’s exposed capabilities and expected parameters independently of the model’s prose</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it upgrades the provider plan automatically</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Human-readable Markdown is not just prettification; it is a contract communication layer between technical and semi-technical stakeholders." data-explanation-wrong="The point is shared understanding, not styling.">
+            <h3 class="quiz-question">4. Why is rendering tool metadata into Markdown a meaningful product-documentation move rather than a superficial formatting step?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Markdown makes credentials disappear</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because markdown output always improves latency</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because readable contracts help teams reason about capability scope, inputs, and expectations together</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The parse-then-reparse logic demonstrates that remote tool boundaries, like model boundaries, deserve defensive handling for payload shape drift." data-explanation-wrong="The broader lesson is about robust protocol handling.">
+            <h3 class="quiz-question">5. What principle is reinforced by checking whether the response data is already a structured object or still a string?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Protocol boundaries should be parsed defensively because payload shapes can vary</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Structured responses are always a bug</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tools should avoid metadata entirely</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The notebook uses the high-level model abstraction for productivity, then drops to the protocol layer for confidence and understanding." data-explanation-wrong="The key pattern is layered understanding.">
+            <h3 class="quiz-question">6. What layered engineering habit does this module model for AI teams?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Always bypass abstractions entirely</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use convenient abstractions for work, but inspect the underlying protocol when you need trust and debugging leverage</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Never connect the model to remote tools</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `TOOL_GET` reveals that a tool is not just a button the model can press; it has an explicit semantic contract of name, description, and parameters." data-explanation-wrong="The deeper lesson is about contract semantics.">
+            <h3 class="quiz-question">7. What does inspecting `GLOBAL_QUOTE` via `TOOL_GET` teach beyond “a quote came back”?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That quotes are only available for Apple</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That metadata is less useful than final answers</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That tools are governed by explicit parameterized contracts which can be inspected independently of any one result</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. MCP does not remove the need for credentials or governance; it reorganizes capability exposure through a protocol." data-explanation-wrong="The strongest answer is about controlled capability exposure, not simplification of responsibility.">
+            <h3 class="quiz-question">8. Which statement best captures the security and governance lesson of this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tool ecosystems still need explicit authorization and inspectable contracts</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP eliminates the need for provider auth boundaries</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tool discoverability is only a UX issue</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. This module gives teams vocabulary to ask for features like 'inspect the MCP tool list' or 'show the remote contract in docs,' which is much stronger than vague requests to 'make it smarter.'" data-explanation-wrong="The gain is actionable design language.">
+            <h3 class="quiz-question">9. How does understanding this module help AI-exposed teams steer future implementation work better?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It teaches them to ask for more gradients</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives them language for remote capability discovery, inspection, and contract-level debugging</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves remote tools should never be documented</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The deepest “why” is about turning remote AI tool access into something legible, inspectable, and governable by humans." data-explanation-wrong="This module is about disciplined understanding of remote capability layers.">
+            <h3 class="quiz-question">10. Which statement is the strongest conceptual summary of Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP mainly saves a few lines of code</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tools matter because they hide protocol details from teams</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP matters because it enables remote tool use through a standard protocol that humans can still inspect and govern</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" type="button" onclick="checkQuiz('quiz-module3')">Check Answers</button>
+        <button class="quiz-reset-btn" type="button" onclick="resetQuiz('quiz-module3')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>

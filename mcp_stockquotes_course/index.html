@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Stock Quotes: APIs, Tools, and Market Data</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root {
+      --color-accent:       #355C93;
+      --color-accent-hover: #284874;
+      --color-accent-light: #E7EEF9;
+      --color-accent-muted: #7994C0;
+    }
+  </style>
+
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="nav-inner">
+      <span class="nav-title">MCP Stock Quotes: APIs, Tools, and Market Data</span>
+      <div class="nav-meta">
+        <div class="quiz-level-control" role="group" aria-label="Quiz difficulty">
+          <span class="quiz-level-caption">Quiz level</span>
+          <div class="quiz-level-switch" data-quiz-level-switch>
+            <button class="quiz-level-btn" data-quiz-level-btn="low" type="button" aria-pressed="false">Low</button>
+            <button class="quiz-level-btn is-active" data-quiz-level-btn="medium" type="button" aria-pressed="true">Medium</button>
+            <button class="quiz-level-btn" data-quiz-level-btn="deep" type="button" aria-pressed="false">Deep</button>
+          </div>
+        </div>
+        <div class="nav-dots" id="nav-dots" role="tablist">
+          <button class="nav-dot" data-target="module-1" data-tooltip="Direct Quote APIs and Setup" role="tab" aria-label="Module 1: Direct Quote APIs and Setup"></button>
+          <button class="nav-dot" data-target="module-2" data-tooltip="Function Tools Without MCP" role="tab" aria-label="Module 2: Function Tools Without MCP"></button>
+          <button class="nav-dot" data-target="module-3" data-tooltip="MCP Server Calls and Introspection" role="tab" aria-label="Module 3: MCP Server Calls and Introspection"></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- modules/*.html content is assembled here by build.sh -->
+<section class="module" id="module-1">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">01</span>
+      <h1 class="module-title">Direct Quote APIs and Setup</h1>
+      <p class="module-subtitle">The notebook begins like a field technician opening a locked service panel: get credentials, confirm the wiring, then prove the data path works before asking an LLM to narrate anything.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The first architecture choice is to separate access from analysis</h2>
+      <p class="animate-in">This notebook does not start with a finance question. It starts by installing dependencies, loading secrets, and binding a named <span class="term" data-definition="An environment variable is a named value the running program can read at runtime. Teams use them for secrets and configuration so those values do not live directly inside source code.">environment variable</span> for each API key.</p>
+      <p class="animate-in">Why that matters: if live market access is not stable on its own, every later LLM answer is built on sand. Software engineers care because this is dependency hygiene; product partners care because it explains why “the model failed” is often really “the integration was never ready.”</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">from google.colab import userdata</span>
+<span class="code-line">os.environ["OPENAI_API_KEY"] = userdata.get('OPENAI_API_KEY')</span>
+<span class="code-line">os.environ["ALPHAVANTAGE_API_KEY"] = userdata.get('ALPHAVANTAGE_API_KEY')</span>
+<span class="code-line">AI_MODEL = 'gpt-5-mini'</span>
+<span class="code-line"></span>
+<span class="code-line">ALPHAVANTAGE_API_URL = "https://www.alphavantage.co/query"</span>
+<span class="code-line">ALPHAVANTAGE_API_KEY = os.environ["ALPHAVANTAGE_API_KEY"]</span>
+<span class="code-line"></span>
+<span class="code-line">client=OpenAI(api_key=os.environ['OPENAI_API_KEY'])</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Pull secrets out of Colab’s private notebook storage instead of hardcoding them into visible cells.</p>
+            <p class="tl">Bind each key into a runtime variable so the rest of the notebook can use a stable name.</p>
+            <p class="tl">Choose the model once up front so later calls stay consistent.</p>
+            <p class="tl">Keep the quote provider’s URL separate from the key because one is a service address and the other is a credential.</p>
+            <p class="tl">Create the OpenAI client only after the key exists, which makes failures easier to localize.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Two quote paths teach the same product lesson in different ways</h2>
+      <p class="animate-in">Think of Alpha Vantage as calling the exchange desk directly, while <span class="term" data-definition="A Python package is reusable code you install and import instead of writing everything yourself. In AI-assisted work, asking for 'use the provider SDK or package wrapper' is often clearer than asking for raw HTTP everywhere.">package</span>-based Yahoo Finance is like using a well-trained broker. Both can answer “what is the stock doing,” but one exposes the raw request more clearly and the other packages richer metadata.</p>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">H</div>
+          <h3 class="pattern-title">HTTP Path</h3>
+          <p class="pattern-desc">Alpha Vantage uses an explicit request with named query parameters and a normalized dictionary return value.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">P</div>
+          <h3 class="pattern-title">Package Path</h3>
+          <p class="pattern-desc">Yahoo Finance wraps retrieval details and returns both price data and business metadata such as market cap and PE ratio.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-5);">
+          <div class="pattern-icon" style="background: var(--color-actor-5); color: white;">W</div>
+          <h3 class="pattern-title">Why It Matters</h3>
+          <p class="pattern-desc">The notebook is showing that fresh external data must be grounded in a real provider before the LLM layer adds explanation.</p>
+        </div>
+      </div>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">def get_stock_quote(symbol: str) -&gt; dict:</span>
+<span class="code-line">    """Fetch the latest stock quote for ``symbol`` using the Alpha Vantage API."""</span>
+<span class="code-line">    params = {"function": "GLOBAL_QUOTE", "symbol": symbol, "apikey": ALPHAVANTAGE_API_KEY}</span>
+<span class="code-line">    response = requests.get(ALPHAVANTAGE_API_URL, params=params, timeout=10)</span>
+<span class="code-line">    response.raise_for_status()</span>
+<span class="code-line">    data = response.json().get("Global Quote", {})</span>
+<span class="code-line">    if not data:</span>
+<span class="code-line">        return {"symbol": symbol.upper(), "price": None}</span>
+<span class="code-line">    return {</span>
+<span class="code-line">        "symbol": data.get("01. symbol", symbol.upper()),</span>
+<span class="code-line">        "price": float(data.get("05. price", "0") or 0.0),</span>
+<span class="code-line">        "change_percent": data.get("10. change percent"),</span>
+<span class="code-line">    }</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Define one helper whose whole job is “give me the latest quote for this symbol.”</p>
+            <p class="tl">Build a compact request payload with the exact Alpha Vantage function name the provider expects.</p>
+            <p class="tl">Fail fast if the network call itself is broken.</p>
+            <p class="tl">Extract only the `Global Quote` slice instead of making every caller interpret provider-specific JSON.</p>
+            <p class="tl">If no quote comes back, return the same schema anyway so downstream code stays predictable.</p>
+            <p class="tl">Normalize provider field names into business-friendly keys such as `symbol`, `price`, and `change_percent`.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The notebook is teaching contract design, not just ticker lookup</h2>
+      <p class="animate-in">A <span class="term" data-definition="A schema is the shape of the data your code promises to return or accept. When you tell an AI tool 'normalize this into a stable schema,' you are asking for outputs that other code can depend on.">schema</span> is the quiet hero here. `get_stock_quote()` returns a Python <span class="term" data-definition="A dictionary is a key-value data structure in Python. It is useful when you want named fields such as `symbol` and `price` instead of relying on position.">dictionary</span>; `get_stock_quote_yf()` returns JSON text. That difference signals who the expected consumer is and how much cleanup still remains.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">def get_stock_quote_yf(symbol: str) -&gt; str:</span>
+<span class="code-line">    """Get current stock price and basic information."""</span>
+<span class="code-line">    try:</span>
+<span class="code-line">        stock = yf.Ticker(symbol)</span>
+<span class="code-line">        info = stock.info</span>
+<span class="code-line">        hist = stock.history(period="1d")</span>
+<span class="code-line">        if hist.empty:</span>
+<span class="code-line">            return json.dumps({"error": f"Could not retrieve data for {symbol}"})</span>
+<span class="code-line"></span>
+<span class="code-line">        current_price = hist['Close'].iloc[-1]</span>
+<span class="code-line">        result = {</span>
+<span class="code-line">            "symbol": symbol,</span>
+<span class="code-line">            "current_price": round(current_price, 2),</span>
+<span class="code-line">            "company_name": info.get('longName', symbol),</span>
+<span class="code-line">            "market_cap": info.get('marketCap', 0),</span>
+<span class="code-line">            "pe_ratio": info.get('trailingPE', 'N/A'),</span>
+<span class="code-line">            "52_week_high": info.get('fiftyTwoWeekHigh', 0),</span>
+<span class="code-line">            "52_week_low": info.get('fiftyTwoWeekLow', 0)</span>
+<span class="code-line">        }</span>
+<span class="code-line">        return json.dumps(result, indent=2)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Wrap the provider logic in a `try` block because package-backed integrations can fail in several places.</p>
+            <p class="tl">Ask Yahoo Finance for both identity information and a one-day price history.</p>
+            <p class="tl">Return an explicit error payload if the history table is empty instead of pretending a price exists.</p>
+            <p class="tl">Use the latest closing value as the current price for this notebook’s purposes.</p>
+            <p class="tl">Bundle price, company name, valuation clues, and range data into one result object.</p>
+            <p class="tl">Serialize that object to formatted JSON so it is easy to display or pass along as text.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">i</div>
+        <div class="callout-content">
+          <strong class="callout-title">Why this module matters</strong>
+          <p>The rest of the course only makes sense if you see the base principle first: the LLM is not the source of truth for today’s stock price. The provider is. The model becomes useful after that boundary is respected.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module1">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. `userdata.get(...)` is being used as the notebook’s secret store." data-explanation-wrong="This opening setup is about credentials, not ticker discovery.">
+            <h3 class="quiz-question">1. What job does `userdata.get(...)` perform in this notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It downloads stock history directly</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It loads secrets such as API keys</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It formats market charts</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Alpha Vantage is called with the explicit `GLOBAL_QUOTE` function name." data-explanation-wrong="The helper does not use a general search route in this section.">
+            <h3 class="quiz-question">2. Which provider function is used for the direct Alpha Vantage quote lookup?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`GLOBAL_QUOTE`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`EARNINGS_ESTIMATE`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`TOOLS_LIST`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `response.raise_for_status()` is there to surface network or HTTP failure immediately." data-explanation-wrong="The direct helper explicitly includes a fast-fail check.">
+            <h3 class="quiz-question">3. Which line is meant to fail fast when the quote request itself is broken?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`AI_MODEL = 'gpt-5-mini'`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`data = response.json().get("Global Quote", {})`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.raise_for_status()`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The fallback preserves a stable return shape even when data is missing." data-explanation-wrong="The code does not leave the caller empty-handed when the provider returns nothing.">
+            <h3 class="quiz-question">4. Why return `{\"symbol\": symbol.upper(), \"price\": None}` when no quote payload exists?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To hide provider errors from logs</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To keep the output schema predictable</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To make the model answer faster</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The Yahoo Finance helper returns much richer company context than the bare Alpha Vantage helper." data-explanation-wrong="Both retrieve prices, but only one also packages business metadata.">
+            <h3 class="quiz-question">5. Which helper also returns company name, market cap, and valuation hints?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_stock_quote_yf`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_completion`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`answer_question`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `hist.empty` is the simple check for whether any one-day price history came back." data-explanation-wrong="The empty-history branch is handled before the result object is built.">
+            <h3 class="quiz-question">6. What condition tells the Yahoo Finance helper that no daily price data was retrieved?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`info is None`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`current_price == 0`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`hist.empty`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The early `TT` calls are proving that live quote access works before the LLM orchestration starts." data-explanation-wrong="Those calls are validation steps, not decorative examples.">
+            <h3 class="quiz-question">7. Why does the notebook call both quote helpers before introducing LLM tools?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To train a new finance model</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To verify that fresh data retrieval works on its own</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To populate the quiz automatically</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. `client=OpenAI(...)` creates the object used for later model calls." data-explanation-wrong="This line sets up the OpenAI client, not Alpha Vantage.">
+            <h3 class="quiz-question">8. What does `client=OpenAI(api_key=os.environ['OPENAI_API_KEY'])` create?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An authenticated OpenAI client</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A stock-market dashboard</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A local cache of quotes</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The direct helper returns a Python dictionary, while the Yahoo Finance helper returns JSON text." data-explanation-wrong="The two helpers intentionally do not return the same type.">
+            <h3 class="quiz-question">9. Which statement matches the return types in this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Both helpers return pandas DataFrames</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Both helpers return plain floats</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Alpha Vantage returns a dict, Yahoo Finance returns JSON text</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The module’s biggest point is that provider data owns the live fact before any model explanation begins." data-explanation-wrong="This module is about system boundaries, not about prompt artistry yet.">
+            <h3 class="quiz-question">10. What is the most important “why” from Module 1?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every finance notebook should start with a quiz</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Fresh provider data must be grounded before the LLM layer adds explanation</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Yahoo Finance is always better than Alpha Vantage</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. If the keys are not loaded first, every later networked dependency will fail for reasons that look unrelated." data-explanation-wrong="This is an environment-readiness problem, not an LLM reasoning problem.">
+            <h3 class="quiz-question">1. A teammate says, “The model is broken.” You notice the notebook never ran the `userdata.get(...)` lines. What is the more accurate diagnosis?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The prompt is too short</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The runtime credentials layer was never initialized</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The stock symbol must be lowercase</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. A normalized dictionary is easier for downstream Python code to inspect than raw provider field names." data-explanation-wrong="The direct helper is doing cleanup work so later stages do not need provider-specific parsing.">
+            <h3 class="quiz-question">2. Why is the Alpha Vantage helper more integration-friendly than returning the provider’s raw JSON untouched?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It translates provider-specific fields into a smaller stable contract</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for network access</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees the stock price is never delayed</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The empty-history check is there because product-friendly explanation depends on real data being present first." data-explanation-wrong="This branch exists to protect downstream consumers from pretending missing data is usable.">
+            <h3 class="quiz-question">3. If `hist.empty` becomes `True` for a symbol, what architectural purpose does the error JSON serve?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It improves model creativity</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It hides provider instability from the caller</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives downstream code an explicit failure object instead of fake market facts</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. A product person asking for a company snapshot probably needs the richer helper because it exposes more context than a bare quote." data-explanation-wrong="The choice depends on the shape of the decision, not on which provider sounds nicer.">
+            <h3 class="quiz-question">4. You need a one-screen product snapshot for a leadership update. Which helper is the stronger starting point and why?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_stock_quote`, because it only returns the API URL</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_stock_quote_yf`, because it includes broader company and valuation context</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Neither, because the notebook avoids provider metadata</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. This is a boundary-preserving design: missing data still produces a known object shape." data-explanation-wrong="The key issue is predictable downstream handling, not user interface polish.">
+            <h3 class="quiz-question">5. What design principle is shown by returning `price: None` rather than throwing an exception on every empty quote?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Graceful degradation with a stable contract</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt injection prevention</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Vector retrieval</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Validating quote access first localizes failures before the model layer adds another source of complexity." data-explanation-wrong="This sequencing is about debugging leverage, not classroom drama.">
+            <h3 class="quiz-question">6. Why is it useful from a debugging standpoint to run quote retrieval before adding LLM orchestration?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes the model deterministic</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it increases the context window</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it isolates data-access failures before another moving part is introduced</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Environment variables are being used so the notebook code can refer to stable names while the secret values stay external." data-explanation-wrong="The benefit is configuration separation, not better ticker formatting.">
+            <h3 class="quiz-question">7. Why assign the secrets into `os.environ[...]` instead of reading `userdata` every time a request is made?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because `userdata` cannot return strings twice</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because named runtime variables give the rest of the notebook a consistent configuration surface</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because OpenAI only accepts lowercase keys</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. JSON text is easier to hand to a text-oriented downstream consumer, while native dicts are easier for direct Python logic." data-explanation-wrong="This difference signals intended consumers, not random inconsistency.">
+            <h3 class="quiz-question">8. Why might `get_stock_quote_yf()` intentionally return a JSON string instead of a native dict?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because serialized text is convenient when the next consumer expects display-ready or text-passable output</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Python cannot store nested dictionaries</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON strings always load faster from the network</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. `AI_MODEL = 'gpt-5-mini'` is a control point that makes later model behavior intentional rather than accidental." data-explanation-wrong="This line is configuration, not quote logic.">
+            <h3 class="quiz-question">9. What strategic value comes from assigning `AI_MODEL = 'gpt-5-mini'` near the top of the notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It unlocks Alpha Vantage metadata fields</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It changes the Yahoo Finance API version</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It creates one explicit place to control later LLM calls</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The module is about understanding why external data access is the foundation underneath later AI features." data-explanation-wrong="The takeaway is architectural, not merely procedural.">
+            <h3 class="quiz-question">10. If you had to explain Module 1 to a new PM in one sentence, which summary is strongest?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook first proves it can securely fetch live market facts before it asks an LLM to interpret them</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The module mainly teaches CSS for finance dashboards</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The module shows that stock providers are optional once you know the ticker</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The module is architecturally important because it treats provider data access as a separate reliability boundary from model reasoning." data-explanation-wrong="The deeper lesson is about system boundaries, not just classroom pacing.">
+            <h3 class="quiz-question">1. Why is it architecturally valuable that the notebook proves quote retrieval in isolation before introducing tool-calling?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because isolated quote retrieval makes the model more creative later</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because provider setup only matters for Yahoo Finance</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it separates external data reliability from LLM orchestration reliability</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The helper is effectively a translation layer from provider-specific JSON into application-friendly semantics." data-explanation-wrong="The value comes from contract simplification, not just shorter code.">
+            <h3 class="quiz-question">2. In systems terms, what role does `get_stock_quote()` play between Alpha Vantage and the rest of the notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An adapter that normalizes provider-specific output into notebook-friendly fields</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A caching layer that stores every quote permanently</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A prompt router that chooses between models</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Returning JSON text from the Yahoo Finance helper hints that this path is optimized more for presentation or string-based handoff than for direct Python field access." data-explanation-wrong="The deeper implication is about intended consumers and future composition.">
+            <h3 class="quiz-question">3. What deeper design signal is contained in the choice to `json.dumps(result, indent=2)` in `get_stock_quote_yf()`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That provider data should never be structured</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That this output is meant to travel easily through text-oriented consumers or displays</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That the function is secretly an MCP server</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Preserving a stable output shape is what lets downstream components reason about missingness without collapsing the whole flow." data-explanation-wrong="The core idea is resilient composition, not hiding errors from developers.">
+            <h3 class="quiz-question">4. Why is “same schema, different value quality” often better than “sometimes value, sometimes exception” for helper functions like this?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because exceptions are illegal in notebooks</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because models can only read strings</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because downstream orchestration can handle degraded data more predictably when the contract stays stable</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Module 1 is setting up the epistemic rule for the course: live market facts come from data providers, and the LLM’s role is downstream of that." data-explanation-wrong="The deepest lesson is about who is allowed to know what in the system.">
+            <h3 class="quiz-question">5. What “source of truth” rule is being established before any LLM is asked a stock question?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Current market facts should originate from external providers, not from the model’s prior knowledge</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model should invent prices when APIs are slow</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Notebook cells become the market authority once executed</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The two helpers model a practical tradeoff between direct control and convenience-rich abstraction." data-explanation-wrong="This comparison is about integration style and contract shape, not brand preference.">
+            <h3 class="quiz-question">6. What is the most useful tradeoff comparison between the Alpha Vantage path and the Yahoo Finance path?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One is for mobile and one is for desktop</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One offers direct request-level control, while the other offers a richer wrapper abstraction</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One works with AI and the other does not</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Binding the model name early is a small but important sign that the notebook treats the LLM as a configurable dependency, not as an invisible ambient service." data-explanation-wrong="The line matters because it makes model choice explicit and inspectable.">
+            <h3 class="quiz-question">7. Why does the early `AI_MODEL` assignment matter conceptually even before the first LLM call appears?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Python requires model names at import time</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Alpha Vantage reads the model name for pricing</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it signals that model selection is an explicit application-level choice</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The empty branch in the Yahoo Finance helper is a reminder that a richer abstraction still needs defensive handling around missing provider data." data-explanation-wrong="The package wrapper does not eliminate failure handling.">
+            <h3 class="quiz-question">8. What deeper engineering point is illustrated by checking `hist.empty` even when using a high-level package wrapper?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Abstractions reduce boilerplate, but they do not remove the need for defensive data checks</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Package wrappers automatically fix all provider outages</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>High-level APIs are always worse than raw HTTP</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. A balanced architecture explanation for AI-exposed teams must keep returning to who owns the truth versus who packages or interprets it." data-explanation-wrong="This course is emphasizing causality and system boundaries, not memorization.">
+            <h3 class="quiz-question">9. If an AI-exposed team wants to ask better coding agents for changes here, what concept from Module 1 helps most?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That every helper should use the same font</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That there is a distinct provider-integration layer whose outputs should be normalized before higher-level reasoning uses them</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That finance notebooks should avoid reusable functions</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The strongest explanation is that Module 1 establishes reliable grounding for live facts before the system becomes more complex." data-explanation-wrong="The real why is about trustworthy composition, not provider fandom.">
+            <h3 class="quiz-question">10. Which statement best captures the architectural “why” of this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It exists mainly to compare two finance brands</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves that LLM prompts are optional for finance work</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It builds a trustworthy live-data foundation so later AI layers can explain facts instead of inventing them</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" type="button" onclick="checkQuiz('quiz-module1')">Check Answers</button>
+        <button class="quiz-reset-btn" type="button" onclick="resetQuiz('quiz-module1')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="module" id="module-2" style="background: var(--color-bg-warm);">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">Function Tools Without MCP</h1>
+      <p class="module-subtitle">This module is the customs checkpoint of the notebook: the model can request a stock quote, but Python still checks the paperwork, executes the call, and decides when the conversation is done.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The tool schema explains what the model is allowed to ask for</h2>
+      <p class="animate-in">If Module 1 separated live facts from model narration, Module 2 explains how the model gets permission to reach those facts. The tool declaration is like a typed service contract: name the function, describe its purpose, and declare the one argument that matters.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">response = client.chat.completions.create(</span>
+<span class="code-line">    model=model,</span>
+<span class="code-line">    messages=messages,</span>
+<span class="code-line">    tools=[</span>
+<span class="code-line">        {</span>
+<span class="code-line">            "type": "function",</span>
+<span class="code-line">            "function": {</span>
+<span class="code-line">                "name": "get_stock_quote",</span>
+<span class="code-line">                "description": """Fetch the latest stock quote for ``symbol`` using the Alpha Vantage API.""",</span>
+<span class="code-line">                "parameters": {</span>
+<span class="code-line">                    "type": "object",</span>
+<span class="code-line">                    "properties": {</span>
+<span class="code-line">                        "symbol": {</span>
+<span class="code-line">                            "type": "string",</span>
+<span class="code-line">                        },</span>
+<span class="code-line">                    },</span>
+<span class="code-line">                    "required": ["symbol"],</span>
+<span class="code-line">                },</span>
+<span class="code-line">            },</span>
+<span class="code-line">        },</span>
+<span class="code-line">    ],</span>
+<span class="code-line">    temperature=1,</span>
+<span class="code-line">)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Ask the chat-completions API to answer in the context of the current message history.</p>
+            <p class="tl">Advertise one callable <span class="term" data-definition="A tool schema is a machine-readable description of a callable capability. It tells the model the tool name, what it does, and which arguments are valid.">tool schema</span> instead of hoping the model guesses how to access quote data.</p>
+            <p class="tl">Tell the model the function is named `get_stock_quote`, which is the Python helper it can indirectly request.</p>
+            <p class="tl">Explain what the tool is for in natural language so the model knows when it is relevant.</p>
+            <p class="tl">Constrain the arguments to an object containing a required string field called `symbol`.</p>
+            <p class="tl">Leave the model free to decide whether it needs the tool, but not free to invent a different function contract.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">i</div>
+        <div class="callout-content">
+          <strong class="callout-title">Why this matters</strong>
+          <p>Software engineers should read this as interface design. Product partners should read it as operational scope. In both cases, the point is the same: the model can only ask for what the app explicitly exposes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The conversation loop is a negotiation, not a monologue</h2>
+      <p class="animate-in">Use this chat animation like a behind-the-scenes subtitle track. It shows the “why” of tool-calling more clearly than a static paragraph: the model notices a missing fact, asks for a tool, gets a result, and then continues with more grounded context.</p>
+
+      <div class="chat-window animate-in" id="chat-module2">
+        <div class="chat-messages">
+          <div class="chat-message" data-msg="0" data-sender="user" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-4);">U</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-4);">User</span>
+              <p>How is Nvidia's stock today?</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="1" data-sender="baseline" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-1);">M</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-1);">Model</span>
+              <p>I need a fresh quote, so I am requesting the `get_stock_quote` tool with a symbol argument.</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="2" data-sender="rag" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-2);">P</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-2);">Python Orchestrator</span>
+              <p>I will parse the tool arguments, call the real helper, and append the tool result back into the conversation.</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="3" data-sender="agent" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-3);">T</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-3);">Tool Result</span>
+              <p>{ "symbol": "NVDA", "price": ..., "change_percent": ... }</p>
+            </div>
+          </div>
+          <div class="chat-message" data-msg="4" data-sender="baseline" style="display:none">
+            <div class="chat-avatar" style="background: var(--color-actor-1);">M</div>
+            <div class="chat-bubble">
+              <span class="chat-sender" style="color: var(--color-actor-1);">Model</span>
+              <p>Now I can answer with live data instead of relying on stale prior knowledge.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-typing" style="display:none">
+          <div class="chat-avatar" id="chat-module2-typing-avatar">?</div>
+          <div class="chat-typing-dots">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+
+        <div class="chat-controls">
+          <button class="btn chat-next-btn" type="button">Next Message</button>
+          <button class="btn chat-all-btn" type="button">Play All</button>
+          <button class="btn chat-reset-btn" type="button">Replay</button>
+          <span class="chat-progress"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">`answer_question()` is the actual orchestrator</h2>
+      <p class="animate-in">A <span class="term" data-definition="An orchestrator is the layer that coordinates multiple steps, components, or services. In AI systems, it often manages prompts, tool calls, retries, and state transitions.">orchestrator</span> is like an air-traffic controller: it does not fly the plane, but it decides what happens next and prevents collisions. Here, that role belongs to Python, not the model.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">while True:</span>
+<span class="code-line">    loop_count += 1</span>
+<span class="code-line">    if loop_count &gt; loop_count_limit:</span>
+<span class="code-line">        raise Exception("Loop count exceeded")</span>
+<span class="code-line"></span>
+<span class="code-line">    response = get_completion(AI_MODEL, messages)</span>
+<span class="code-line">    print(f"\n\n*** For input {messages}\n*** Received response {response}\n\n")</span>
+<span class="code-line"></span>
+<span class="code-line">    choice = response.choices[0]</span>
+<span class="code-line">    msg = choice.message</span>
+<span class="code-line">    finish = choice.finish_reason</span>
+<span class="code-line"></span>
+<span class="code-line">    if finish == "stop":</span>
+<span class="code-line">        return msg.content</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Keep looping until the model either finishes normally or the notebook decides the conversation has gone too far.</p>
+            <p class="tl">Increment a loop counter so runaway tool usage becomes visible and stoppable.</p>
+            <p class="tl">Ask the model for the next step using the current messages plus any prior tool results.</p>
+            <p class="tl">Log the request and response for debugging, which is especially useful when AI behavior feels “mysterious.”</p>
+            <p class="tl">Read the model’s finish reason because that is how the API signals whether it wants to stop or call a tool.</p>
+            <p class="tl">Return plain content only when the model declares it is done.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">S</div>
+          <h3 class="pattern-title">`stop`</h3>
+          <p class="pattern-desc">The model has enough context and is returning a final answer.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">T</div>
+          <h3 class="pattern-title">`tool_calls`</h3>
+          <p class="pattern-desc">The model is asking the notebook to execute one or more tools before it can continue.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-5);">
+          <div class="pattern-icon" style="background: var(--color-actor-5); color: white;">L</div>
+          <h3 class="pattern-title">Legacy `function_call`</h3>
+          <p class="pattern-desc">The notebook also supports an older response shape, which is a practical compatibility choice.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The code is defensive because model output is not a perfect API client</h2>
+      <p class="animate-in">The model may emit malformed JSON, odd capitalization, or an older function-calling shape. The notebook compensates by parsing carefully, looking for `symbol` case-insensitively, and serializing tool results back into the conversation as explicit messages.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">try:</span>
+<span class="code-line">    args = json.loads(arg_json) if isinstance(arg_json, str) else (arg_json or {})</span>
+<span class="code-line">except Exception:</span>
+<span class="code-line">    args = {}</span>
+<span class="code-line"></span>
+<span class="code-line">if isinstance(args, dict):</span>
+<span class="code-line">    symbol = args.get("symbol")</span>
+<span class="code-line">    if symbol is None:</span>
+<span class="code-line">        for k in list(args.keys()):</span>
+<span class="code-line">            if k.lower() == "symbol":</span>
+<span class="code-line">                symbol = args[k]</span>
+<span class="code-line">                break</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Try to parse the tool arguments as JSON, but do not assume the model emitted perfect syntax.</p>
+            <p class="tl">Fall back to an empty dictionary if parsing fails so the notebook stays in control.</p>
+            <p class="tl">Check whether the parsed value is really a dictionary before trying to read named fields from it.</p>
+            <p class="tl">Look for `symbol` directly first because that is the preferred contract.</p>
+            <p class="tl">If it is missing, search again case-insensitively so small formatting drift does not break the flow.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warning animate-in">
+        <div class="callout-icon">!</div>
+        <div class="callout-content">
+          <strong class="callout-title">The deeper why</strong>
+          <p>The notebook is teaching a realistic AI architecture principle: models are probabilistic planners, so application code must still own validation, retries, shape normalization, and termination rules.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module2">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The schema exposes a required string field named `symbol`." data-explanation-wrong="The initial tool contract is intentionally small.">
+            <h3 class="quiz-question">1. What argument is required for the model to use `get_stock_quote`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A string stock symbol</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A screenshot of a chart</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A market-cap number</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `finish_reason` tells the notebook whether the model is done or wants to call a tool." data-explanation-wrong="This field is one of the main control signals in the loop.">
+            <h3 class="quiz-question">2. Which value in the response tells Python what the model wants to do next?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`temperature`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`AI_MODEL`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`finish_reason`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. `stop` means the model is returning a finished answer instead of requesting more tools." data-explanation-wrong="Only one branch means “normal final content.”">
+            <h3 class="quiz-question">3. What does `finish == "stop"` mean?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The tool failed</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model has finished its answer</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook must restart</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The notebook appends the tool result back into `messages` so the model can continue with more context." data-explanation-wrong="The result is meant to inform the next model step, not disappear.">
+            <h3 class="quiz-question">4. After Python runs the tool, what happens to the result?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is appended to the conversation as a tool message</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is deleted after printing</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It replaces the API key</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The loop-count check exists to stop runaway tool-calling behavior." data-explanation-wrong="The guardrail is about bounded execution.">
+            <h3 class="quiz-question">5. Why does the loop have a `loop_count_limit`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To improve CSS animations</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To force only one tool call ever</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To prevent unbounded looping</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The notebook supports both `tool_calls` and legacy `function_call` shapes." data-explanation-wrong="The compatibility branch is not about providers.">
+            <h3 class="quiz-question">6. Why are there two branches for tool execution logic in `answer_question()`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One is for Yahoo Finance and one is for Alpha Vantage</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook supports both newer and older tool-calling response formats</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One is for mobile and one is for desktop</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The code explicitly looks for a `symbol` key even if the model varies the capitalization." data-explanation-wrong="This fallback is a small resilience feature.">
+            <h3 class="quiz-question">7. Why does the code check keys case-insensitively when reading tool arguments?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To tolerate small formatting variations in model output</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To make Python faster</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To change the stock symbol automatically</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `json.loads(...)` is trying to turn the model’s argument text into a usable Python object." data-explanation-wrong="This step is about argument parsing, not quote retrieval yet.">
+            <h3 class="quiz-question">8. What is the job of `json.loads(arg_json)` in this loop?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It downloads the stock quote</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It selects the OpenAI model</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It parses tool-call arguments into structured data</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. Tool use in this notebook is an application feature, not a spontaneous model superpower." data-explanation-wrong="The model is only acting within what the app exposed.">
+            <h3 class="quiz-question">9. What gives the model the ability to ask for a stock quote in Module 2?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The training data alone</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The explicit tool definition passed in the API request</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The `requests` library import by itself</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The orchestrator remains the control layer even while the model proposes the next action." data-explanation-wrong="The deepest simple takeaway is about control ownership.">
+            <h3 class="quiz-question">10. Who ultimately controls execution in this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The Python notebook code</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The ticker symbol</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The JSON-RPC server</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. A tool schema is valuable because it narrows what the model is allowed to request into a machine-readable contract." data-explanation-wrong="The main gain is contract clarity, not formatting polish.">
+            <h3 class="quiz-question">1. A teammate wants to let the model fetch quotes “just by prompt.” Why is the explicit tool schema still the stronger design?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because prompts cannot contain nouns</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the schema defines a clear callable boundary with valid arguments</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the schema removes the need for provider APIs</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The model is proposing work, but Python is the layer that decides how that work becomes executable behavior." data-explanation-wrong="The notebook is orchestrated, not agentic in the “do anything on its own” sense.">
+            <h3 class="quiz-question">2. If the model requests a tool, what is Python’s real role in that moment?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To disappear and let the model run provider code directly</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To change the prompt into CSS</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To validate arguments, execute the helper, and append the result back into state</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Logging the raw response and finish reason helps turn fuzzy AI behavior into inspectable runtime evidence." data-explanation-wrong="The print statements are there for observability, not decoration.">
+            <h3 class="quiz-question">3. Why are the `print(...)` lines inside the loop useful even though they look noisy?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They make the tool-calling flow observable during debugging</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They improve provider quote accuracy</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They reduce JSON size</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The loop limit is defensive architecture against endless tool-request cycles." data-explanation-wrong="This control exists to bound failure, not to improve finance logic.">
+            <h3 class="quiz-question">4. If the model somehow keeps asking for tools forever, which line of defense is supposed to stop the notebook from hanging indefinitely?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`temperature=1`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`loop_count_limit = 5` plus the exception check</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The `symbol.upper()` fallback</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. This branch is about resilience to imperfect model formatting, which is a real production concern." data-explanation-wrong="The case-insensitive lookup is a robustness feature, not a finance-specific rule.">
+            <h3 class="quiz-question">5. Why is the case-insensitive search for `symbol` a meaningful engineering choice rather than a trivial convenience?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it speeds up Alpha Vantage</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it increases the model context window</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because model-generated structured output can drift slightly, and orchestration code should absorb small deviations</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Supporting both `tool_calls` and `function_call` means the notebook is accounting for API evolution rather than assuming one eternal format." data-explanation-wrong="Compatibility is the core reason.">
+            <h3 class="quiz-question">6. What is the best architectural interpretation of the notebook supporting both `tool_calls` and `function_call`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is defensive against API-shape variation across generations of the interface</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves the model is confused</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It is needed only for Colab notebooks</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. `messages` is not just text history; it is the evolving state bundle the model sees on each pass." data-explanation-wrong="The list carries operational memory, not just cosmetic logs.">
+            <h3 class="quiz-question">7. Why is appending the assistant tool-call record and the tool result back into `messages` so important?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because otherwise the notebook forgets the API key</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the next model pass needs to see what was requested and what data came back</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the provider requires two copies of every request</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. If parsing fails, the notebook deliberately falls back to `{}` so it can keep control and decide what to do next." data-explanation-wrong="The point is graceful recovery, not data enhancement.">
+            <h3 class="quiz-question">8. What problem is solved by the `except Exception: args = {}` fallback?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It upgrades the model automatically</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees a valid stock symbol</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It prevents malformed tool arguments from crashing the whole orchestration step immediately</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. If the question is about today’s stock movement, the model needs fresh data and the tool is the intended path." data-explanation-wrong="This is exactly the kind of question the module is designed to ground through tool use.">
+            <h3 class="quiz-question">9. A user asks for today’s stock movement for a company. Why is tool-calling the right pattern here?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model needs fresh provider data to answer reliably</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because tools always make answers shorter</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because prompts cannot mention company names</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The strongest “why” is about safe delegation: the model can plan, but the application still governs execution." data-explanation-wrong="This module is really about controlled orchestration.">
+            <h3 class="quiz-question">10. What is the clearest one-line explanation of Module 2 for an AI-exposed cross-functional team?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model became a direct Python interpreter</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The app lets the model propose tool use, while Python still owns execution and control</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook removed the need for provider APIs</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The tool schema is an application-governed capability boundary, not just extra prompt text." data-explanation-wrong="The deeper point is contractual exposure of capabilities.">
+            <h3 class="quiz-question">1. What is the most important systems-level meaning of the `tools=[...]` block?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It fine-tunes the model on stock data</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It caches prior answers inside the model weights</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It exposes an explicit capability surface that the application, not the model, defines</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The architecture separates planning from execution: the model proposes actions, while Python validates and performs them." data-explanation-wrong="This is not direct code execution by the model.">
+            <h3 class="quiz-question">2. Why is the chat animation’s “Model asks, Python executes” pattern architecturally healthier than letting the model call provider code directly?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes prompts shorter</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it preserves validation, observability, and termination control in application code</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because providers refuse model-generated requests</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The loop limit is a classic bounded-orchestration safeguard against autonomous drift." data-explanation-wrong="The major concern is loss of execution bounds, not just user experience.">
+            <h3 class="quiz-question">3. What failure mode is the `loop_count_limit` specifically defending against in an AI-agent-like flow?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Unbounded recursive planning or repeated tool-request churn</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Provider key leakage through CSS</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Loss of stock symbol capitalization only</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The branch for malformed or differently cased arguments is a reminder that model output behaves more like probabilistic user input than like a perfectly typed SDK call." data-explanation-wrong="The deeper framing is about the reliability class of model outputs.">
+            <h3 class="quiz-question">4. Why should model-generated tool arguments be treated more like user input than like trusted internal function calls?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because they always contain malicious code</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON cannot represent strings safely</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because they are probabilistic outputs that may be malformed, incomplete, or slightly off-schema</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Supporting both legacy and modern shapes lowers brittleness as upstream APIs evolve." data-explanation-wrong="This is about interface drift and long-term maintainability.">
+            <h3 class="quiz-question">5. What long-term maintenance benefit comes from handling both `tool_calls` and `function_call`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes the model more truthful</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It reduces breakage from API-shape changes across interface generations</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for provider-side monitoring</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Appending the tool result back into `messages` turns the loop into an explicit state machine where each transition is recorded." data-explanation-wrong="The value is not just transcript verbosity.">
+            <h3 class="quiz-question">6. In deeper architectural terms, what does the `messages` list become after tool results are appended?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An evolving state ledger for the orchestrated conversation</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A replacement for environment variables</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A vector store of prior prompts</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The logging and defensive parsing show that AI orchestration benefits from ordinary software engineering discipline, not less of it." data-explanation-wrong="The right answer is about observability and control.">
+            <h3 class="quiz-question">7. What does this module suggest about how AI features change the need for normal engineering practices like logging and input validation?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They become less important because the model is adaptive</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They matter only in local notebooks</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>They become more important because model behavior adds another uncertain boundary to observe and constrain</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. Module 2 is really a lesson in controlled delegation: the model can identify a needed action, but the app still owns the real side effects." data-explanation-wrong="The deepest takeaway is about controlled action boundaries.">
+            <h3 class="quiz-question">8. What is the strongest “why” behind letting the model request tools but not execute them directly?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It preserves a safe separation between intent generation and effectful execution</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It makes prompts look more professional</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It avoids needing schemas</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. This module gives AI-exposed teams the language to ask for guardrails like 'validate arguments before tool execution' instead of vague requests for a better agent." data-explanation-wrong="The practical gain is better system requests, not just trivia.">
+            <h3 class="quiz-question">9. How does understanding this orchestration loop help a PM or engineer steer an AI coding assistant more effectively?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It teaches them to ask for brighter colors</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives them precise architectural language for tool boundaries, validation, and state handling</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves prompt wording is the only important factor</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The best summary is that the notebook turns the model into a planner over exposed tools while preserving application ownership of reality." data-explanation-wrong="This module is not about surrendering control to the model.">
+            <h3 class="quiz-question">10. Which statement best captures the conceptual “why” of Module 2?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The LLM becomes a direct stock API replacement</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook removes the need for structured interfaces</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The LLM becomes a probabilistic planner over tools, while Python remains the execution and control layer</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" type="button" onclick="checkQuiz('quiz-module2')">Check Answers</button>
+        <button class="quiz-reset-btn" type="button" onclick="resetQuiz('quiz-module2')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="module" id="module-3">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">MCP Server Calls and Introspection</h1>
+      <p class="module-subtitle">The last module switches metaphors from “private service desk” to “public transit network”: instead of exposing one local function, the notebook connects to a remote MCP server and then inspects the station map directly.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">MCP changes the integration boundary</h2>
+      <p class="animate-in">In Module 2, the notebook advertised a local function to the model. Here, it hands the model a remote <span class="term" data-definition="MCP stands for Model Context Protocol. It is a standard way to expose tools and resources to a model through a discoverable server interface instead of a one-off local function contract.">MCP</span> server endpoint, which means the tool surface lives outside the notebook and can be discovered through protocol calls.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">response = client.responses.create(</span>
+<span class="code-line">    model="gpt-5-mini",</span>
+<span class="code-line">    input="Get the latest stock quote for AAPL using the Alpha Vantage MCP server. It is okay to get delayed or most recent close.",</span>
+<span class="code-line">    tools=[</span>
+<span class="code-line">        {</span>
+<span class="code-line">            "type": "mcp",</span>
+<span class="code-line">            "server_url": f"https://mcp.alphavantage.co/mcp?apikey={ALPHAVANTAGE_API_KEY}",</span>
+<span class="code-line">            "server_label": "alphavantage",</span>
+<span class="code-line">            "require_approval": "never"</span>
+<span class="code-line">        }</span>
+<span class="code-line">    ]</span>
+<span class="code-line">)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Use the Responses API instead of the earlier chat-completions path for this remote-tool example.</p>
+            <p class="tl">Ask a concrete stock question that clearly needs fresh market data.</p>
+            <p class="tl">Expose a tool of type `mcp`, which tells the client this capability comes from a protocol server rather than a local Python helper.</p>
+            <p class="tl">Point the client at the Alpha Vantage MCP endpoint and include the provider key in the server URL.</p>
+            <p class="tl">Give the remote server a readable label so it has an identity in the tool configuration.</p>
+            <p class="tl">Allow the call without a separate approval step inside this notebook context.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">i</div>
+        <div class="callout-content">
+          <strong class="callout-title">Why this matters</strong>
+          <p>The notebook is no longer teaching only “how to expose one tool.” It is teaching how to consume a discoverable tool ecosystem where the model can be pointed at a remote capability surface.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The flow is now visible as a protocol, not just an answer</h2>
+      <p class="animate-in">This animation shows the architecture in motion. The user request goes to the model client, the client reaches the remote MCP server, the server exposes tool metadata, and the result comes back as provider-backed output.</p>
+
+      <div class="flow-animation animate-in" data-steps='[
+        {"highlight":"flow-user","label":"The notebook sends a stock question to the Responses API."},
+        {"highlight":"flow-client","label":"The OpenAI client sees that an MCP server is available as a tool surface.","packet":true,"from":"user","to":"client"},
+        {"highlight":"flow-server","label":"The client connects to the Alpha Vantage MCP server using the provided URL.","packet":true,"from":"client","to":"server"},
+        {"highlight":"flow-tools","label":"The server exposes tools such as quote access and metadata queries.","packet":true,"from":"server","to":"tools"},
+        {"highlight":"flow-answer","label":"The model returns output text backed by remote tool access.","packet":true,"from":"tools","to":"answer"}
+      ]'>
+        <div class="flow-actors">
+          <div class="flow-actor" id="flow-user">
+            <div class="flow-actor-icon">U</div>
+            <span>User Prompt</span>
+          </div>
+          <div class="flow-actor" id="flow-client">
+            <div class="flow-actor-icon">C</div>
+            <span>OpenAI Client</span>
+          </div>
+          <div class="flow-actor" id="flow-server">
+            <div class="flow-actor-icon">M</div>
+            <span>MCP Server</span>
+          </div>
+          <div class="flow-actor" id="flow-tools">
+            <div class="flow-actor-icon">T</div>
+            <span>Tool Surface</span>
+          </div>
+          <div class="flow-actor" id="flow-answer">
+            <div class="flow-actor-icon">A</div>
+            <span>Answer Text</span>
+          </div>
+        </div>
+
+        <div class="flow-packet"></div>
+
+        <div class="flow-step-label">Click "Next Step" to begin</div>
+
+        <div class="flow-controls">
+          <button class="btn flow-next-btn" type="button">Next Step</button>
+          <button class="btn flow-reset-btn" type="button">Restart</button>
+          <span class="flow-progress"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The notebook refuses to treat MCP as a black box</h2>
+      <p class="animate-in">This is the strongest “why” in the whole notebook. Instead of stopping after `response.output_text`, the author uses raw <span class="term" data-definition="JSON-RPC is a lightweight protocol for calling named methods over JSON messages. You send a method name plus parameters, and the server replies with a structured result.">JSON-RPC</span> to list tools and inspect one tool’s parameter contract directly.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">payload = {</span>
+<span class="code-line">    "jsonrpc": "2.0",</span>
+<span class="code-line">    "id": 1,</span>
+<span class="code-line">    "method": "tools/list"</span>
+<span class="code-line">}</span>
+<span class="code-line">response = requests.post(url, json=payload)</span>
+<span class="code-line">data = response.json()</span>
+<span class="code-line">if isinstance(data, str):</span>
+<span class="code-line">    data = json.loads(data)</span>
+<span class="code-line"></span>
+<span class="code-line">tools = data["result"]["tools"]</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Construct a protocol message asking the server to enumerate its available tools.</p>
+            <p class="tl">Post that message directly to the MCP endpoint, bypassing any high-level abstraction for a moment.</p>
+            <p class="tl">Parse the JSON response, but stay defensive in case the payload arrives as a string.</p>
+            <p class="tl">Pull the `result.tools` list out as a discoverable catalog of what the server actually offers.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">payload = {</span>
+<span class="code-line">    "jsonrpc": "2.0",</span>
+<span class="code-line">    "id": 2,</span>
+<span class="code-line">    "method": "tools/call",</span>
+<span class="code-line">    "params": {</span>
+<span class="code-line">        "name": "TOOL_GET",</span>
+<span class="code-line">        "arguments": {</span>
+<span class="code-line">            "tool_name": "GLOBAL_QUOTE"</span>
+<span class="code-line">        }</span>
+<span class="code-line">    }</span>
+<span class="code-line">}</span>
+<span class="code-line"></span>
+<span class="code-line">resp = requests.post(url, json=payload)</span>
+<span class="code-line">outer = resp.json()</span>
+<span class="code-line">inner_text = outer["result"]["content"][0]["text"]</span>
+<span class="code-line">data = ast.literal_eval(inner_text)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Build a second protocol message that calls a specific metadata tool on the server.</p>
+            <p class="tl">Ask for details about `GLOBAL_QUOTE`, which is the quote capability the course has already seen in raw API form.</p>
+            <p class="tl">Read the nested result structure out of the server response.</p>
+            <p class="tl">Convert the returned text payload into a Python object so the notebook can display the tool contract clearly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Inspection is a product and engineering skill, not just a coding trick</h2>
+      <p class="animate-in">The notebook renders the listed tools into <span class="term" data-definition="Markdown is a lightweight text format for headings, lists, code, and emphasis. Teams often use it when they want readable structured output without full HTML.">Markdown</span> because human-readable contracts reduce ambiguity. Engineers can debug faster, and product partners can reason about what the model is genuinely able to access.</p>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">L</div>
+          <h3 class="pattern-title">List</h3>
+          <p class="pattern-desc">`tools/list` reveals the server’s menu of capabilities.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">I</div>
+          <h3 class="pattern-title">Inspect</h3>
+          <p class="pattern-desc">`TOOL_GET` plus `GLOBAL_QUOTE` reveals the parameter and description contract of one capability.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-5);">
+          <div class="pattern-icon" style="background: var(--color-actor-5); color: white;">W</div>
+          <h3 class="pattern-title">Why</h3>
+          <p class="pattern-desc">Discoverability makes remote tools governable. You are not just trusting the model; you are reading the interface it was given.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-warning animate-in">
+        <div class="callout-icon">!</div>
+        <div class="callout-content">
+          <strong class="callout-title">The deeper why</strong>
+          <p>Module 3 teaches a critical architecture habit for AI-heavy teams: use abstractions when they help, but inspect the underlying protocol when you need confidence, debugging leverage, or sharper product decisions.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module3">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. In this module the tool is an MCP server connection, not a locally declared function." data-explanation-wrong="The main shift is the integration boundary.">
+            <h3 class="quiz-question">1. What is the biggest change from Module 2 to Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook stops using stock data</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model gets access to a remote MCP server instead of one local function schema</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook removes all API keys</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. `tools/list` is the discovery request that asks the server what it exposes." data-explanation-wrong="This request is for enumeration, not for getting a quote itself.">
+            <h3 class="quiz-question">2. What does the `tools/list` method ask the server for?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A list of available tools and their schemas</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A replacement OpenAI client</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A chart image of AAPL</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. `server_label` is the readable name attached to the remote server in the tool config." data-explanation-wrong="That field is for naming, not authentication.">
+            <h3 class="quiz-question">3. What is `server_label` doing in the MCP tool definition?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It controls the quiz difficulty</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It stores the stock symbol</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives the remote server a readable identity</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The notebook checks for string payloads because the response shape may vary." data-explanation-wrong="This is a defensive parsing step.">
+            <h3 class="quiz-question">4. Why does the code test `if isinstance(data, str)` after reading a server response?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because strings are required for AAPL only</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the payload may need an extra JSON parse step</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the model can only read strings</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The notebook calls `TOOL_GET` with `tool_name: GLOBAL_QUOTE` to inspect that capability." data-explanation-wrong="The second call is a metadata-inspection step.">
+            <h3 class="quiz-question">5. What is the purpose of calling `TOOL_GET` for `GLOBAL_QUOTE`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To inspect the details of one server capability</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To reset the notebook runtime</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To disable Alpha Vantage</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The notebook converts tool metadata into Markdown so a person can read the contract comfortably." data-explanation-wrong="This formatting step is for human clarity.">
+            <h3 class="quiz-question">6. Why does the notebook build a Markdown string from the listed tools?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To speed up provider latency</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To change the server schema</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To present the tool contract in a human-readable format</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. `type: "mcp"` is the marker that this tool comes from an MCP server." data-explanation-wrong="That field changes the meaning of the tool configuration.">
+            <h3 class="quiz-question">7. Which field makes the tool definition an MCP integration instead of a local function tool?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`"type": "mcp"`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`"method": "tools/list"`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`"id": 2`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The endpoint still needs authentication, so the provider key is passed in the server URL." data-explanation-wrong="This is still a real service boundary with auth requirements.">
+            <h3 class="quiz-question">8. Why is the Alpha Vantage API key included in the `server_url`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To make the quiz switch default to Medium</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the remote server still needs provider authorization</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON-RPC requires secret keys in every field</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The notebook prints `response.output_text` after the MCP-backed model call." data-explanation-wrong="The module still returns ordinary human-readable answer text at the end.">
+            <h3 class="quiz-question">9. What field is printed after the direct MCP-backed model call succeeds?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.vector_store_id`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.markdown_schema`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.output_text`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The deeper simple takeaway is that remote tools should be discoverable and inspectable, not opaque." data-explanation-wrong="This module is about visibility and protocol understanding.">
+            <h3 class="quiz-question">10. What is the strongest simple summary of Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook connects to a remote tool ecosystem and then inspects that ecosystem directly</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook stops caring about contracts</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook replaces JSON with screenshots</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. MCP is valuable here because it moves from one bespoke local tool to a discoverable remote interface surface." data-explanation-wrong="The key gain is interface generality and discoverability.">
+            <h3 class="quiz-question">1. A team wants to scale from one hardcoded quote helper to a broader remote tool surface. Why is the MCP pattern a better fit?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it removes the need for API contracts</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it exposes a discoverable remote capability surface instead of a single local function</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it forces all answers to be delayed quotes</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Listing tools gives both engineers and product stakeholders a concrete view of what the model can actually access through the server." data-explanation-wrong="The value is observability, not decoration.">
+            <h3 class="quiz-question">2. Why is `tools/list` especially useful in a cross-functional setting, not just for programmers?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it increases market-cap precision</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it avoids all authentication questions</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes the model’s reachable capability surface visible to humans</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The explicit direct JSON-RPC call is a form of interface verification: it shows the server contract independent of the model abstraction." data-explanation-wrong="This step is about checking the underlying interface.">
+            <h3 class="quiz-question">3. Why not stop after `response.output_text` returns a plausible AAPL answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because a high-level answer is less informative than inspecting the tool contract that made it possible</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the Responses API cannot return text reliably</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because models are forbidden to summarize quotes</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. If you want to understand what a remote tool does, reading its parameter contract is more actionable than reading only a single answer instance." data-explanation-wrong="The question is about interface understanding, not answer prose quality.">
+            <h3 class="quiz-question">4. Why is inspecting `GLOBAL_QUOTE` through `TOOL_GET` a higher-value learning step than just reading the model’s quote summary?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because summaries cannot contain ticker names</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because the tool metadata reveals the reusable contract behind the answer</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because `TOOL_GET` turns off provider billing</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. The `isinstance(data, str)` branch is defensive coding against non-uniform payload shapes." data-explanation-wrong="The branch exists because robustness matters at protocol boundaries.">
+            <h3 class="quiz-question">5. A bug report says tool discovery sometimes breaks because the payload shape changed slightly. Which existing pattern in the notebook is already aimed at that class of problem?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The `server_label` field</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The `print(response.output_text)` line</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The extra parse branch that handles string payloads before using the data</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. Converting tool metadata into Markdown is a product-documentation move: it makes the interface readable and discussable." data-explanation-wrong="This choice is about human comprehension.">
+            <h3 class="quiz-question">6. Why is the Markdown rendering step valuable for product understanding, not just for engineering curiosity?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it turns protocol details into something stakeholders can review and discuss</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it improves the market price itself</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Markdown automatically validates API keys</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The remote tool surface still depends on provider authorization, so the server URL carries a credential." data-explanation-wrong="This module does not eliminate auth boundaries.">
+            <h3 class="quiz-question">7. If a PM asks why the server URL still includes a provider API key, what is the best answer?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because MCP duplicates all secrets for style</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because remote tool ecosystems still require authorization at the provider boundary</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because `server_label` cannot work without it</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Correct. This step shows protocol literacy: you are reading the interface itself, not just trusting the model’s use of it." data-explanation-wrong="The point is about inspectability of the underlying tool surface.">
+            <h3 class="quiz-question">8. What capability does the notebook gain by manually issuing JSON-RPC calls to the MCP endpoint?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It bypasses all provider pricing</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It turns the model into a database</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It lets the notebook inspect and reason about the remote tool contract directly</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. If the model can call a remote server, teams need to know what that server actually exposes before trusting product behavior built on top of it." data-explanation-wrong="The strongest answer is about governance and trust.">
+            <h3 class="quiz-question">9. Why is discoverability especially important when remote tools become part of the product architecture?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because teams need visibility into what capabilities are really available and how they are shaped</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because discoverability replaces all logging</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because hidden tools are always faster</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The strongest “why” is that teams should use abstraction productively while still being able to inspect the underlying contract when needed." data-explanation-wrong="This module is about inspectable remote capability surfaces.">
+            <h3 class="quiz-question">10. Which statement best summarizes Module 3 for an AI-savvy product and engineering audience?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP removes the need to understand protocols</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tools are most useful when their contracts are both usable through the model and inspectable by humans</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The value of MCP is mainly visual formatting</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The move from local function tools to MCP is a move from app-specific capability wiring to protocol-governed remote capability discovery." data-explanation-wrong="The deepest shift is about the boundary and governance model of tools.">
+            <h3 class="quiz-question">1. What is the most meaningful architectural upgrade from Module 2 to Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model becomes a market-data provider</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook stops caring about schemas</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The tool surface moves from a bespoke local function contract to a discoverable remote protocol contract</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Inspecting `tools/list` and `TOOL_GET` is a governance move: it gives humans the ability to verify what the model has access to instead of treating the remote tool layer as magic." data-explanation-wrong="The main value is contract visibility and control.">
+            <h3 class="quiz-question">2. Why is raw JSON-RPC inspection an important complement to the high-level MCP client abstraction?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it lets humans verify and reason about the actual remote contract beneath the abstraction</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because high-level clients cannot return normal text</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON-RPC automatically improves quote quality</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. The direct JSON-RPC requests turn protocol understanding into a first-class debugging tool, which matters when remote capabilities behave unexpectedly." data-explanation-wrong="The deeper value is observability and debuggability.">
+            <h3 class="quiz-question">3. If the model’s remote tool behavior starts surprising the team, why is the `tools/list` pattern especially valuable?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it forces the model to answer from memory</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it reveals the server’s exposed capabilities and expected parameters independently of the model’s prose</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it upgrades the provider plan automatically</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Human-readable Markdown is not just prettification; it is a contract communication layer between technical and semi-technical stakeholders." data-explanation-wrong="The point is shared understanding, not styling.">
+            <h3 class="quiz-question">4. Why is rendering tool metadata into Markdown a meaningful product-documentation move rather than a superficial formatting step?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Markdown makes credentials disappear</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because markdown output always improves latency</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because readable contracts help teams reason about capability scope, inputs, and expectations together</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. The parse-then-reparse logic demonstrates that remote tool boundaries, like model boundaries, deserve defensive handling for payload shape drift." data-explanation-wrong="The broader lesson is about robust protocol handling.">
+            <h3 class="quiz-question">5. What principle is reinforced by checking whether the response data is already a structured object or still a string?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Protocol boundaries should be parsed defensively because payload shapes can vary</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Structured responses are always a bug</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tools should avoid metadata entirely</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The notebook uses the high-level model abstraction for productivity, then drops to the protocol layer for confidence and understanding." data-explanation-wrong="The key pattern is layered understanding.">
+            <h3 class="quiz-question">6. What layered engineering habit does this module model for AI teams?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Always bypass abstractions entirely</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Use convenient abstractions for work, but inspect the underlying protocol when you need trust and debugging leverage</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Never connect the model to remote tools</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `TOOL_GET` reveals that a tool is not just a button the model can press; it has an explicit semantic contract of name, description, and parameters." data-explanation-wrong="The deeper lesson is about contract semantics.">
+            <h3 class="quiz-question">7. What does inspecting `GLOBAL_QUOTE` via `TOOL_GET` teach beyond “a quote came back”?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That quotes are only available for Apple</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That metadata is less useful than final answers</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That tools are governed by explicit parameterized contracts which can be inspected independently of any one result</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. MCP does not remove the need for credentials or governance; it reorganizes capability exposure through a protocol." data-explanation-wrong="The strongest answer is about controlled capability exposure, not simplification of responsibility.">
+            <h3 class="quiz-question">8. Which statement best captures the security and governance lesson of this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tool ecosystems still need explicit authorization and inspectable contracts</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP eliminates the need for provider auth boundaries</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Tool discoverability is only a UX issue</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. This module gives teams vocabulary to ask for features like 'inspect the MCP tool list' or 'show the remote contract in docs,' which is much stronger than vague requests to 'make it smarter.'" data-explanation-wrong="The gain is actionable design language.">
+            <h3 class="quiz-question">9. How does understanding this module help AI-exposed teams steer future implementation work better?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It teaches them to ask for more gradients</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives them language for remote capability discovery, inspection, and contract-level debugging</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves remote tools should never be documented</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The deepest “why” is about turning remote AI tool access into something legible, inspectable, and governable by humans." data-explanation-wrong="This module is about disciplined understanding of remote capability layers.">
+            <h3 class="quiz-question">10. Which statement is the strongest conceptual summary of Module 3?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP mainly saves a few lines of code</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Remote tools matter because they hide protocol details from teams</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>MCP matters because it enables remote tool use through a standard protocol that humans can still inspect and govern</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" type="button" onclick="checkQuiz('quiz-module3')">Check Answers</button>
+        <button class="quiz-reset-btn" type="button" onclick="resetQuiz('quiz-module3')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+
+</body>
+</html>

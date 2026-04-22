@@ -1,0 +1,436 @@
+<section class="module" id="module-1">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">01</span>
+      <h1 class="module-title">Direct Quote APIs and Setup</h1>
+      <p class="module-subtitle">The notebook begins like a field technician opening a locked service panel: get credentials, confirm the wiring, then prove the data path works before asking an LLM to narrate anything.</p>
+    </header>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The first architecture choice is to separate access from analysis</h2>
+      <p class="animate-in">This notebook does not start with a finance question. It starts by installing dependencies, loading secrets, and binding a named <span class="term" data-definition="An environment variable is a named value the running program can read at runtime. Teams use them for secrets and configuration so those values do not live directly inside source code.">environment variable</span> for each API key.</p>
+      <p class="animate-in">Why that matters: if live market access is not stable on its own, every later LLM answer is built on sand. Software engineers care because this is dependency hygiene; product partners care because it explains why “the model failed” is often really “the integration was never ready.”</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">from google.colab import userdata</span>
+<span class="code-line">os.environ["OPENAI_API_KEY"] = userdata.get('OPENAI_API_KEY')</span>
+<span class="code-line">os.environ["ALPHAVANTAGE_API_KEY"] = userdata.get('ALPHAVANTAGE_API_KEY')</span>
+<span class="code-line">AI_MODEL = 'gpt-5-mini'</span>
+<span class="code-line"></span>
+<span class="code-line">ALPHAVANTAGE_API_URL = "https://www.alphavantage.co/query"</span>
+<span class="code-line">ALPHAVANTAGE_API_KEY = os.environ["ALPHAVANTAGE_API_KEY"]</span>
+<span class="code-line"></span>
+<span class="code-line">client=OpenAI(api_key=os.environ['OPENAI_API_KEY'])</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Pull secrets out of Colab’s private notebook storage instead of hardcoding them into visible cells.</p>
+            <p class="tl">Bind each key into a runtime variable so the rest of the notebook can use a stable name.</p>
+            <p class="tl">Choose the model once up front so later calls stay consistent.</p>
+            <p class="tl">Keep the quote provider’s URL separate from the key because one is a service address and the other is a credential.</p>
+            <p class="tl">Create the OpenAI client only after the key exists, which makes failures easier to localize.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">Two quote paths teach the same product lesson in different ways</h2>
+      <p class="animate-in">Think of Alpha Vantage as calling the exchange desk directly, while <span class="term" data-definition="A Python package is reusable code you install and import instead of writing everything yourself. In AI-assisted work, asking for 'use the provider SDK or package wrapper' is often clearer than asking for raw HTTP everywhere.">package</span>-based Yahoo Finance is like using a well-trained broker. Both can answer “what is the stock doing,” but one exposes the raw request more clearly and the other packages richer metadata.</p>
+
+      <div class="pattern-cards stagger-children">
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-1);">
+          <div class="pattern-icon" style="background: var(--color-actor-1); color: white;">H</div>
+          <h3 class="pattern-title">HTTP Path</h3>
+          <p class="pattern-desc">Alpha Vantage uses an explicit request with named query parameters and a normalized dictionary return value.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-2);">
+          <div class="pattern-icon" style="background: var(--color-actor-2); color: white;">P</div>
+          <h3 class="pattern-title">Package Path</h3>
+          <p class="pattern-desc">Yahoo Finance wraps retrieval details and returns both price data and business metadata such as market cap and PE ratio.</p>
+        </div>
+        <div class="pattern-card animate-in" style="border-top: 3px solid var(--color-actor-5);">
+          <div class="pattern-icon" style="background: var(--color-actor-5); color: white;">W</div>
+          <h3 class="pattern-title">Why It Matters</h3>
+          <p class="pattern-desc">The notebook is showing that fresh external data must be grounded in a real provider before the LLM layer adds explanation.</p>
+        </div>
+      </div>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">def get_stock_quote(symbol: str) -&gt; dict:</span>
+<span class="code-line">    """Fetch the latest stock quote for ``symbol`` using the Alpha Vantage API."""</span>
+<span class="code-line">    params = {"function": "GLOBAL_QUOTE", "symbol": symbol, "apikey": ALPHAVANTAGE_API_KEY}</span>
+<span class="code-line">    response = requests.get(ALPHAVANTAGE_API_URL, params=params, timeout=10)</span>
+<span class="code-line">    response.raise_for_status()</span>
+<span class="code-line">    data = response.json().get("Global Quote", {})</span>
+<span class="code-line">    if not data:</span>
+<span class="code-line">        return {"symbol": symbol.upper(), "price": None}</span>
+<span class="code-line">    return {</span>
+<span class="code-line">        "symbol": data.get("01. symbol", symbol.upper()),</span>
+<span class="code-line">        "price": float(data.get("05. price", "0") or 0.0),</span>
+<span class="code-line">        "change_percent": data.get("10. change percent"),</span>
+<span class="code-line">    }</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Define one helper whose whole job is “give me the latest quote for this symbol.”</p>
+            <p class="tl">Build a compact request payload with the exact Alpha Vantage function name the provider expects.</p>
+            <p class="tl">Fail fast if the network call itself is broken.</p>
+            <p class="tl">Extract only the `Global Quote` slice instead of making every caller interpret provider-specific JSON.</p>
+            <p class="tl">If no quote comes back, return the same schema anyway so downstream code stays predictable.</p>
+            <p class="tl">Normalize provider field names into business-friendly keys such as `symbol`, `price`, and `change_percent`.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <h2 class="screen-heading animate-in">The notebook is teaching contract design, not just ticker lookup</h2>
+      <p class="animate-in">A <span class="term" data-definition="A schema is the shape of the data your code promises to return or accept. When you tell an AI tool 'normalize this into a stable schema,' you are asking for outputs that other code can depend on.">schema</span> is the quiet hero here. `get_stock_quote()` returns a Python <span class="term" data-definition="A dictionary is a key-value data structure in Python. It is useful when you want named fields such as `symbol` and `price` instead of relying on position.">dictionary</span>; `get_stock_quote_yf()` returns JSON text. That difference signals who the expected consumer is and how much cleanup still remains.</p>
+
+      <div class="translation-block animate-in">
+        <div class="translation-code">
+          <span class="translation-label">Code</span>
+          <pre><code><span class="code-line">def get_stock_quote_yf(symbol: str) -&gt; str:</span>
+<span class="code-line">    """Get current stock price and basic information."""</span>
+<span class="code-line">    try:</span>
+<span class="code-line">        stock = yf.Ticker(symbol)</span>
+<span class="code-line">        info = stock.info</span>
+<span class="code-line">        hist = stock.history(period="1d")</span>
+<span class="code-line">        if hist.empty:</span>
+<span class="code-line">            return json.dumps({"error": f"Could not retrieve data for {symbol}"})</span>
+<span class="code-line"></span>
+<span class="code-line">        current_price = hist['Close'].iloc[-1]</span>
+<span class="code-line">        result = {</span>
+<span class="code-line">            "symbol": symbol,</span>
+<span class="code-line">            "current_price": round(current_price, 2),</span>
+<span class="code-line">            "company_name": info.get('longName', symbol),</span>
+<span class="code-line">            "market_cap": info.get('marketCap', 0),</span>
+<span class="code-line">            "pe_ratio": info.get('trailingPE', 'N/A'),</span>
+<span class="code-line">            "52_week_high": info.get('fiftyTwoWeekHigh', 0),</span>
+<span class="code-line">            "52_week_low": info.get('fiftyTwoWeekLow', 0)</span>
+<span class="code-line">        }</span>
+<span class="code-line">        return json.dumps(result, indent=2)</span></code></pre>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">Plain English</span>
+          <div class="translation-lines">
+            <p class="tl">Wrap the provider logic in a `try` block because package-backed integrations can fail in several places.</p>
+            <p class="tl">Ask Yahoo Finance for both identity information and a one-day price history.</p>
+            <p class="tl">Return an explicit error payload if the history table is empty instead of pretending a price exists.</p>
+            <p class="tl">Use the latest closing value as the current price for this notebook’s purposes.</p>
+            <p class="tl">Bundle price, company name, valuation clues, and range data into one result object.</p>
+            <p class="tl">Serialize that object to formatted JSON so it is easy to display or pass along as text.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info animate-in">
+        <div class="callout-icon">i</div>
+        <div class="callout-content">
+          <strong class="callout-title">Why this module matters</strong>
+          <p>The rest of the course only makes sense if you see the base principle first: the LLM is not the source of truth for today’s stock price. The provider is. The model becomes useful after that boundary is respected.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen">
+      <div class="quiz-container animate-in" id="quiz-module1">
+        <div class="quiz-toolbar">
+          <div>
+            <span class="quiz-kicker">Practice</span>
+            <p class="quiz-level-note">Current level: <span data-quiz-level-label>Medium</span></p>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="low">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. `userdata.get(...)` is being used as the notebook’s secret store." data-explanation-wrong="This opening setup is about credentials, not ticker discovery.">
+            <h3 class="quiz-question">1. What job does `userdata.get(...)` perform in this notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It downloads stock history directly</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It loads secrets such as API keys</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It formats market charts</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. Alpha Vantage is called with the explicit `GLOBAL_QUOTE` function name." data-explanation-wrong="The helper does not use a general search route in this section.">
+            <h3 class="quiz-question">2. Which provider function is used for the direct Alpha Vantage quote lookup?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`GLOBAL_QUOTE`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`EARNINGS_ESTIMATE`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`TOOLS_LIST`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `response.raise_for_status()` is there to surface network or HTTP failure immediately." data-explanation-wrong="The direct helper explicitly includes a fast-fail check.">
+            <h3 class="quiz-question">3. Which line is meant to fail fast when the quote request itself is broken?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`AI_MODEL = 'gpt-5-mini'`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`data = response.json().get("Global Quote", {})`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`response.raise_for_status()`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. The fallback preserves a stable return shape even when data is missing." data-explanation-wrong="The code does not leave the caller empty-handed when the provider returns nothing.">
+            <h3 class="quiz-question">4. Why return `{\"symbol\": symbol.upper(), \"price\": None}` when no quote payload exists?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To hide provider errors from logs</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To keep the output schema predictable</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To make the model answer faster</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The Yahoo Finance helper returns much richer company context than the bare Alpha Vantage helper." data-explanation-wrong="Both retrieve prices, but only one also packages business metadata.">
+            <h3 class="quiz-question">5. Which helper also returns company name, market cap, and valuation hints?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_stock_quote_yf`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_completion`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`answer_question`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. `hist.empty` is the simple check for whether any one-day price history came back." data-explanation-wrong="The empty-history branch is handled before the result object is built.">
+            <h3 class="quiz-question">6. What condition tells the Yahoo Finance helper that no daily price data was retrieved?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`info is None`</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`current_price == 0`</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`hist.empty`</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. The early `TT` calls are proving that live quote access works before the LLM orchestration starts." data-explanation-wrong="Those calls are validation steps, not decorative examples.">
+            <h3 class="quiz-question">7. Why does the notebook call both quote helpers before introducing LLM tools?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To train a new finance model</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To verify that fresh data retrieval works on its own</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>To populate the quiz automatically</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. `client=OpenAI(...)` creates the object used for later model calls." data-explanation-wrong="This line sets up the OpenAI client, not Alpha Vantage.">
+            <h3 class="quiz-question">8. What does `client=OpenAI(api_key=os.environ['OPENAI_API_KEY'])` create?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An authenticated OpenAI client</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A stock-market dashboard</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A local cache of quotes</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The direct helper returns a Python dictionary, while the Yahoo Finance helper returns JSON text." data-explanation-wrong="The two helpers intentionally do not return the same type.">
+            <h3 class="quiz-question">9. Which statement matches the return types in this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Both helpers return pandas DataFrames</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Both helpers return plain floats</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Alpha Vantage returns a dict, Yahoo Finance returns JSON text</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The module’s biggest point is that provider data owns the live fact before any model explanation begins." data-explanation-wrong="This module is about system boundaries, not about prompt artistry yet.">
+            <h3 class="quiz-question">10. What is the most important “why” from Module 1?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Every finance notebook should start with a quiz</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Fresh provider data must be grounded before the LLM layer adds explanation</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Yahoo Finance is always better than Alpha Vantage</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track active" data-quiz-level="medium">
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Exactly. If the keys are not loaded first, every later networked dependency will fail for reasons that look unrelated." data-explanation-wrong="This is an environment-readiness problem, not an LLM reasoning problem.">
+            <h3 class="quiz-question">1. A teammate says, “The model is broken.” You notice the notebook never ran the `userdata.get(...)` lines. What is the more accurate diagnosis?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The prompt is too short</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The runtime credentials layer was never initialized</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The stock symbol must be lowercase</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. A normalized dictionary is easier for downstream Python code to inspect than raw provider field names." data-explanation-wrong="The direct helper is doing cleanup work so later stages do not need provider-specific parsing.">
+            <h3 class="quiz-question">2. Why is the Alpha Vantage helper more integration-friendly than returning the provider’s raw JSON untouched?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It translates provider-specific fields into a smaller stable contract</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It removes the need for network access</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It guarantees the stock price is never delayed</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The empty-history check is there because product-friendly explanation depends on real data being present first." data-explanation-wrong="This branch exists to protect downstream consumers from pretending missing data is usable.">
+            <h3 class="quiz-question">3. If `hist.empty` becomes `True` for a symbol, what architectural purpose does the error JSON serve?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It improves model creativity</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It hides provider instability from the caller</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It gives downstream code an explicit failure object instead of fake market facts</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Yes. A product person asking for a company snapshot probably needs the richer helper because it exposes more context than a bare quote." data-explanation-wrong="The choice depends on the shape of the decision, not on which provider sounds nicer.">
+            <h3 class="quiz-question">4. You need a one-screen product snapshot for a leadership update. Which helper is the stronger starting point and why?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_stock_quote`, because it only returns the API URL</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>`get_stock_quote_yf`, because it includes broader company and valuation context</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Neither, because the notebook avoids provider metadata</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. This is a boundary-preserving design: missing data still produces a known object shape." data-explanation-wrong="The key issue is predictable downstream handling, not user interface polish.">
+            <h3 class="quiz-question">5. What design principle is shown by returning `price: None` rather than throwing an exception on every empty quote?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Graceful degradation with a stable contract</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Prompt injection prevention</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Vector retrieval</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Validating quote access first localizes failures before the model layer adds another source of complexity." data-explanation-wrong="This sequencing is about debugging leverage, not classroom drama.">
+            <h3 class="quiz-question">6. Why is it useful from a debugging standpoint to run quote retrieval before adding LLM orchestration?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it makes the model deterministic</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it increases the context window</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it isolates data-access failures before another moving part is introduced</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. Environment variables are being used so the notebook code can refer to stable names while the secret values stay external." data-explanation-wrong="The benefit is configuration separation, not better ticker formatting.">
+            <h3 class="quiz-question">7. Why assign the secrets into `os.environ[...]` instead of reading `userdata` every time a request is made?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because `userdata` cannot return strings twice</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because named runtime variables give the rest of the notebook a consistent configuration surface</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because OpenAI only accepts lowercase keys</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. JSON text is easier to hand to a text-oriented downstream consumer, while native dicts are easier for direct Python logic." data-explanation-wrong="This difference signals intended consumers, not random inconsistency.">
+            <h3 class="quiz-question">8. Why might `get_stock_quote_yf()` intentionally return a JSON string instead of a native dict?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because serialized text is convenient when the next consumer expects display-ready or text-passable output</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Python cannot store nested dictionaries</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because JSON strings always load faster from the network</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. `AI_MODEL = 'gpt-5-mini'` is a control point that makes later model behavior intentional rather than accidental." data-explanation-wrong="This line is configuration, not quote logic.">
+            <h3 class="quiz-question">9. What strategic value comes from assigning `AI_MODEL = 'gpt-5-mini'` near the top of the notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It unlocks Alpha Vantage metadata fields</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It changes the Yahoo Finance API version</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It creates one explicit place to control later LLM calls</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Right. The module is about understanding why external data access is the foundation underneath later AI features." data-explanation-wrong="The takeaway is architectural, not merely procedural.">
+            <h3 class="quiz-question">10. If you had to explain Module 1 to a new PM in one sentence, which summary is strongest?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The notebook first proves it can securely fetch live market facts before it asks an LLM to interpret them</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The module mainly teaches CSS for finance dashboards</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The module shows that stock providers are optional once you know the ticker</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <div class="quiz-track" data-quiz-level="deep">
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. The module is architecturally important because it treats provider data access as a separate reliability boundary from model reasoning." data-explanation-wrong="The deeper lesson is about system boundaries, not just classroom pacing.">
+            <h3 class="quiz-question">1. Why is it architecturally valuable that the notebook proves quote retrieval in isolation before introducing tool-calling?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because isolated quote retrieval makes the model more creative later</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because provider setup only matters for Yahoo Finance</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it separates external data reliability from LLM orchestration reliability</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Correct. The helper is effectively a translation layer from provider-specific JSON into application-friendly semantics." data-explanation-wrong="The value comes from contract simplification, not just shorter code.">
+            <h3 class="quiz-question">2. In systems terms, what role does `get_stock_quote()` play between Alpha Vantage and the rest of the notebook?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>An adapter that normalizes provider-specific output into notebook-friendly fields</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A caching layer that stores every quote permanently</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>A prompt router that chooses between models</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Right. Returning JSON text from the Yahoo Finance helper hints that this path is optimized more for presentation or string-based handoff than for direct Python field access." data-explanation-wrong="The deeper implication is about intended consumers and future composition.">
+            <h3 class="quiz-question">3. What deeper design signal is contained in the choice to `json.dumps(result, indent=2)` in `get_stock_quote_yf()`?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That provider data should never be structured</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That this output is meant to travel easily through text-oriented consumers or displays</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That the function is secretly an MCP server</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Exactly. Preserving a stable output shape is what lets downstream components reason about missingness without collapsing the whole flow." data-explanation-wrong="The core idea is resilient composition, not hiding errors from developers.">
+            <h3 class="quiz-question">4. Why is “same schema, different value quality” often better than “sometimes value, sometimes exception” for helper functions like this?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because exceptions are illegal in notebooks</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because models can only read strings</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because downstream orchestration can handle degraded data more predictably when the contract stays stable</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Yes. Module 1 is setting up the epistemic rule for the course: live market facts come from data providers, and the LLM’s role is downstream of that." data-explanation-wrong="The deepest lesson is about who is allowed to know what in the system.">
+            <h3 class="quiz-question">5. What “source of truth” rule is being established before any LLM is asked a stock question?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Current market facts should originate from external providers, not from the model’s prior knowledge</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>The model should invent prices when APIs are slow</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Notebook cells become the market authority once executed</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. The two helpers model a practical tradeoff between direct control and convenience-rich abstraction." data-explanation-wrong="This comparison is about integration style and contract shape, not brand preference.">
+            <h3 class="quiz-question">6. What is the most useful tradeoff comparison between the Alpha Vantage path and the Yahoo Finance path?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One is for mobile and one is for desktop</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One offers direct request-level control, while the other offers a richer wrapper abstraction</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>One works with AI and the other does not</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. Binding the model name early is a small but important sign that the notebook treats the LLM as a configurable dependency, not as an invisible ambient service." data-explanation-wrong="The line matters because it makes model choice explicit and inspectable.">
+            <h3 class="quiz-question">7. Why does the early `AI_MODEL` assignment matter conceptually even before the first LLM call appears?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Python requires model names at import time</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because Alpha Vantage reads the model name for pricing</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Because it signals that model selection is an explicit application-level choice</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-a" data-explanation-right="Exactly. The empty branch in the Yahoo Finance helper is a reminder that a richer abstraction still needs defensive handling around missing provider data." data-explanation-wrong="The package wrapper does not eliminate failure handling.">
+            <h3 class="quiz-question">8. What deeper engineering point is illustrated by checking `hist.empty` even when using a high-level package wrapper?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Abstractions reduce boilerplate, but they do not remove the need for defensive data checks</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>Package wrappers automatically fix all provider outages</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>High-level APIs are always worse than raw HTTP</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-b" data-explanation-right="Correct. A balanced architecture explanation for AI-exposed teams must keep returning to who owns the truth versus who packages or interprets it." data-explanation-wrong="This course is emphasizing causality and system boundaries, not memorization.">
+            <h3 class="quiz-question">9. If an AI-exposed team wants to ask better coding agents for changes here, what concept from Module 1 helps most?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That every helper should use the same font</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That there is a distinct provider-integration layer whose outputs should be normalized before higher-level reasoning uses them</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>That finance notebooks should avoid reusable functions</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+          <div class="quiz-question-block" data-correct="option-c" data-explanation-right="Right. The strongest explanation is that Module 1 establishes reliable grounding for live facts before the system becomes more complex." data-explanation-wrong="The real why is about trustworthy composition, not provider fandom.">
+            <h3 class="quiz-question">10. Which statement best captures the architectural “why” of this module?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It exists mainly to compare two finance brands</span></button>
+              <button class="quiz-option" data-value="option-b" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It proves that LLM prompts are optional for finance work</span></button>
+              <button class="quiz-option" data-value="option-c" type="button" onclick="selectOption(this)"><div class="quiz-option-radio"></div><span>It builds a trustworthy live-data foundation so later AI layers can explain facts instead of inventing them</span></button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+        </div>
+
+        <button class="quiz-check-btn" type="button" onclick="checkQuiz('quiz-module1')">Check Answers</button>
+        <button class="quiz-reset-btn" type="button" onclick="resetQuiz('quiz-module1')">Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
